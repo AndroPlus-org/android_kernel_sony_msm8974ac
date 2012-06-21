@@ -276,42 +276,6 @@ static ssize_t show_hotplug_enable(struct kobject *kobj,
 
 static struct kobj_attribute hotplug_disabled_attr = __ATTR_RO(hotplug_disable);
 
-static struct kobj_attribute hotplug_enabled_attr =
-	__ATTR(hotplug_enable, S_IWUSR | S_IRUSR, show_hotplug_enable,
-	       store_hotplug_enable);
-
-static ssize_t store_bricked_hotplug_enable(struct kobject *kobj,
-				struct kobj_attribute *attr,
-				const char *buf, size_t count)
-{
-	int ret;
-	unsigned int val;
-	unsigned long flags = 0;
-
-	spin_lock_irqsave(&rq_lock, flags);
-	ret = sscanf(buf, "%u", &val);
-	if (ret != 1 || val < 0 || val > 1)
-		return -EINVAL;
-
-	rq_info.bricked_hotplug_enabled = val;
-
-	spin_unlock_irqrestore(&rq_lock, flags);
-
-	return count;
-}
-
-static ssize_t show_bricked_hotplug_enable(struct kobject *kobj,
-				struct kobj_attribute *attr, char *buf)
-{
-	return snprintf(buf, MAX_LONG_SIZE, "%d\n",
-			rq_info.bricked_hotplug_enabled);
-}
-
-static struct kobj_attribute bricked_hotplug_enabled_attr =
-		__ATTR(bricked_hotplug_enable, S_IWUSR | S_IRUSR,
-		show_bricked_hotplug_enable,
-		store_bricked_hotplug_enable);
-
 unsigned int get_rq_info(void)
 {
 	unsigned long flags = 0;

@@ -109,22 +109,6 @@ static struct dbs_tuners dbs_tuners_ins = {
 	//.freq_step = 5,
 };
 
-static inline unsigned int get_cpu_idle_time(unsigned int cpu)
-{
-
-	unsigned int add_nice = 0, ret;
-
-	if (dbs_tuners_ins.ignore_nice)
-		add_nice = kcpustat_cpu(cpu).cpustat[CPUTIME_NICE];
-
-	ret = kcpustat_cpu(cpu).cpustat[CPUTIME_IDLE] +
-			kcpustat_cpu(cpu).cpustat[CPUTIME_IOWAIT] +
-			add_nice;
-
-	return ret;
-
-}
-
 /* keep track of frequency transitions */
 static int
 dbs_cpufreq_notifier(struct notifier_block *nb, unsigned long val,

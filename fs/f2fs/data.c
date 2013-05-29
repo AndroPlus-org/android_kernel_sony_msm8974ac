@@ -1071,9 +1071,9 @@ static int check_direct_IO(struct inode *inode, int rw,
 	if (offset & blocksize_mask)
 		return -EINVAL;
 
-       for (i = 0; i < nr_segs; i++)
-               if (iov[i].iov_len & blocksize_mask)
-                       return -EINVAL;
+	for (i = 0; i < nr_segs; i++)
+		if (iov[i].iov_len & blocksize_mask)
+			return -EINVAL;
 
 	return 0;
 }
@@ -1103,7 +1103,6 @@ static ssize_t f2fs_direct_IO(int rw, struct kiocb *iocb,
 
 	err = blockdev_direct_IO(rw, iocb, inode, iov, offset, nr_segs,
 							get_data_block);
-
 	if (err < 0 && (rw & WRITE))
 		f2fs_write_failed(mapping, offset + count);
 

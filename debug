@@ -1,0 +1,37 @@
+patching file Documentation/vm/00-INDEX
+patching file Documentation/vm/uksm.txt
+patching file fs/exec.c
+Hunk #3 succeeded at 1174 (offset -1 lines).
+Hunk #4 succeeded at 1269 (offset -16 lines).
+patching file fs/proc/meminfo.c
+patching file include/linux/ksm.h
+patching file include/linux/mm_types.h
+Hunk #1 succeeded at 252 (offset -10 lines).
+patching file include/linux/mmzone.h
+Hunk #1 succeeded at 142 (offset 26 lines).
+Hunk #2 succeeded at 796 (offset 39 lines).
+patching file include/linux/sradix-tree.h
+patching file include/linux/uksm.h
+patching file kernel/fork.c
+Hunk #1 succeeded at 377 (offset 15 lines).
+Hunk #2 succeeded at 429 (offset 15 lines).
+patching file lib/Makefile
+patching file lib/sradix-tree.c
+patching file mm/Kconfig
+patching file mm/Makefile
+Hunk #1 succeeded at 33 with fuzz 2 (offset -1 lines).
+patching file mm/memory.c
+Hunk #3 succeeded at 748 (offset -5 lines).
+Hunk #4 succeeded at 937 (offset -5 lines).
+Hunk #5 succeeded at 1177 (offset -5 lines).
+Hunk #6 succeeded at 1706 (offset -5 lines).
+Hunk #7 succeeded at 1753 (offset -5 lines).
+Hunk #8 succeeded at 2513 (offset -5 lines).
+Hunk #9 succeeded at 2714 (offset -5 lines).
+Hunk #10 succeeded at 2736 (offset -5 lines).
+patching file mm/mmap.c
+patching file mm/rmap.c
+Hunk #1 succeeded at 1014 (offset 2 lines).
+patching file mm/uksm.c
+patching file mm/vmstat.c
+Hunk #1 succeeded at 722 (offset 3 lines).

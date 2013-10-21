@@ -365,11 +365,6 @@ struct rq {
 #endif
 	int skip_clock_update;
 
-	/* time-based average load */
-	u64 nr_last_stamp;
-	unsigned int ave_nr_running;
-	seqcount_t ave_seqcnt;
-
 	/* capture load from *all* tasks on this cpu: */
 	struct load_weight load;
 	unsigned long nr_load_updates;
@@ -937,6 +932,7 @@ static inline void cpuacct_charge(struct task_struct *tsk, u64 cputime) {}
 #define NR_AVE_PERIOD		(1 << NR_AVE_PERIOD_EXP)
 #define NR_AVE_DIV_PERIOD(x)	((x) >> NR_AVE_PERIOD_EXP)
 
+<<<<<<< HEAD
 static inline unsigned int do_avg_nr_running(struct rq *rq)
 {
 	s64 nr, deltax;
@@ -952,14 +948,33 @@ static inline unsigned int do_avg_nr_running(struct rq *rq)
 			NR_AVE_DIV_PERIOD(deltax * (nr - ave_nr_running));
 
 	return ave_nr_running;
+=======
+static inline void do_avg_nr_running(struct rq *rq)
+{
+	s64 nr, deltax;
+
+	deltax = rq->clock_task - rq->nr_last_stamp;
+	rq->nr_last_stamp = rq->clock_task;
+	nr = NR_AVE_SCALE(rq->nr_running);
+
+	if (deltax > NR_AVE_PERIOD)
+		rq->ave_nr_running = nr;
+	else
+		rq->ave_nr_running +=
+			NR_AVE_DIV_PERIOD(deltax * (nr - rq->ave_nr_running));
+>>>>>>> 1d7d559... scheduler: compute time-average nr_running per run-queue
 }
 
 static inline void inc_nr_running(struct rq *rq)
 {
 	sched_update_nr_prod(cpu_of(rq), rq->nr_running, true);
+<<<<<<< HEAD
 	write_seqcount_begin(&rq->ave_seqcnt);
 	rq->ave_nr_running = do_avg_nr_running(rq);
 	rq->nr_last_stamp = rq->clock_task;
+=======
+	do_avg_nr_running(rq);
+>>>>>>> 1d7d559... scheduler: compute time-average nr_running per run-queue
 	rq->nr_running++;
 	write_seqcount_end(&rq->ave_seqcnt);
 }
@@ -967,9 +982,13 @@ static inline void inc_nr_running(struct rq *rq)
 static inline void dec_nr_running(struct rq *rq)
 {
 	sched_update_nr_prod(cpu_of(rq), rq->nr_running, false);
+<<<<<<< HEAD
 	write_seqcount_begin(&rq->ave_seqcnt);
 	rq->ave_nr_running = do_avg_nr_running(rq);
 	rq->nr_last_stamp = rq->clock_task;
+=======
+	do_avg_nr_running(rq);
+>>>>>>> 1d7d559... scheduler: compute time-average nr_running per run-queue
 	rq->nr_running--;
 	write_seqcount_end(&rq->ave_seqcnt);
 }

@@ -23,11 +23,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifdef CONFIG_FB
-#include <linux/fb.h>
-#elif defined CONFIG_POWERSUSPEND
-#include <linux/powersuspend.h>
-#endif
+#include <linux/earlysuspend.h>
 #include <linux/init.h>
 #include <linux/cpufreq.h>
 #include <linux/workqueue.h>
@@ -86,7 +82,6 @@ struct msm_mpdec_cpudata_t {
 };
 static DEFINE_PER_CPU(struct msm_mpdec_cpudata_t, msm_mpdec_cpudata);
 
-static struct notifier_block msm_mpdec_fb_notif;
 static struct delayed_work msm_mpdec_work;
 static struct workqueue_struct *msm_mpdec_workq;
 static DEFINE_MUTEX(mpdec_msm_cpu_lock);
@@ -556,7 +551,7 @@ static struct input_handler mpdec_input_handler = {
 };
 #endif
 
-static void msm_mpdec_suspend(void) {
+static void msm_mpdec_early_suspend(struct early_suspend *h) {
     int cpu = nr_cpu_ids;
 #ifdef CONFIG_MSM_MPDEC_INPUTBOOST_CPUMIN
     is_screen_on = false;
@@ -583,7 +578,7 @@ static void msm_mpdec_suspend(void) {
     pr_info(MPDEC_TAG"Screen -> off. Deactivated mpdecision.\n");
 }
 
-static void msm_mpdec_resume(void) {
+static void msm_mpdec_late_resume(struct early_suspend *h) {
     int cpu = nr_cpu_ids;
 #ifdef CONFIG_MSM_MPDEC_INPUTBOOST_CPUMIN
     is_screen_on = true;
@@ -615,56 +610,11 @@ static void msm_mpdec_resume(void) {
     }
 }
 
-#ifdef CONFIG_FB
-static int fb_notifier_callback(struct notifier_block *this,
-				unsigned long event, void *data) {
-	int blank_mode;
-	static int first = 1;
-
-	if (event != FB_EVENT_BLANK || data == NULL)
-		return 0;
-
-	blank_mode = *(int*)(((struct fb_event*)data)->data);
-	pr_debug("FB_CB: event = %lu, blank mode = %d\n", event, blank_mode);
-
-	switch (blank_mode) {
-	case FB_BLANK_UNBLANK:
-		if (first) {
-			msm_mpdec_resume();
-			first = 0;
-		} else {
-			first = 1;
-		}
-		break;
-	case FB_BLANK_POWERDOWN:
-		if (first) {
-			msm_mpdec_suspend();
-			first = 0;
-		} else {
-			first = 1;
-		}
-		break;
-	default:
-		break;
-	}
-
-	return 0;
-}
-#elif defined CONFIG_HAS_EARLYSUSPEND
-static void msm_mpdec_early_suspend(struct early_suspend *h) {
-       msm_mpdec_suspend();
-}
-
-static void msm_mpdec_late_resume(struct power_suspend *h) {
-       msm_mpdec_resume();
-}
-
 static struct early_suspend msm_mpdec_early_suspend_handler = {
 	.level = EARLY_SUSPEND_LEVEL_DISABLE_FB,
 	.suspend = msm_mpdec_power_suspend,
 	.resume = msm_mpdec_late_resume,
 };
-#endif
 
 /**************************** SYSFS START ****************************/
 struct kobject *msm_mpdec_kobject;
@@ -1204,16 +1154,7 @@ static int __init msm_mpdec_init(void) {
         queue_delayed_work(msm_mpdec_workq, &msm_mpdec_work,
                            msecs_to_jiffies(msm_mpdec_tuners_ins.delay));
 
-#ifdef CONFIG_FB
-	msm_mpdec_fb_notif.notifier_call = fb_notifier_callback;
-	if (fb_register_client(&msm_mpdec_fb_notif) != 0) {
-		pr_err("%s: Failed to register fb callback\n", __func__);
-		err = -EINVAL;
-		goto err_fb_register;
-	}
-#elif defined CONFIG_HAS_EARLYSUSPEND
-	register_power_suspend(&msm_mpdec_early_suspend_handler);
-#endif
+    register_early_suspend(&msm_mpdec_early_suspend_handler);
 
     msm_mpdec_kobject = kobject_create_and_add("msm_mpdecision", kernel_kobj);
     if (msm_mpdec_kobject) {
@@ -1232,8 +1173,7 @@ static int __init msm_mpdec_init(void) {
 
 	pr_info(MPDEC_TAG"%s init complete.", __func__);
 
-err_fb_register:
-    return err;
+	return err;
 }
 late_initcall(msm_mpdec_init);
 

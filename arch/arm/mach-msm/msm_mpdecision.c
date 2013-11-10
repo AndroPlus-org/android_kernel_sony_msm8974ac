@@ -615,8 +615,8 @@ static int fb_notifier_callback(struct notifier_block *this,
 
 	return 0;
 }
-#else
-static void msm_mpdec_early_suspend(struct power_suspend *h) {
+#elif defined CONFIG_HAS_EARLYSUSPEND
+static void msm_mpdec_early_suspend(struct early_suspend *h) {
        msm_mpdec_suspend();
 }
 

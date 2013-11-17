@@ -4208,10 +4208,6 @@ unsigned int taiko_read(struct snd_soc_codec *codec,
 	val = wcd9xxx_reg_read(&wcd9xxx->core_res, reg);
 	return val;
 }
-<<<<<<< HEAD
-static unsigned int taiko_read(struct snd_soc_codec *codec,
-				unsigned int reg)
-=======
 #ifdef CONFIG_SOUND_CONTROL_HAX_3_GPL
 EXPORT_SYMBOL(taiko_read);
 #endif
@@ -4221,7 +4217,6 @@ static
 #endif
 int taiko_write(struct snd_soc_codec *codec, unsigned int reg,
 	unsigned int value)
->>>>>>> 03ed8b1... Sound Control: (Optional) work around for Nexus 4/5 audio issues
 {
 	int ret;
 #ifdef CONFIG_SOUND_CONTROL_HAX_3_GPL
@@ -4256,12 +4251,9 @@ int taiko_write(struct snd_soc_codec *codec, unsigned int reg,
 	return wcd9xxx_reg_write(&wcd9xxx->core_res, reg, value);
 #endif
 }
-<<<<<<< HEAD
-=======
 #ifdef CONFIG_SOUND_CONTROL_HAX_3_GPL
 EXPORT_SYMBOL(taiko_write);
 #endif
->>>>>>> 03ed8b1... Sound Control: (Optional) work around for Nexus 4/5 audio issues
 
 static int taiko_startup(struct snd_pcm_substream *substream,
 		struct snd_soc_dai *dai)

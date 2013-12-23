@@ -96,6 +96,14 @@ config SIMPLE_GPU_ALGORITHM
 	help
 	  Simple user configurable GPU controlling algorithm
 
+config DEVFREQ_GOV_CONSERVATIVE
+	tristate "Conservative"
+	depends on MSM_KGSL
+	help
+	  Chooses frequency based on the recent load on the device. Works
+	  similar as conservative governor of cpufreq does and implements
+	  the useful optimizations from Adreno TZ.
+
 comment "DEVFREQ Drivers"
 
 config ARM_EXYNOS4_BUS_DEVFREQ

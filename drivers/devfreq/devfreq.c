@@ -118,14 +118,15 @@ static int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
 	int lev, prev_lev, ret = 0;
 	unsigned long cur_time;
 
+	cur_time = jiffies;
+
 	prev_lev = devfreq_get_freq_level(devfreq, devfreq->previous_freq);
 	if (prev_lev < 0) {
 		ret = prev_lev;
 		goto out;
 	}
 
-	cur_time = jiffies;
-	devfreq->time_in_state[lev] +=
+	devfreq->time_in_state[prev_lev] +=
 			 cur_time - devfreq->last_stat_updated;
 
 	lev = devfreq_get_freq_level(devfreq, freq);

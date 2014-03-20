@@ -1,0 +1,33 @@
+### select toolchain
+## GCC 4.4.3
+##CUR_TC=/home/doomlord/android/system/prebuilt/linux-x86/toolchain/arm-eabi-4.4.3/bin/
+## GCC 4.6 Linaro
+CUR_TC=/home/doomlord/android-toolchain-eabi-linaro-4.6-2011.10/bin/
+## GCC 4.7 Linaro
+##CUR_TC=/home/doomlord/android-toolchain-eabi-linaro-4.7-2013.01/bin/
+
+### compile kernel
+ARCH=arm CROSS_COMPILE=${CUR_TC}arm-eabi- make -j8
+#ARCH=arm CROSS_COMPILE=~/arm-linux-androideabi-4.7/bin/arm-linux-androideabi- make -j8
+
+echo "checking for compiled kernel..."
+if [ -f arch/arm/boot/zImage ]
+then
+
+echo "generating device tree..."
+./dtbTool -o ../final_files/dt.img -s 2048 -p ./scripts/dtc/ ./arch/arm/boot/
+
+### copy zImage
+cp arch/arm/boot/zImage ../final_files/.
+cp drivers/char/adsprpc.ko ../final_files/.
+cp arch/arm/mach-msm/qdsp6v2/adsp-loader.ko ../final_files/.
+cp net/wireless/cfg80211.ko ../final_files/.
+cp drivers/staging/prima/wlan.ko ../final_files/pronto_wlan.ko
+~/arm-linux-androideabi-4.7/bin/arm-linux-androideabi-strip --strip-unneeded ../final_files/adsprpc.ko
+~/arm-linux-androideabi-4.7/bin/arm-linux-androideabi-strip --strip-unneeded ../final_files/adsp-loader.ko
+~/arm-linux-androideabi-4.7/bin/arm-linux-androideabi-strip --strip-unneeded ../final_files/cfg80211.ko 
+~/arm-linux-androideabi-4.7/bin/arm-linux-androideabi-strip --strip-unneeded ../final_files/pronto_wlan.ko
+
+echo "DONE"
+
+fi

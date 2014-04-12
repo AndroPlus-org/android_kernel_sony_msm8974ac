@@ -96,7 +96,7 @@ extern "C" {
 #define WSTRCHR(str, wchar)             __wstrchr(str, wchar)
 #define WSTRLEN(str)                    __wstrlen(str)
 
-#if EXFAT_CONFIG_DEBUG_MSG
+#ifdef CONFIG_EXFAT_DEBUG_MSG
 #define PRINTK(...)			\
 	do {								\
 		printk("[EXFAT] " __VA_ARGS__);	\

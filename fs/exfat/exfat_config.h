@@ -86,30 +86,6 @@ extern "C" {
 #define FFS_CONFIG_SUPPORT_CP950        1       // Traditional Chinese
 #define FFS_CONFIG_SUPPORT_UTF8         1       // UTF8 encoding
 
-/*----------------------------------------------------------------------*/
-/* Feature Config                                                       */
-/*----------------------------------------------------------------------*/
-#ifndef CONFIG_EXFAT_DISCARD
-#define CONFIG_EXFAT_DISCARD		1	/* mount option -o discard support */
-#endif
-
-#ifndef CONFIG_EXFAT_DELAYED_SYNC
-#define CONFIG_EXFAT_DELAYED_SYNC 0
-#endif
-
-#ifndef CONFIG_EXFAT_KERNEL_DEBUG
-#define CONFIG_EXFAT_KERNEL_DEBUG	1	/* kernel debug features via ioctl */
-#endif
-
-#ifndef CONFIG_EXFAT_DEBUG_MSG
-#define CONFIG_EXFAT_DEBUG_MSG		0	/* debugging message on/off */
-#endif
-
-#ifndef CONFIG_EXFAT_DEFAULT_CODEPAGE
-#define CONFIG_EXFAT_DEFAULT_CODEPAGE	437
-#define CONFIG_EXFAT_DEFAULT_IOCHARSET	"utf8"
-#endif
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

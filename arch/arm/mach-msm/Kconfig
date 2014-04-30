@@ -1896,6 +1896,17 @@ config CPU_OC
 	help
 	  Unlock the CPU Overclock freq speed @ 2.457 GHz
 
+config MSM_CPUFREQ_LIMITER
+	tristate "MSM CPU frequency limiter"
+	default n
+	help
+	  This driver limits MSM CPU frequency through sysfs file system.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called cpufreq_stats.
+
+	  If in doubt, say N.
+
 config MSM_DEVFREQ_CPUBW
 	bool "Devfreq device for CPU<->DDR IB/AB BW voting"
 	depends on PM_DEVFREQ

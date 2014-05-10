@@ -130,6 +130,12 @@ config CPU_FREQ_DEFAULT_GOV_SMARTASSV2
 	help
 		Use the CPUFreq governor 'smartassV2' as default.
 
+config CPU_FREQ_DEFAULT_GOV_LIONHEART
+	bool "lionheart"
+	select CPU_FREQ_GOV_LIONHEART
+	help
+	 Use the CPUFreq governor 'lionheart' as default.
+
 config CPU_FREQ_DEFAULT_GOV_INTELLIACTIVE
 	bool "intelliactive"
 	select CPU_FREQ_GOV_INTELLIACTIVE
@@ -140,6 +146,14 @@ config CPU_FREQ_DEFAULT_GOV_INTELLIACTIVE
 	  'interactive' governor for latency-sensitive workloads.
 
 endchoice
+
+config CPU_FREQ_GOV_LIONHEART
+	tristate "lionheart"
+	depends on CPU_FREQ
+	help
+	 Use the CPUFreq governor 'lionheart' as default.
+
+	  If in doubt, say N.
 
 config CPU_FREQ_GOV_SMARTASSV2
 	tristate "'smartassV2' cpufreq governor"

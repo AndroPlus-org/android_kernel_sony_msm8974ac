@@ -23,6 +23,11 @@ enum msm_dcvs_algo_param_type {
 	MSM_DCVS_ALGO_MPD_PARAM  = 1,
 };
 
+enum msm_dcvs_algo_param_type {
+	MSM_DCVS_ALGO_DCVS_PARAM = 0,
+	MSM_DCVS_ALGO_MPD_PARAM  = 1,
+};
+
 enum msm_dcvs_scm_event {
 	MSM_DCVS_SCM_IDLE_ENTER = 0, /* Core enters idle */
 	MSM_DCVS_SCM_IDLE_EXIT = 1, /* Core exits idle */
@@ -81,6 +86,18 @@ struct msm_dcvs_power_params {
 struct msm_dcvs_core_param {
 	uint32_t core_type;
 	uint32_t core_bitmask_id;
+};
+
+struct msm_mpd_algo_param {
+	uint32_t em_win_size_min_us;
+	uint32_t em_win_size_max_us;
+	uint32_t em_max_util_pct;
+	uint32_t mp_em_rounding_point_min;
+	uint32_t mp_em_rounding_point_max;
+	uint32_t online_util_pct_min;
+	uint32_t online_util_pct_max;
+	uint32_t slack_time_min_us;
+	uint32_t slack_time_max_us;
 };
 
 struct msm_mpd_algo_param {
@@ -163,6 +180,15 @@ extern int msm_dcvs_scm_set_power_params(uint32_t core_id,
 				struct msm_dcvs_power_params *pwr_param,
 				struct msm_dcvs_freq_entry *freq_entry,
 				struct msm_dcvs_energy_curve_coeffs *coeffs);
+
+/**
+ * Set MPDecision algorithm parameters
+ *
+ * @param: The param data structure
+ *	0 on success.
+ *	-EINVAL: Invalid args.
+ */
+extern int msm_mpd_scm_set_algo_params(struct msm_mpd_algo_param *param);
 
 /**
  * Do an SCM call.
@@ -251,6 +277,9 @@ static inline int msm_dcvs_set_power_params(uint32_t core_id,
 		struct msm_dcvs_power_params *pwr_param,
 		struct msm_dcvs_freq_entry *freq_entry,
 		struct msm_dcvs_energy_curve_coeffs *coeffs)
+{ return -ENOSYS; }
+static inline int msm_mpd_scm_set_algo_params(
+		struct msm_mpd_algo_param *param)
 { return -ENOSYS; }
 static inline int msm_dcvs_scm_event(uint32_t core_id,
 		enum msm_dcvs_scm_event event_id,

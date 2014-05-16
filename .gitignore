@@ -85,6 +85,9 @@ GTAGS
 *~
 \#*#
 
+Module.symvers
+System.map
+vmlinux
 kernel/config_data.h
 boot.img
 dt.img

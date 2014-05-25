@@ -26,6 +26,10 @@
 #include <linux/err.h>
 #include <linux/regulator/consumer.h>
 
+#ifdef CONFIG_POWERSUSPEND
+#include <linux/powersuspend.h>
+#endif
+
 #include "mdss_mdp.h"
 #include "mdss_dsi.h"
 
@@ -1065,6 +1069,10 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 		return -EINVAL;
 	}
 
+#ifdef CONFIG_POWERSUSPEND
+	set_power_suspend_state_pannel_hook(POWER_SUSPEND_INACTIVE);
+#endif
+
 	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
 
@@ -1203,6 +1211,10 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 		fpsd.fpks = 0;
 		pr_info("%s: vsyncs_per_ksecs is invalid\n", __func__);
 	}
+
+#ifdef CONFIG_POWERSUSPEND
+	set_power_suspend_state_pannel_hook(POWER_SUSPEND_ACTIVE);
+#endif
 
 	pr_debug("%s: Done\n", __func__);
 

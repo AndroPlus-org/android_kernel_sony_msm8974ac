@@ -151,10 +151,13 @@ static unsigned int calculate_thread_stats(void)
 	unsigned int avg_nr_run = avg_nr_running();
 	unsigned int nr_run;
 	unsigned int threshold_size;
+	unsigned int *current_profile;
 
-	if (!eco_mode_active) {
-		threshold_size =  ARRAY_SIZE(nr_run_thresholds_full);
-		nr_run_hysteresis = 8;
+	if (!eco_mode_active ||
+		!(nr_run_profile_sel == NR_RUN_ECO_MODE_PROFILE)) {
+		current_profile = nr_run_profiles[nr_run_profile_sel];
+		threshold_size =
+			ARRAY_SIZE(nr_run_thresholds_balance);
 		nr_fshift = 3;
 #ifdef DEBUG_INTELLI_PLUG
 		pr_info("intelliplug: full mode active!");
@@ -247,7 +250,7 @@ static void __cpuinit intelli_plug_work_fn(struct work_struct *work)
 
 	int i;
 
-	if (intelli_plug_active == 1) {
+	if (intelli_plug_active) {
 		nr_run_stat = calculate_thread_stats();
 		update_per_cpu_stat();
 #ifdef DEBUG_INTELLI_PLUG

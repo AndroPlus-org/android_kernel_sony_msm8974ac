@@ -410,6 +410,7 @@ static void wakeup_boost(void)
 	}
 }
 
+
 #ifdef CONFIG_POWERSUSPEND
 static void __cpuinit intelli_plug_resume(struct power_suspend *handler)
 #else

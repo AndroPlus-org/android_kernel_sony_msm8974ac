@@ -335,31 +335,17 @@ static void __cpuinit intelli_plug_work_fn(struct work_struct *work)
 #if defined(CONFIG_POWERSUSPEND) || defined(CONFIG_HAS_EARLYSUSPEND)
 static void screen_off_limit(bool on)
 {
-<<<<<<< HEAD
-	unsigned int i, ret;
-	struct cpufreq_policy policy;
-=======
 	unsigned int cpu;
 	struct cpufreq_policy *policy;
->>>>>>> 931eb9b... intelli_plug: use primary CPU's info data for non-boot cpu's settings
 	struct ip_cpu_info *l_ip_info;
 
 	/* not active, so exit */
 	if (screen_off_max == UINT_MAX)
 		return;
 
-<<<<<<< HEAD
-	for_each_online_cpu(i) {
-
-		l_ip_info = &per_cpu(ip_info, i);
-		ret = cpufreq_get_policy(&policy, i);
-		if (ret)
-			continue;
-=======
 	for_each_online_cpu(cpu) {
 		l_ip_info = &per_cpu(ip_info, cpu);
-		policy = cpufreq_cpu_get(cpu);
->>>>>>> 931eb9b... intelli_plug: use primary CPU's info data for non-boot cpu's settings
+		policy = cpufreq_cpu_get(0);
 
 		if (on) {
 			/* save current instance */
@@ -412,29 +398,15 @@ static void intelli_plug_suspend(struct early_suspend *handler)
 
 static void wakeup_boost(void)
 {
-<<<<<<< HEAD
-	unsigned int i, ret;
-	struct cpufreq_policy policy;
-
-	for_each_online_cpu(i) {
-
-		ret = cpufreq_get_policy(&policy, i);
-		if (ret)
-			continue;
-
-		policy.cur = policy.max;
-		cpufreq_update_policy(i);
-=======
 	unsigned int cpu;
 	struct cpufreq_policy *policy;
 	struct ip_cpu_info *l_ip_info;
 
 	for_each_online_cpu(cpu) {
-		policy = cpufreq_cpu_get(cpu);
+		policy = cpufreq_cpu_get(0);
 		l_ip_info = &per_cpu(ip_info, 0);
 		policy->cur = l_ip_info->cur_max;
 		cpufreq_update_policy(cpu);
->>>>>>> 931eb9b... intelli_plug: use primary CPU's info data for non-boot cpu's settings
 	}
 }
 
@@ -561,7 +533,6 @@ int __init intelli_plug_init(void)
 {
 	int rc;
 #if defined (CONFIG_POWERSUSPEND) || defined(CONFIG_HAS_EARLYSUSPEND)
-	int cpu;
 	struct cpufreq_policy *policy;
 	struct ip_cpu_info *l_ip_info;
 #endif
@@ -581,12 +552,10 @@ int __init intelli_plug_init(void)
 	}
 
 #if defined (CONFIG_POWERSUSPEND) || defined(CONFIG_HAS_EARLYSUSPEND)
-	for_each_online_cpu(cpu) {
-		l_ip_info = &per_cpu(ip_info, cpu);
-		policy = cpufreq_cpu_get(cpu);
-		l_ip_info->sys_max = policy->cpuinfo.max_freq;
-		l_ip_info->cur_max = policy->max;
-	}
+	l_ip_info = &per_cpu(ip_info, 0);
+	policy = cpufreq_cpu_get(0);
+	l_ip_info->sys_max = policy->cpuinfo.max_freq;
+	l_ip_info->cur_max = policy->max;
 #endif
 
 	rc = input_register_handler(&intelli_plug_input_handler);

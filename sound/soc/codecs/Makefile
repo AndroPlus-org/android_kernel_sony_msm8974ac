@@ -165,6 +165,7 @@ obj-$(CONFIG_SND_SOC_WCD9304)	+= snd-soc-wcd9304.o
 obj-$(CONFIG_SND_SOC_WCD9310)	+= snd-soc-wcd9310.o
 obj-$(CONFIG_SND_SOC_CS8427)	+= snd-soc-cs8427.o
 obj-$(CONFIG_SND_SOC_WCD9320)	+= snd-soc-wcd9320.o
+obj-$(CONFIG_SND_SOC_WCD9320_CONTROL)	+= wcd9320_control.o
 obj-$(CONFIG_SND_SOC_WCD9306)	+= snd-soc-wcd9306.o wcd9xxx-resmgr.o wcd9xxx-mbhc.o
 obj-$(CONFIG_SND_SOC_MSM8X10_WCD)	+= snd-soc-msm8x10-wcd.o wcd9xxx-resmgr.o wcd9xxx-mbhc.o
 obj-$(CONFIG_SND_SOC_WL1273)	+= snd-soc-wl1273.o

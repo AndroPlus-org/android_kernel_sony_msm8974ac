@@ -44,6 +44,10 @@
 #include "wcdcal-hwdep.h"
 
 
+#ifdef CONFIG_SND_SOC_WCD9320_CONTROL
+#include "wcd9320_control.h"
+#endif
+
 #define TAIKO_MAD_SLIMBUS_TX_PORT 12
 #define TAIKO_MAD_AUDIO_FIRMWARE_PATH "wcd9320/wcd9320_mad_audio.bin"
 #define TAIKO_VALIDATE_RX_SBPORT_RANGE(port) ((port >= 16) && (port <= 22))
@@ -2558,9 +2562,24 @@ static int taiko_codec_enable_spk_pa(struct snd_soc_dapm_widget *w,
 	switch (event) {
 	case SND_SOC_DAPM_PRE_PMU:
 		taiko->spkr_pa_widget_on = true;
+#ifdef CONFIG_SND_SOC_WCD9320_CONTROL
+		spkwidget = true;
+
+		if(spkdrv_ena) {
+			snd_soc_update_bits(codec, TAIKO_A_SPKR_DRV_EN, 0x80, 0x80);
+
+			if (spkdiggain_con)
+				taiko_write(codec, TAIKO_A_CDC_RX7_VOL_CTL_B2_CTL, spkdiggain);
+		}
+#else
 		snd_soc_update_bits(codec, TAIKO_A_SPKR_DRV_EN, 0x80, 0x80);
+#endif
+
 		break;
 	case SND_SOC_DAPM_POST_PMD:
+#ifdef CONFIG_SND_SOC_WCD9320_CONTROL
+		spkwidget = false;
+#endif
 		taiko->spkr_pa_widget_on = false;
 		snd_soc_update_bits(codec, TAIKO_A_SPKR_DRV_EN, 0x80, 0x00);
 		break;
@@ -3094,8 +3113,11 @@ static int taiko_codec_enable_vdd_spkr(struct snd_soc_dapm_widget *w,
 
 	pr_debug("%s: %d %s\n", __func__, event, w->name);
 
+	/*
 	WARN_ONCE(!priv->spkdrv_reg, "SPKDRV supply %s isn't defined\n",
 		  WCD9XXX_VDD_SPKDRV_NAME);
+	*/
+
 	switch (event) {
 	case SND_SOC_DAPM_PRE_PMU:
 		if (priv->spkdrv_reg) {
@@ -3492,6 +3514,19 @@ static int taiko_hph_pa_event(struct snd_soc_dapm_widget *w,
 						 WCD9XXX_CLSH_REQ_ENABLE,
 						 WCD9XXX_CLSH_EVENT_POST_PA);
 
+#ifdef CONFIG_SND_SOC_WCD9320_CONTROL
+		hpwidget = true;
+
+		if (hplanagain_con)
+			taiko_write(codec, TAIKO_A_RX_HPH_L_GAIN, hplanagain);
+		if (hpranagain_con)
+			taiko_write(codec, TAIKO_A_RX_HPH_R_GAIN, hpranagain);
+		if (hpldiggain_con)
+			taiko_write(codec, TAIKO_A_CDC_RX1_VOL_CTL_B2_CTL, hpldiggain);
+		if (hprdiggain_con)
+			taiko_write(codec, TAIKO_A_CDC_RX2_VOL_CTL_B2_CTL, hprdiggain);
+#endif
+
 		break;
 
 	case SND_SOC_DAPM_PRE_PMD:
@@ -3516,6 +3551,10 @@ static int taiko_hph_pa_event(struct snd_soc_dapm_widget *w,
 			wcd9xxx_enable_high_perf_mode(codec, &taiko->clsh_d,
 						req_clsab_state,
 						WCD9XXX_CLSAB_REQ_DISABLE);
+
+#ifdef CONFIG_SND_SOC_WCD9320_CONTROL
+		hpwidget = false;
+#endif
 
 		break;
 	}
@@ -4304,7 +4343,10 @@ static int taiko_volatile(struct snd_soc_codec *ssc, unsigned int reg)
 	return 0;
 }
 
-static int taiko_write(struct snd_soc_codec *codec, unsigned int reg,
+#ifndef CONFIG_SND_SOC_WCD9320_CONTROL
+static 
+#endif
+int taiko_write(struct snd_soc_codec *codec, unsigned int reg,
 	unsigned int value)
 {
 	int ret;
@@ -4324,7 +4366,11 @@ static int taiko_write(struct snd_soc_codec *codec, unsigned int reg,
 
 	return wcd9xxx_reg_write(&wcd9xxx->core_res, reg, value);
 }
-static unsigned int taiko_read(struct snd_soc_codec *codec,
+
+#ifndef CONFIG_SND_SOC_WCD9320_CONTROL
+static 
+#endif
+unsigned int taiko_read(struct snd_soc_codec *codec,
 				unsigned int reg)
 {
 	unsigned int val;
@@ -7102,6 +7148,11 @@ static int taiko_codec_probe(struct snd_soc_codec *codec)
 	}
 
 	taiko->codec = codec;
+
+#ifdef CONFIG_SND_SOC_WCD9320_CONTROL
+	wcd9320_codec = codec;
+#endif
+
 	for (i = 0; i < COMPANDER_MAX; i++) {
 		taiko->comp_enabled[i] = 0;
 		taiko->comp_fs[i] = COMPANDER_FS_48KHZ;

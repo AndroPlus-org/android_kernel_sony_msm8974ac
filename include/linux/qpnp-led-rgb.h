@@ -6,3 +6,4 @@ enum rgb_color
 };
 
 void qpnp_led_rgb_set(enum rgb_color color, int brightness);
+int  qpnp_led_rgb_get(enum rgb_color color);

@@ -1714,6 +1714,28 @@ void qpnp_led_rgb_set(enum rgb_color color, int brightness)
 	schedule_work(&led->work);
 }
 
+int qpnp_led_rgb_get(enum rgb_color color)
+{
+	struct qpnp_led_data *led;
+
+	switch (color) {
+	case COLOR_RED:
+		led = led_rgb_r;
+		break;
+	case COLOR_GREEN:
+		led = led_rgb_g;
+		break;
+	case COLOR_BLUE:
+		led = led_rgb_b;
+		break;
+	default:
+		pr_err("%s: Unknown LED group\n", __func__);
+		return 0;
+	}
+
+	return led->cdev.brightness;
+}
+
 static int __devinit qpnp_led_set_max_brightness(struct qpnp_led_data *led)
 {
 	switch (led->id) {

@@ -163,7 +163,7 @@ static int export_kmsg_logs(void)
 
 	kmsg_size = min(buffer->size, kmsg_size);
 	memcpy(kmsg_buf, buffer->data, kmsg_size);
-	entry = create_proc_entry("last_kmsg",
+	entry = create_proc_entry("last_logs",
 			S_IFREG | S_IRUGO, NULL);
 	if (!entry) {
 		dev_err(dev,

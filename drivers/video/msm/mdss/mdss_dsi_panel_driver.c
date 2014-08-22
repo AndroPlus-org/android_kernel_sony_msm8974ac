@@ -1070,7 +1070,7 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 	}
 
 #ifdef CONFIG_POWERSUSPEND
-	set_power_suspend_state_pannel_hook(POWER_SUSPEND_INACTIVE);
+	set_power_suspend_state_panel_hook(POWER_SUSPEND_INACTIVE);
 #endif
 
 	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata,
@@ -1202,6 +1202,10 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 		ctrl_pdata->panel_data.panel_info.lcdc.v_front_porch =
 			spec_pdata->new_vfp;
 
+#ifdef CONFIG_POWERSUSPEND
+	set_power_suspend_state_panel_hook(POWER_SUSPEND_ACTIVE);
+#endif
+
 	vs_handle.vsync_handler = (mdp_vsync_handler_t)vsync_handler;
 	vs_handle.cmd_post_flush = false;
 	vs_handle.enabled = true;
@@ -1211,10 +1215,6 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 		fpsd.fpks = 0;
 		pr_info("%s: vsyncs_per_ksecs is invalid\n", __func__);
 	}
-
-#ifdef CONFIG_POWERSUSPEND
-	set_power_suspend_state_pannel_hook(POWER_SUSPEND_ACTIVE);
-#endif
 
 	pr_debug("%s: Done\n", __func__);
 

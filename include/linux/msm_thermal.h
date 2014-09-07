@@ -55,11 +55,11 @@ struct msm_thermal_data {
 };
 #endif
 
-#if defined(CONFIG_THERMAL_MONITOR) || defined(CONFIG_INTELLI_THERMAL)
+#if defined(CONFIG_THERMAL_MONITOR) ||\
+    defined(CONFIG_INTELLI_THERMAL) ||\
+    defined(CONFIG_INTELLI_THERMAL_V2)
 extern int msm_thermal_init(struct msm_thermal_data *pdata);
-#ifdef CONFIG_THERMAL_MONITOR
 extern int msm_thermal_device_init(void);
-#endif
 extern int msm_thermal_set_frequency(uint32_t cpu, uint32_t freq,
 	bool is_max);
 #else

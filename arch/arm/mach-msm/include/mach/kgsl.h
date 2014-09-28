@@ -41,7 +41,7 @@
 	 (((_mi) & 0xFF) << 8) | \
 	 ((_pa) & 0xFF))
 
-#ifdef CONFIG_CPU_FREQ_GOV_ELEMENTALX
+#if defined(CONFIG_CPU_FREQ_GOV_ELEMENTALX) || defined(CONFIG_CPU_FREQ_GOV_SLIM)
 extern int graphics_boost;
 #endif
 

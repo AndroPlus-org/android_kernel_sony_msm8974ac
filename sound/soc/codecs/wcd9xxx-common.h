@@ -213,4 +213,6 @@ enum {
 	MAX_CFG_REGISTERS,
 };
 
+extern int high_perf_mode;
+
 #endif

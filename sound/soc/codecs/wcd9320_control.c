@@ -19,7 +19,7 @@
 #include <linux/mfd/wcd9xxx/wcd9320_registers.h>
 #include "wcd9320_control.h"
 
-#define TAIKO_CONTROL_VERSION			"r00"
+#define TAIKO_CONTROL_VERSION			"r02"
 
 struct snd_soc_codec *wcd9320_codec;
 
@@ -50,7 +50,7 @@ static ssize_t version_store(struct kobject *kobj, struct kobj_attribute *attr, 
 }
 static struct kobj_attribute version_interface = __ATTR(version, 0644, version_show, version_store);
 
-static ssize_t hplanagain_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+static ssize_t hplana_gain_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 {
 	u32 vol = taiko_read(wcd9320_codec, TAIKO_A_RX_HPH_L_GAIN) & TAIKO_HPH_VOL_MASK;
 	u32 usr = hplanagain & TAIKO_HPH_VOL_MASK;
@@ -62,7 +62,7 @@ static ssize_t hplanagain_show(struct kobject *kobj, struct kobj_attribute *attr
 	return strlen(buf);
 }
 
-static ssize_t hplanagain_store(struct kobject *kobj, struct kobj_attribute *attr, const char *buf, size_t count)
+static ssize_t hplana_gain_store(struct kobject *kobj, struct kobj_attribute *attr, const char *buf, size_t count)
 {
 	u32 usr;
 
@@ -105,9 +105,9 @@ static ssize_t hplanagain_store(struct kobject *kobj, struct kobj_attribute *att
 
 	return count;
 }
-static struct kobj_attribute hplanagain_interface = __ATTR(hplanagain, 0644, hplanagain_show, hplanagain_store);
+static struct kobj_attribute hplana_gain_interface = __ATTR(hplana_gain, 0644, hplana_gain_show, hplana_gain_store);
 
-static ssize_t hpranagain_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+static ssize_t hprana_gain_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 {
 	u32 vol = taiko_read(wcd9320_codec, TAIKO_A_RX_HPH_R_GAIN) & TAIKO_HPH_VOL_MASK;
 	u32 usr = hpranagain & TAIKO_HPH_VOL_MASK;
@@ -119,7 +119,7 @@ static ssize_t hpranagain_show(struct kobject *kobj, struct kobj_attribute *attr
 	return strlen(buf);
 }
 
-static ssize_t hpranagain_store(struct kobject *kobj, struct kobj_attribute *attr, const char *buf, size_t count)
+static ssize_t hprana_gain_store(struct kobject *kobj, struct kobj_attribute *attr, const char *buf, size_t count)
 {
 	u32 usr;
 
@@ -162,69 +162,72 @@ static ssize_t hpranagain_store(struct kobject *kobj, struct kobj_attribute *att
 
 	return count;
 }
-static struct kobj_attribute hpranagain_interface = __ATTR(hpranagain, 0644, hpranagain_show, hpranagain_store);
+static struct kobj_attribute hprana_gain_interface = __ATTR(hprana_gain, 0644, hprana_gain_show, hprana_gain_store);
 
-#define _RX_VOL_CONTROL(_name, _con, _reg, _wdg)	\
-static ssize_t _name##_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)	\
-{	\
-	u32 reg = taiko_read(wcd9320_codec, _reg);	\
-	u32 usr = _name;	\
-	\
-	sprintf(buf,   "Control: %s\n", _con ? "on" : "off");	\
+#define _RX_VOL_CONTROL(_file, _uval, _con, _reg, _wdg)			\
+static ssize_t _file##_show(struct kobject *kobj, 			\
+	struct kobj_attribute *attr, char *buf)				\
+{									\
+	u32 reg = taiko_read(wcd9320_codec, _reg);			\
+	u32 usr = _uval;						\
+									\
+	sprintf(buf,   "Control: %s\n", _con ? "on" : "off");		\
 	sprintf(buf, "%sRegister: %d (%#04x)\n", buf, reg, reg);	\
-	sprintf(buf, "%sUser: %d (%#04x)\n", buf, usr, usr);	\
-	\
-	return strlen(buf);	\
-}	\
-	\
-static ssize_t _name##_store(struct kobject *kobj, struct kobj_attribute *attr, const char *buf, size_t count)	\
-{	\
-	u32 usr;	\
-	\
-	if (sysfs_streq(buf, "on")) {	\
-		_con = true;	\
-	\
-		if (_wdg)	\
-			taiko_write(wcd9320_codec, _reg, _name);	\
-	\
-		return count;	\
-	}	\
-	\
-	if (sysfs_streq(buf, "off")) {	\
-		_con = false;	\
-	\
-		taiko_write(wcd9320_codec, 	\
-			_reg, 	\
-			_reg##_DEF);	\
-	\
-		return count;	\
-	}	\
-	\
-	if (sscanf(buf, "reg=%x", &usr)) {	\
-		taiko_write(wcd9320_codec, _reg, usr);	\
-	\
-		return count;	\
-	}	\
-	\
-	if (sscanf(buf, "%d", &usr)) {	\
-		if (usr > TAIKO_A_CDC_RXX_VOL_MASK)	\
-			return -EINVAL;	\
-	\
-		_name = usr;	\
-	\
-		if (_wdg && _con)	\
-			taiko_write(wcd9320_codec, _reg, _name);	\
-	\
-		return count;	\
-	}	\
-	\
-	return count;	\
-}	\
-static struct kobj_attribute _name##_interface = __ATTR(_name, 0644, _name##_show, _name##_store);
+	sprintf(buf, "%sUser: %d (%#04x)\n", buf, usr, usr);		\
+									\
+	return strlen(buf);						\
+}									\
+									\
+static ssize_t _file##_store(struct kobject *kobj, 			\
+	struct kobj_attribute *attr, const char *buf, size_t count)	\
+{									\
+	u32 usr;							\
+									\
+	if (sysfs_streq(buf, "on")) {					\
+		_con = true;						\
+									\
+		if (_wdg)						\
+			taiko_write(wcd9320_codec, _reg, _uval);	\
+									\
+		return count;						\
+	}								\
+									\
+	if (sysfs_streq(buf, "off")) {					\
+		_con = false;						\
+									\
+		taiko_write(wcd9320_codec, 				\
+			_reg, 						\
+			_reg##_DEF);					\
+									\
+		return count;						\
+	}								\
+									\
+	if (sscanf(buf, "reg=%x", &usr)) {				\
+		taiko_write(wcd9320_codec, _reg, usr);			\
+									\
+		return count;						\
+	}								\
+									\
+	if (sscanf(buf, "%d", &usr)) {					\
+		if (usr > TAIKO_A_CDC_RXX_VOL_MASK)			\
+			return -EINVAL;					\
+									\
+		_uval = usr;						\
+									\
+		if (_wdg && _con)					\
+			taiko_write(wcd9320_codec, _reg, _uval);	\
+									\
+		return count;						\
+	}								\
+									\
+	return count;							\
+}									\
+static struct kobj_attribute _file##_interface = 			\
+	__ATTR(_file, 0644, _file##_show, _file##_store);
 
-_RX_VOL_CONTROL(hpldiggain, hpldiggain_con, TAIKO_A_CDC_RX1_VOL_CTL_B2_CTL, hpwidget);
-_RX_VOL_CONTROL(hprdiggain, hprdiggain_con, TAIKO_A_CDC_RX2_VOL_CTL_B2_CTL, hpwidget);
-_RX_VOL_CONTROL(spkdiggain, spkdiggain_con, TAIKO_A_CDC_RX7_VOL_CTL_B2_CTL, spkwidget);
+_RX_VOL_CONTROL(hpldig_gain, hpldiggain, hpldiggain_con, TAIKO_A_CDC_RX1_VOL_CTL_B2_CTL, hpwidget);
+_RX_VOL_CONTROL(hprdig_gain, hprdiggain, hprdiggain_con, TAIKO_A_CDC_RX2_VOL_CTL_B2_CTL, hpwidget);
+_RX_VOL_CONTROL(spkdig_gain, spkdiggain, spkdiggain_con, TAIKO_A_CDC_RX7_VOL_CTL_B2_CTL, spkwidget);
 
 static ssize_t spkdrv_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 {
@@ -261,14 +264,66 @@ static ssize_t spkdrv_store(struct kobject *kobj, struct kobj_attribute *attr, c
 }
 static struct kobj_attribute spkdrv_interface = __ATTR(spkdrv, 0644, spkdrv_show, spkdrv_store);
 
+#define _BIAS_CONTROL_(_file, _string, _reg, _por)			\
+static ssize_t _file##_show(struct kobject *kobj, 			\
+	struct kobj_attribute *attr, char *buf)				\
+{									\
+	u32 regval = taiko_read(wcd9320_codec, _reg);			\
+									\
+	sprintf(buf, "%s: %d%% (%#04x:%#04x)\n",			\
+			_string,					\
+			regval * 100 / _por,				\
+			regval,						\
+			_por);						\
+									\
+	return strlen(buf);						\
+}									\
+									\
+static ssize_t _file##_store(struct kobject *kobj, 			\
+	struct kobj_attribute *attr, const char *buf, size_t count)	\
+{									\
+	u32 per;							\
+	u32 regval;							\
+									\
+	if (!sscanf(buf, "%u", &per))					\
+		return -EINVAL;						\
+									\
+	if (per < 0 || per > 100)					\
+		return -EINVAL;						\
+									\
+	regval = (u32)(_por * per / 100);				\
+									\
+	taiko_write(wcd9320_codec, _reg, regval);			\
+									\
+	return count;							\
+}									\
+static struct kobj_attribute _file##_interface = 			\
+	__ATTR(_file, 0644, _file##_show, _file##_store);
+
+_BIAS_CONTROL_(hpdac_bias,   "Headphone DAC PowerBias", 
+		TAIKO_A_RX_HPH_BIAS_PA,  TAIKO_A_RX_HPH_BIAS_PA__POR);
+_BIAS_CONTROL_(hpldo_bias,   "Headphone LDO PowerBias", 
+		TAIKO_A_RX_HPH_BIAS_LDO, TAIKO_A_RX_HPH_BIAS_LDO__POR);
+_BIAS_CONTROL_(eardac_bias,  "Earpiece DAC PowerBias", 
+		TAIKO_A_RX_EAR_BIAS_PA,  TAIKO_A_RX_EAR_BIAS_PA__POR);
+_BIAS_CONTROL_(linedac_bias, "LineOut DAC PowerBias", 
+		TAIKO_A_RX_LINE_BIAS_PA, TAIKO_A_RX_LINE_BIAS_PA__POR);
+_BIAS_CONTROL_(spkdac_bias,  "Speaker DAC PowerBias", 
+		TAIKO_A_SPKR_DRV_BIAS_PA, TAIKO_A_SPKR_DRV_BIAS_PA__POR);
+
 static struct attribute *taiko_control_attrs[] = {
 	&version_interface.attr,
-	&hplanagain_interface.attr,
-	&hpranagain_interface.attr,
-	&hpldiggain_interface.attr,
-	&hprdiggain_interface.attr,
-	&spkdiggain_interface.attr,
+	&hplana_gain_interface.attr,
+	&hprana_gain_interface.attr,
+	&hpldig_gain_interface.attr,
+	&hprdig_gain_interface.attr,
+	&spkdig_gain_interface.attr,
 	&spkdrv_interface.attr,
+	&hpdac_bias_interface.attr,
+	&hpldo_bias_interface.attr,
+	&eardac_bias_interface.attr,
+	&linedac_bias_interface.attr,
+	&spkdac_bias_interface.attr,
 	NULL,
 };
 

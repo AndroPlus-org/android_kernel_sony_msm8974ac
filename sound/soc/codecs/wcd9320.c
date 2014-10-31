@@ -6326,8 +6326,8 @@ static const struct wcd9xxx_reg_mask_val taiko_reg_defaults[] = {
 	TAIKO_REG_VAL(TAIKO_A_CDC_CLK_OTHR_CTL, 0x00),
 	TAIKO_REG_VAL(TAIKO_A_CDC_CONN_MAD, 0x01),
 
-	/* Set HPH Path to low power mode */
-	TAIKO_REG_VAL(TAIKO_A_RX_HPH_BIAS_PA, 0x55),
+	/* Disable low power mode of HPH path */
+	TAIKO_REG_VAL(TAIKO_A_RX_HPH_BIAS_PA, 0xAA),
 
 	/* BUCK default */
 	TAIKO_REG_VAL(WCD9XXX_A_BUCK_CTRL_CCL_4, 0x51),
@@ -7151,6 +7151,10 @@ static int taiko_codec_probe(struct snd_soc_codec *codec)
 
 #ifdef CONFIG_SND_SOC_WCD9320_CONTROL
 	wcd9320_codec = codec;
+
+	pr_info("%s: Chip v%s\n",
+		__func__,
+		TAIKO_IS_1_0(core->version) ? "1.0" : "2.0");
 #endif
 
 	for (i = 0; i < COMPANDER_MAX; i++) {

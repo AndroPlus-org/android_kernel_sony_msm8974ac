@@ -1,1 +1,1 @@
-cmd_drivers/media/platform/msm/camera_v2/ispif/built-in.o :=  /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/media/platform/msm/camera_v2/ispif/built-in.o drivers/media/platform/msm/camera_v2/ispif/msm_ispif.o 
+cmd_drivers/media/platform/msm/camera_v2/ispif/built-in.o :=  /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/media/platform/msm/camera_v2/ispif/built-in.o drivers/media/platform/msm/camera_v2/ispif/msm_ispif.o 

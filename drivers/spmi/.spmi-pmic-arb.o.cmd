@@ -1,4 +1,4 @@
-cmd_drivers/spmi/spmi-pmic-arb.o := /home/dev/Desktop/leo/kernel/scripts/gcc-wrapper.py /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-gcc -Wp,-MD,drivers/spmi/.spmi-pmic-arb.o.d  -nostdinc -isystem /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/include -I/home/dev/Desktop/leo/kernel/arch/arm/include -Iarch/arm/include/generated -Iinclude  -include /home/dev/Desktop/leo/kernel/include/linux/kconfig.h -D__KERNEL__ -mlittle-endian -Iarch/arm/mach-msm/include -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs -fno-strict-aliasing -fno-common -Werror-implicit-function-declaration -Wno-format-security -Wno-maybe-uninitialized -Wno-uninitialized -fno-delete-null-pointer-checks -Os -marm -fno-dwarf2-cfi-asm -fstack-protector -mabi=aapcs-linux -mno-thumb-interwork -funwind-tables -D__LINUX_ARM_ARCH__=7 -mcpu=cortex-a15 -msoft-float -Uarm -Wframe-larger-than=1024 -Wno-unused-but-set-variable -fomit-frame-pointer -g -Wdeclaration-after-statement -Wno-pointer-sign -fno-strict-overflow -fconserve-stack    -D"KBUILD_STR(s)=\#s" -D"KBUILD_BASENAME=KBUILD_STR(spmi_pmic_arb)"  -D"KBUILD_MODNAME=KBUILD_STR(spmi_pmic_arb)" -c -o drivers/spmi/.tmp_spmi-pmic-arb.o drivers/spmi/spmi-pmic-arb.c
+cmd_drivers/spmi/spmi-pmic-arb.o := /home/AndroPlus/Desktop/leo/kernel/scripts/gcc-wrapper.py /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-gcc -Wp,-MD,drivers/spmi/.spmi-pmic-arb.o.d  -nostdinc -isystem /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/include -I/home/AndroPlus/Desktop/leo/kernel/arch/arm/include -Iarch/arm/include/generated -Iinclude  -include /home/AndroPlus/Desktop/leo/kernel/include/linux/kconfig.h -D__KERNEL__ -mlittle-endian -Iarch/arm/mach-msm/include -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs -fno-strict-aliasing -fno-common -Werror-implicit-function-declaration -Wno-format-security -Wno-maybe-uninitialized -Wno-uninitialized -fno-delete-null-pointer-checks -Os -marm -fno-dwarf2-cfi-asm -fstack-protector -mabi=aapcs-linux -mno-thumb-interwork -funwind-tables -D__LINUX_ARM_ARCH__=7 -mcpu=cortex-a15 -msoft-float -Uarm -Wframe-larger-than=1024 -Wno-unused-but-set-variable -fomit-frame-pointer -g -Wdeclaration-after-statement -Wno-pointer-sign -fno-strict-overflow -fconserve-stack    -D"KBUILD_STR(s)=\#s" -D"KBUILD_BASENAME=KBUILD_STR(spmi_pmic_arb)"  -D"KBUILD_MODNAME=KBUILD_STR(spmi_pmic_arb)" -c -o drivers/spmi/.tmp_spmi-pmic-arb.o drivers/spmi/spmi-pmic-arb.c
 
 source_drivers/spmi/spmi-pmic-arb.o := drivers/spmi/spmi-pmic-arb.c
 
@@ -20,7 +20,7 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
     $(wildcard include/config/arch/dma/addr/t/64bit.h) \
     $(wildcard include/config/phys/addr/t/64bit.h) \
     $(wildcard include/config/64bit.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/types.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/types.h \
   include/asm-generic/int-ll64.h \
   arch/arm/include/generated/asm/bitsperlong.h \
   include/asm-generic/bitsperlong.h \
@@ -36,13 +36,13 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
     $(wildcard include/config/arch/supports/optimized/inlining.h) \
     $(wildcard include/config/optimize/inlining.h) \
   include/linux/compiler-gcc4.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/posix_types.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/posix_types.h \
   include/asm-generic/posix_types.h \
-  /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/include/stdarg.h \
+  /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/include/stdarg.h \
   include/linux/linkage.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/linkage.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/linkage.h \
   include/linux/bitops.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/bitops.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/bitops.h \
     $(wildcard include/config/smp.h) \
   include/linux/irqflags.h \
     $(wildcard include/config/trace/irqflags.h) \
@@ -50,11 +50,11 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
     $(wildcard include/config/preempt/tracer.h) \
     $(wildcard include/config/trace/irqflags/support.h) \
   include/linux/typecheck.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/irqflags.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/ptrace.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/irqflags.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/ptrace.h \
     $(wildcard include/config/cpu/endian/be8.h) \
     $(wildcard include/config/arm/thumb.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/hwcap.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/hwcap.h \
   include/asm-generic/bitops/non-atomic.h \
   include/asm-generic/bitops/fls64.h \
   include/asm-generic/bitops/sched.h \
@@ -63,10 +63,10 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
   include/asm-generic/bitops/const_hweight.h \
   include/asm-generic/bitops/lock.h \
   include/asm-generic/bitops/le.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/byteorder.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/byteorder.h \
   include/linux/byteorder/little_endian.h \
   include/linux/swab.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/swab.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/swab.h \
   include/linux/byteorder/generic.h \
   include/asm-generic/bitops/ext2-atomic-setbit.h \
   include/linux/log2.h \
@@ -79,9 +79,9 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
     $(wildcard include/config/modules.h) \
     $(wildcard include/config/hotplug.h) \
   include/linux/dynamic_debug.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/div64.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/compiler.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/bug.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/div64.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/compiler.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/bug.h \
     $(wildcard include/config/bug.h) \
     $(wildcard include/config/thumb2/kernel.h) \
     $(wildcard include/config/debug/bugverbose.h) \
@@ -89,8 +89,8 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
   include/asm-generic/bug.h \
     $(wildcard include/config/generic/bug.h) \
     $(wildcard include/config/generic/bug/relative/pointers.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/delay.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/memory.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/delay.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/memory.h \
     $(wildcard include/config/need/mach/memory/h.h) \
     $(wildcard include/config/mmu.h) \
     $(wildcard include/config/page/offset.h) \
@@ -120,7 +120,7 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
     $(wildcard include/config/flatmem.h) \
     $(wildcard include/config/discontigmem.h) \
     $(wildcard include/config/sparsemem/vmemmap.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/param.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/param.h \
     $(wildcard include/config/hz.h) \
   include/linux/err.h \
   arch/arm/include/generated/asm/errno.h \
@@ -128,7 +128,7 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
   include/asm-generic/errno-base.h \
   include/linux/io.h \
     $(wildcard include/config/has/ioport.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/io.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/io.h \
     $(wildcard include/config/arm/dma/mem/bufferable.h) \
     $(wildcard include/config/need/mach/io/h.h) \
     $(wildcard include/config/pcmcia/soc/common.h) \
@@ -140,16 +140,16 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
     $(wildcard include/config/generic/pci/iomap.h) \
   arch/arm/mach-msm/include/mach/msm_rtb.h \
     $(wildcard include/config/msm/rtb.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/barrier.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/barrier.h \
     $(wildcard include/config/cpu/32v6k.h) \
     $(wildcard include/config/cpu/xsc3.h) \
     $(wildcard include/config/cpu/fa526.h) \
     $(wildcard include/config/arch/has/barriers.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/outercache.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/outercache.h \
     $(wildcard include/config/outer/cache/sync.h) \
     $(wildcard include/config/outer/cache.h) \
   arch/arm/mach-msm/include/mach/io.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/page.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/page.h \
     $(wildcard include/config/cpu/copy/v3.h) \
     $(wildcard include/config/cpu/copy/v4wt.h) \
     $(wildcard include/config/cpu/copy/v4wb.h) \
@@ -161,8 +161,8 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
     $(wildcard include/config/kuser/helpers.h) \
     $(wildcard include/config/have/arch/pfn/valid.h) \
     $(wildcard include/config/memory/hotplug/sparse.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/glue.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/pgtable-2level-types.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/glue.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/pgtable-2level-types.h \
   include/asm-generic/getorder.h \
   include/linux/platform_device.h \
     $(wildcard include/config/suspend.h) \
@@ -192,8 +192,8 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
   include/linux/atomic.h \
     $(wildcard include/config/arch/has/atomic/or.h) \
     $(wildcard include/config/generic/atomic64.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/atomic.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/cmpxchg.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/atomic.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/cmpxchg.h \
     $(wildcard include/config/cpu/sa110.h) \
     $(wildcard include/config/cpu/v6.h) \
   include/asm-generic/cmpxchg-local.h \
@@ -208,27 +208,27 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
     $(wildcard include/config/preempt/notifiers.h) \
   include/linux/thread_info.h \
     $(wildcard include/config/compat.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/thread_info.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/thread_info.h \
     $(wildcard include/config/arm/thumbee.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/fpstate.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/fpstate.h \
     $(wildcard include/config/vfpv3.h) \
     $(wildcard include/config/iwmmxt.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/domain.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/domain.h \
     $(wildcard include/config/verify/permission/fault.h) \
     $(wildcard include/config/io/36.h) \
     $(wildcard include/config/cpu/use/domains.h) \
   include/linux/stringify.h \
   include/linux/bottom_half.h \
   include/linux/spinlock_types.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/spinlock_types.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/spinlock_types.h \
   include/linux/rwlock_types.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/spinlock.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/spinlock.h \
     $(wildcard include/config/msm/krait/wfe/fixup.h) \
     $(wildcard include/config/arm/ticket/locks.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/processor.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/processor.h \
     $(wildcard include/config/have/hw/breakpoint.h) \
     $(wildcard include/config/arm/errata/754327.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/hw_breakpoint.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/hw_breakpoint.h \
   include/linux/rwlock.h \
   include/linux/spinlock_api_smp.h \
     $(wildcard include/config/inline/spin/lock.h) \
@@ -267,7 +267,7 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
     $(wildcard include/config/debug/mutexes.h) \
     $(wildcard include/config/have/arch/mutex/cpu/relax.h) \
   include/linux/wait.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/current.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/current.h \
   include/linux/klist.h \
   include/linux/pinctrl/devinfo.h \
   include/linux/pm.h \
@@ -287,7 +287,7 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
     $(wildcard include/config/arch/uses/gettimeoffset.h) \
   include/linux/cache.h \
     $(wildcard include/config/arch/has/cache/line/size.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/cache.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/cache.h \
     $(wildcard include/config/arm/l1/cache/shift.h) \
     $(wildcard include/config/aeabi.h) \
   include/linux/seqlock.h \
@@ -295,7 +295,7 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
   include/linux/jiffies.h \
   include/linux/timex.h \
   include/linux/param.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/timex.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/timex.h \
   arch/arm/mach-msm/include/mach/timex.h \
     $(wildcard include/config/have/arch/has/current/timer.h) \
   include/linux/debugobjects.h \
@@ -305,7 +305,7 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
     $(wildcard include/config/nr/cpus.h) \
     $(wildcard include/config/base/small.h) \
   include/linux/completion.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/device.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/device.h \
     $(wildcard include/config/dmabounce.h) \
     $(wildcard include/config/iommu/api.h) \
     $(wildcard include/config/arm/dma/use/iommu.h) \
@@ -346,7 +346,7 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
   include/linux/bitmap.h \
   include/linux/string.h \
     $(wildcard include/config/binary/printf.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/string.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/string.h \
   include/linux/pageblock-flags.h \
     $(wildcard include/config/hugetlb/page.h) \
     $(wildcard include/config/hugetlb/page/size/variable.h) \
@@ -382,7 +382,7 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
     $(wildcard include/config/use/percpu/numa/node/id.h) \
   include/linux/smp.h \
     $(wildcard include/config/use/generic/smp/helpers.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/smp.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/smp.h \
   include/linux/percpu.h \
     $(wildcard include/config/need/per/cpu/embed/first/chunk.h) \
     $(wildcard include/config/need/per/cpu/page/first/chunk.h) \
@@ -392,7 +392,7 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
   include/asm-generic/percpu.h \
   include/linux/percpu-defs.h \
     $(wildcard include/config/debug/force/weak/per/cpu.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/topology.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/topology.h \
     $(wildcard include/config/arm/cpu/topology.h) \
   include/asm-generic/topology.h \
   include/linux/mmdebug.h \
@@ -409,7 +409,7 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
     $(wildcard include/config/sparc.h) \
     $(wildcard include/config/of/dynamic.h) \
     $(wildcard include/config/of.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/prom.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/prom.h \
   include/linux/interrupt.h \
     $(wildcard include/config/generic/hardirqs.h) \
     $(wildcard include/config/irq/forced/threading.h) \
@@ -422,8 +422,8 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
     $(wildcard include/config/irq/time/accounting.h) \
   include/linux/ftrace_irq.h \
     $(wildcard include/config/ftrace/nmi/enter.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/hardirq.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/irq.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/hardirq.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/irq.h \
     $(wildcard include/config/sparse/irq.h) \
   include/linux/irq_cpustat.h \
   include/linux/hrtimer.h \
@@ -445,7 +445,7 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
   include/asm-generic/irq_regs.h \
   include/linux/irqdesc.h \
     $(wildcard include/config/irq/preflow/fasteoi.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/hw_irq.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/hw_irq.h \
   include/linux/irqdomain.h \
     $(wildcard include/config/irq/domain.h) \
   include/linux/radix-tree.h \
@@ -458,14 +458,14 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
     $(wildcard include/config/constructors.h) \
     $(wildcard include/config/debug/set/module/ronx.h) \
   include/linux/stat.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/stat.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/stat.h \
   include/linux/kmod.h \
   include/linux/sysctl.h \
     $(wildcard include/config/sysctl.h) \
   include/linux/elf.h \
   include/linux/elf-em.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/elf.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/user.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/elf.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/user.h \
   include/linux/moduleparam.h \
     $(wildcard include/config/alpha.h) \
     $(wildcard include/config/ia64.h) \
@@ -477,7 +477,7 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
   include/linux/export.h \
     $(wildcard include/config/symbol/prefix.h) \
     $(wildcard include/config/modversions.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/module.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/module.h \
     $(wildcard include/config/arm/unwind.h) \
   include/linux/seq_file.h \
   include/linux/syscore_ops.h \
@@ -529,7 +529,7 @@ deps_drivers/spmi/spmi-pmic-arb.o := \
   include/linux/dqblk_qtree.h \
   include/linux/nfs_fs_i.h \
   include/linux/fcntl.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/fcntl.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/fcntl.h \
   include/asm-generic/fcntl.h \
 
 drivers/spmi/spmi-pmic-arb.o: $(deps_drivers/spmi/spmi-pmic-arb.o)

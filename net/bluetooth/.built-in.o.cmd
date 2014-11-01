@@ -1,1 +1,1 @@
-cmd_net/bluetooth/built-in.o :=  /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o net/bluetooth/built-in.o net/bluetooth/bluetooth.o net/bluetooth/rfcomm/built-in.o net/bluetooth/bnep/built-in.o net/bluetooth/hidp/built-in.o 
+cmd_net/bluetooth/built-in.o :=  /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o net/bluetooth/built-in.o net/bluetooth/bluetooth.o net/bluetooth/rfcomm/built-in.o net/bluetooth/bnep/built-in.o net/bluetooth/hidp/built-in.o 

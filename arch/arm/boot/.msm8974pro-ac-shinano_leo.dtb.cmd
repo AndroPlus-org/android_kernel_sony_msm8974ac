@@ -1,4 +1,4 @@
-cmd_arch/arm/boot/msm8974pro-ac-shinano_leo.dtb := /home/dev/Desktop/leo/kernel/scripts/dtc/dtc -O dtb -o arch/arm/boot/msm8974pro-ac-shinano_leo.dtb -b 0  -d arch/arm/boot/.msm8974pro-ac-shinano_leo.dtb.d arch/arm/boot/dts/msm8974pro-ac-shinano_leo.dts
+cmd_arch/arm/boot/msm8974pro-ac-shinano_leo.dtb := /home/AndroPlus/Desktop/leo/kernel/scripts/dtc/dtc -O dtb -o arch/arm/boot/msm8974pro-ac-shinano_leo.dtb -b 0  -d arch/arm/boot/.msm8974pro-ac-shinano_leo.dtb.d arch/arm/boot/dts/msm8974pro-ac-shinano_leo.dts
 
 source_arch/arm/boot/msm8974pro-ac-shinano_leo.dtb := arch/arm/boot/dts/msm8974pro-ac-shinano_leo.dts
 

@@ -13,14 +13,14 @@
 @	compiled by GNU C version 4.5.2, GMP version 5.0.2, MPFR version 3.0.1-p4, MPC version 0.9
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I /home/dev/Desktop/leo/kernel/arch/arm/include
+@ -I /home/AndroPlus/Desktop/leo/kernel/arch/arm/include
 @ -I arch/arm/include/generated -I include -I arch/arm/mach-msm/include
-@ -iprefix /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/
+@ -iprefix /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/
 @ -D__USES_INITFINI__ -D __KERNEL__ -D __LINUX_ARM_ARCH__=7 -U arm
 @ -D KBUILD_STR(s)=#s -D KBUILD_BASENAME=KBUILD_STR(bounds)
 @ -D KBUILD_MODNAME=KBUILD_STR(bounds)
-@ -isystem /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/include
-@ -include /home/dev/Desktop/leo/kernel/include/linux/kconfig.h
+@ -isystem /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/include
+@ -include /home/AndroPlus/Desktop/leo/kernel/include/linux/kconfig.h
 @ -MD kernel/.bounds.s.d kernel/bounds.c -mlittle-endian -marm
 @ -mabi=aapcs-linux -mno-thumb-interwork -mcpu=cortex-a15 -msoft-float
 @ -mfpu=vfp -auxbase-strip kernel/bounds.s -g -Os -Wall -Wundef
@@ -483,12 +483,12 @@ foo:
 	.ascii	"zone_type\000"
 .LASF7:
 	.ascii	"long unsigned int\000"
+.LASF52:
+	.ascii	"/home/AndroPlus/Desktop/leo/kernel\000"
 .LASF3:
 	.ascii	"short unsigned int\000"
 .LASF30:
 	.ascii	"PG_swapbacked\000"
-.LASF38:
-	.ascii	"PG_savepinned\000"
 .LASF35:
 	.ascii	"PG_checked\000"
 .LASF1:
@@ -497,8 +497,6 @@ foo:
 	.ascii	"kernel/bounds.c\000"
 .LASF26:
 	.ascii	"PG_tail\000"
-.LASF52:
-	.ascii	"/home/dev/Desktop/leo/kernel\000"
 .LASF33:
 	.ascii	"PG_readahead\000"
 .LASF40:
@@ -515,6 +513,8 @@ foo:
 	.ascii	"long long unsigned int\000"
 .LASF37:
 	.ascii	"PG_pinned\000"
+.LASF18:
+	.ascii	"PG_slab\000"
 .LASF19:
 	.ascii	"PG_owner_priv_1\000"
 .LASF17:
@@ -529,8 +529,8 @@ foo:
 	.ascii	"char\000"
 .LASF31:
 	.ascii	"PG_unevictable\000"
-.LASF18:
-	.ascii	"PG_slab\000"
+.LASF38:
+	.ascii	"PG_savepinned\000"
 .LASF2:
 	.ascii	"short int\000"
 .LASF47:

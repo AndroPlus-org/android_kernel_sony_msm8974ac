@@ -1,4 +1,4 @@
-cmd_scripts/bin2c := gcc -Wp,-MD,scripts/.bin2c.d -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer   -I/home/dev/Desktop/leo/kernel/tools/include  -o scripts/bin2c scripts/bin2c.c  
+cmd_scripts/bin2c := gcc -Wp,-MD,scripts/.bin2c.d -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer   -I/home/AndroPlus/Desktop/leo/kernel/tools/include  -o scripts/bin2c scripts/bin2c.c  
 
 source_scripts/bin2c := scripts/bin2c.c
 

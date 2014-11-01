@@ -1,4 +1,4 @@
-cmd_lib/kstrtox.o := /home/dev/Desktop/leo/kernel/scripts/gcc-wrapper.py /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-gcc -Wp,-MD,lib/.kstrtox.o.d  -nostdinc -isystem /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/include -I/home/dev/Desktop/leo/kernel/arch/arm/include -Iarch/arm/include/generated -Iinclude  -include /home/dev/Desktop/leo/kernel/include/linux/kconfig.h -D__KERNEL__ -mlittle-endian -Iarch/arm/mach-msm/include -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs -fno-strict-aliasing -fno-common -Werror-implicit-function-declaration -Wno-format-security -Wno-maybe-uninitialized -Wno-uninitialized -fno-delete-null-pointer-checks -Os -marm -fno-dwarf2-cfi-asm -fstack-protector -mabi=aapcs-linux -mno-thumb-interwork -funwind-tables -D__LINUX_ARM_ARCH__=7 -mcpu=cortex-a15 -msoft-float -Uarm -Wframe-larger-than=1024 -Wno-unused-but-set-variable -fomit-frame-pointer -g -Wdeclaration-after-statement -Wno-pointer-sign -fno-strict-overflow -fconserve-stack    -D"KBUILD_STR(s)=\#s" -D"KBUILD_BASENAME=KBUILD_STR(kstrtox)"  -D"KBUILD_MODNAME=KBUILD_STR(kstrtox)" -c -o lib/.tmp_kstrtox.o lib/kstrtox.c
+cmd_lib/kstrtox.o := /home/AndroPlus/Desktop/leo/kernel/scripts/gcc-wrapper.py /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-gcc -Wp,-MD,lib/.kstrtox.o.d  -nostdinc -isystem /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/include -I/home/AndroPlus/Desktop/leo/kernel/arch/arm/include -Iarch/arm/include/generated -Iinclude  -include /home/AndroPlus/Desktop/leo/kernel/include/linux/kconfig.h -D__KERNEL__ -mlittle-endian -Iarch/arm/mach-msm/include -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs -fno-strict-aliasing -fno-common -Werror-implicit-function-declaration -Wno-format-security -Wno-maybe-uninitialized -Wno-uninitialized -fno-delete-null-pointer-checks -Os -marm -fno-dwarf2-cfi-asm -fstack-protector -mabi=aapcs-linux -mno-thumb-interwork -funwind-tables -D__LINUX_ARM_ARCH__=7 -mcpu=cortex-a15 -msoft-float -Uarm -Wframe-larger-than=1024 -Wno-unused-but-set-variable -fomit-frame-pointer -g -Wdeclaration-after-statement -Wno-pointer-sign -fno-strict-overflow -fconserve-stack    -D"KBUILD_STR(s)=\#s" -D"KBUILD_BASENAME=KBUILD_STR(kstrtox)"  -D"KBUILD_MODNAME=KBUILD_STR(kstrtox)" -c -o lib/.tmp_kstrtox.o lib/kstrtox.c
 
 source_lib/kstrtox.o := lib/kstrtox.c
 
@@ -24,7 +24,7 @@ deps_lib/kstrtox.o := \
     $(wildcard include/config/arch/dma/addr/t/64bit.h) \
     $(wildcard include/config/phys/addr/t/64bit.h) \
     $(wildcard include/config/64bit.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/types.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/types.h \
   include/asm-generic/int-ll64.h \
   arch/arm/include/generated/asm/bitsperlong.h \
   include/asm-generic/bitsperlong.h \
@@ -40,13 +40,13 @@ deps_lib/kstrtox.o := \
     $(wildcard include/config/arch/supports/optimized/inlining.h) \
     $(wildcard include/config/optimize/inlining.h) \
   include/linux/compiler-gcc4.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/posix_types.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/posix_types.h \
   include/asm-generic/posix_types.h \
-  /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/include/stdarg.h \
+  /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/include/stdarg.h \
   include/linux/linkage.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/linkage.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/linkage.h \
   include/linux/bitops.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/bitops.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/bitops.h \
     $(wildcard include/config/smp.h) \
   include/linux/irqflags.h \
     $(wildcard include/config/trace/irqflags.h) \
@@ -54,11 +54,11 @@ deps_lib/kstrtox.o := \
     $(wildcard include/config/preempt/tracer.h) \
     $(wildcard include/config/trace/irqflags/support.h) \
   include/linux/typecheck.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/irqflags.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/ptrace.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/irqflags.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/ptrace.h \
     $(wildcard include/config/cpu/endian/be8.h) \
     $(wildcard include/config/arm/thumb.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/hwcap.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/hwcap.h \
   include/asm-generic/bitops/non-atomic.h \
   include/asm-generic/bitops/fls64.h \
   include/asm-generic/bitops/sched.h \
@@ -67,10 +67,10 @@ deps_lib/kstrtox.o := \
   include/asm-generic/bitops/const_hweight.h \
   include/asm-generic/bitops/lock.h \
   include/asm-generic/bitops/le.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/byteorder.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/byteorder.h \
   include/linux/byteorder/little_endian.h \
   include/linux/swab.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/swab.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/swab.h \
   include/linux/byteorder/generic.h \
   include/asm-generic/bitops/ext2-atomic-setbit.h \
   include/linux/log2.h \
@@ -83,9 +83,9 @@ deps_lib/kstrtox.o := \
     $(wildcard include/config/modules.h) \
     $(wildcard include/config/hotplug.h) \
   include/linux/dynamic_debug.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/div64.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/compiler.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/bug.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/div64.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/compiler.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/bug.h \
     $(wildcard include/config/bug.h) \
     $(wildcard include/config/thumb2/kernel.h) \
     $(wildcard include/config/debug/bugverbose.h) \
@@ -98,32 +98,32 @@ deps_lib/kstrtox.o := \
     $(wildcard include/config/symbol/prefix.h) \
     $(wildcard include/config/modversions.h) \
     $(wildcard include/config/unused/symbols.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/uaccess.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/uaccess.h \
     $(wildcard include/config/mmu.h) \
     $(wildcard include/config/cpu/use/domains.h) \
   include/linux/string.h \
     $(wildcard include/config/binary/printf.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/string.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/string.h \
   include/linux/thread_info.h \
     $(wildcard include/config/compat.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/thread_info.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/thread_info.h \
     $(wildcard include/config/arm/thumbee.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/fpstate.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/fpstate.h \
     $(wildcard include/config/vfpv3.h) \
     $(wildcard include/config/iwmmxt.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/domain.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/domain.h \
     $(wildcard include/config/verify/permission/fault.h) \
     $(wildcard include/config/io/36.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/barrier.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/barrier.h \
     $(wildcard include/config/cpu/32v6k.h) \
     $(wildcard include/config/cpu/xsc3.h) \
     $(wildcard include/config/cpu/fa526.h) \
     $(wildcard include/config/arch/has/barriers.h) \
     $(wildcard include/config/arm/dma/mem/bufferable.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/outercache.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/outercache.h \
     $(wildcard include/config/outer/cache/sync.h) \
     $(wildcard include/config/outer/cache.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/memory.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/memory.h \
     $(wildcard include/config/need/mach/memory/h.h) \
     $(wildcard include/config/page/offset.h) \
     $(wildcard include/config/highmem.h) \
@@ -152,7 +152,7 @@ deps_lib/kstrtox.o := \
     $(wildcard include/config/flatmem.h) \
     $(wildcard include/config/discontigmem.h) \
     $(wildcard include/config/sparsemem/vmemmap.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/unified.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/unified.h \
     $(wildcard include/config/arm/asm/unified.h) \
   lib/kstrtox.h \
 

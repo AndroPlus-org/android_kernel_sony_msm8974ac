@@ -1,4 +1,4 @@
-cmd_arch/arm/boot/compressed/head.o := /home/dev/Desktop/leo/kernel/scripts/gcc-wrapper.py /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-gcc -Wp,-MD,arch/arm/boot/compressed/.head.o.d  -nostdinc -isystem /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/include -I/home/dev/Desktop/leo/kernel/arch/arm/include -Iarch/arm/include/generated -Iinclude  -include /home/dev/Desktop/leo/kernel/include/linux/kconfig.h -D__KERNEL__ -mlittle-endian -Iarch/arm/mach-msm/include -D__ASSEMBLY__ -mabi=aapcs-linux -mno-thumb-interwork -funwind-tables  -D__LINUX_ARM_ARCH__=7 -mcpu=cortex-a15  -include asm/unified.h -msoft-float -gdwarf-2    -Wa,-march=all  -DTEXT_OFFSET=0x00008000   -c -o arch/arm/boot/compressed/head.o arch/arm/boot/compressed/head.S
+cmd_arch/arm/boot/compressed/head.o := /home/AndroPlus/Desktop/leo/kernel/scripts/gcc-wrapper.py /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-gcc -Wp,-MD,arch/arm/boot/compressed/.head.o.d  -nostdinc -isystem /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/include -I/home/AndroPlus/Desktop/leo/kernel/arch/arm/include -Iarch/arm/include/generated -Iinclude  -include /home/AndroPlus/Desktop/leo/kernel/include/linux/kconfig.h -D__KERNEL__ -mlittle-endian -Iarch/arm/mach-msm/include -D__ASSEMBLY__ -mabi=aapcs-linux -mno-thumb-interwork -funwind-tables  -D__LINUX_ARM_ARCH__=7 -mcpu=cortex-a15  -include asm/unified.h -msoft-float -gdwarf-2    -Wa,-march=all  -DTEXT_OFFSET=0x00008000   -c -o arch/arm/boot/compressed/head.o arch/arm/boot/compressed/head.S
 
 source_arch/arm/boot/compressed/head.o := arch/arm/boot/compressed/head.S
 
@@ -24,7 +24,7 @@ deps_arch/arm/boot/compressed/head.o := \
     $(wildcard include/config/thumb2/kernel.h) \
     $(wildcard include/config/processor/id.h) \
     $(wildcard include/config/cpu/feroceon/old/id.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/unified.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/unified.h \
     $(wildcard include/config/arm/asm/unified.h) \
   include/linux/linkage.h \
   include/linux/compiler.h \
@@ -33,7 +33,7 @@ deps_arch/arm/boot/compressed/head.o := \
     $(wildcard include/config/profile/all/branches.h) \
     $(wildcard include/config/enable/must/check.h) \
     $(wildcard include/config/enable/warn/deprecated.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/linkage.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/linkage.h \
 
 arch/arm/boot/compressed/head.o: $(deps_arch/arm/boot/compressed/head.o)
 

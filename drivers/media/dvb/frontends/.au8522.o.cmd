@@ -1,1 +1,1 @@
-cmd_drivers/media/dvb/frontends/au8522.o := /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/media/dvb/frontends/au8522.o drivers/media/dvb/frontends/au8522_dig.o drivers/media/dvb/frontends/au8522_decoder.o 
+cmd_drivers/media/dvb/frontends/au8522.o := /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/media/dvb/frontends/au8522.o drivers/media/dvb/frontends/au8522_dig.o drivers/media/dvb/frontends/au8522_decoder.o 

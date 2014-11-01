@@ -1,1 +1,1 @@
-cmd_drivers/media/platform/msm/camera_v2/sensor/eeprom/built-in.o :=  /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/media/platform/msm/camera_v2/sensor/eeprom/built-in.o drivers/media/platform/msm/camera_v2/sensor/eeprom/msm_eeprom.o 
+cmd_drivers/media/platform/msm/camera_v2/sensor/eeprom/built-in.o :=  /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/media/platform/msm/camera_v2/sensor/eeprom/built-in.o drivers/media/platform/msm/camera_v2/sensor/eeprom/msm_eeprom.o 

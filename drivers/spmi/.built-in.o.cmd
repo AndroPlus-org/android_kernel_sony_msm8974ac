@@ -1,1 +1,1 @@
-cmd_drivers/spmi/built-in.o :=  /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/spmi/built-in.o drivers/spmi/spmi.o drivers/spmi/spmi-resources.o drivers/spmi/spmi-pmic-arb.o drivers/spmi/qpnp-int.o drivers/spmi/spmi-dbgfs.o 
+cmd_drivers/spmi/built-in.o :=  /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/spmi/built-in.o drivers/spmi/spmi.o drivers/spmi/spmi-resources.o drivers/spmi/spmi-pmic-arb.o drivers/spmi/qpnp-int.o drivers/spmi/spmi-dbgfs.o 

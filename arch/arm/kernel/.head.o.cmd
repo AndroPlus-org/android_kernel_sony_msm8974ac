@@ -1,4 +1,4 @@
-cmd_arch/arm/kernel/head.o := /home/dev/Desktop/leo/kernel/scripts/gcc-wrapper.py /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-gcc -Wp,-MD,arch/arm/kernel/.head.o.d  -nostdinc -isystem /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/include -I/home/dev/Desktop/leo/kernel/arch/arm/include -Iarch/arm/include/generated -Iinclude  -include /home/dev/Desktop/leo/kernel/include/linux/kconfig.h -D__KERNEL__ -mlittle-endian -Iarch/arm/mach-msm/include -D__ASSEMBLY__ -mabi=aapcs-linux -mno-thumb-interwork -funwind-tables  -D__LINUX_ARM_ARCH__=7 -mcpu=cortex-a15  -include asm/unified.h -msoft-float -gdwarf-2     -DTEXT_OFFSET=0x00008000   -c -o arch/arm/kernel/head.o arch/arm/kernel/head.S
+cmd_arch/arm/kernel/head.o := /home/AndroPlus/Desktop/leo/kernel/scripts/gcc-wrapper.py /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-gcc -Wp,-MD,arch/arm/kernel/.head.o.d  -nostdinc -isystem /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/include -I/home/AndroPlus/Desktop/leo/kernel/arch/arm/include -Iarch/arm/include/generated -Iinclude  -include /home/AndroPlus/Desktop/leo/kernel/include/linux/kconfig.h -D__KERNEL__ -mlittle-endian -Iarch/arm/mach-msm/include -D__ASSEMBLY__ -mabi=aapcs-linux -mno-thumb-interwork -funwind-tables  -D__LINUX_ARM_ARCH__=7 -mcpu=cortex-a15  -include asm/unified.h -msoft-float -gdwarf-2     -DTEXT_OFFSET=0x00008000   -c -o arch/arm/kernel/head.o arch/arm/kernel/head.S
 
 source_arch/arm/kernel/head.o := arch/arm/kernel/head.S
 
@@ -21,7 +21,7 @@ deps_arch/arm/kernel/head.o := \
     $(wildcard include/config/cpu/icache/disable.h) \
     $(wildcard include/config/arch/msm/krait.h) \
     $(wildcard include/config/thumb2/kernel.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/unified.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/unified.h \
     $(wildcard include/config/arm/asm/unified.h) \
   include/linux/linkage.h \
   include/linux/compiler.h \
@@ -30,7 +30,7 @@ deps_arch/arm/kernel/head.o := \
     $(wildcard include/config/profile/all/branches.h) \
     $(wildcard include/config/enable/must/check.h) \
     $(wildcard include/config/enable/warn/deprecated.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/linkage.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/linkage.h \
   include/linux/init.h \
     $(wildcard include/config/modules.h) \
     $(wildcard include/config/hotplug.h) \
@@ -40,31 +40,31 @@ deps_arch/arm/kernel/head.o := \
     $(wildcard include/config/arch/dma/addr/t/64bit.h) \
     $(wildcard include/config/phys/addr/t/64bit.h) \
     $(wildcard include/config/64bit.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/types.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/types.h \
   include/asm-generic/int-ll64.h \
   arch/arm/include/generated/asm/bitsperlong.h \
   include/asm-generic/bitsperlong.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/assembler.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/assembler.h \
     $(wildcard include/config/cpu/feroceon.h) \
     $(wildcard include/config/trace/irqflags.h) \
     $(wildcard include/config/cpu/use/domains.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/ptrace.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/ptrace.h \
     $(wildcard include/config/cpu/endian/be8.h) \
     $(wildcard include/config/arm/thumb.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/hwcap.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/domain.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/hwcap.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/domain.h \
     $(wildcard include/config/verify/permission/fault.h) \
     $(wildcard include/config/io/36.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/cp15.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/barrier.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/cp15.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/barrier.h \
     $(wildcard include/config/cpu/32v6k.h) \
     $(wildcard include/config/cpu/xsc3.h) \
     $(wildcard include/config/cpu/fa526.h) \
     $(wildcard include/config/arch/has/barriers.h) \
     $(wildcard include/config/arm/dma/mem/bufferable.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/asm-offsets.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/asm-offsets.h \
   include/generated/asm-offsets.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/memory.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/memory.h \
     $(wildcard include/config/need/mach/memory/h.h) \
     $(wildcard include/config/mmu.h) \
     $(wildcard include/config/page/offset.h) \
@@ -92,15 +92,15 @@ deps_arch/arm/kernel/head.o := \
     $(wildcard include/config/flatmem.h) \
     $(wildcard include/config/discontigmem.h) \
     $(wildcard include/config/sparsemem/vmemmap.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/thread_info.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/thread_info.h \
     $(wildcard include/config/arm/thumbee.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/fpstate.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/fpstate.h \
     $(wildcard include/config/vfpv3.h) \
     $(wildcard include/config/iwmmxt.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/pgtable.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/pgtable.h \
     $(wildcard include/config/highpte.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/proc-fns.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/glue-proc.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/proc-fns.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/glue-proc.h \
     $(wildcard include/config/cpu/arm610.h) \
     $(wildcard include/config/cpu/arm7tdmi.h) \
     $(wildcard include/config/cpu/arm710.h) \
@@ -124,8 +124,8 @@ deps_arch/arm/kernel/head.o := \
     $(wildcard include/config/cpu/v6.h) \
     $(wildcard include/config/cpu/v6k.h) \
     $(wildcard include/config/cpu/v7.h) \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/glue.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/page.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/glue.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/page.h \
     $(wildcard include/config/cpu/copy/v3.h) \
     $(wildcard include/config/cpu/copy/v4wt.h) \
     $(wildcard include/config/cpu/copy/v4wb.h) \
@@ -137,9 +137,9 @@ deps_arch/arm/kernel/head.o := \
     $(wildcard include/config/memory/hotplug/sparse.h) \
   include/asm-generic/getorder.h \
   include/asm-generic/pgtable-nopud.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/pgtable-hwdef.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/pgtable-2level-hwdef.h \
-  /home/dev/Desktop/leo/kernel/arch/arm/include/asm/pgtable-2level.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/pgtable-hwdef.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/pgtable-2level-hwdef.h \
+  /home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/pgtable-2level.h \
   arch/arm/kernel/head-common.S \
     $(wildcard include/config/cpu/big/endian.h) \
     $(wildcard include/config/of/flattree.h) \

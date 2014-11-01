@@ -13,14 +13,14 @@
 @	compiled by GNU C version 4.5.2, GMP version 5.0.2, MPFR version 3.0.1-p4, MPC version 0.9
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc
-@ -I /home/dev/Desktop/leo/kernel/arch/arm/include
+@ -I /home/AndroPlus/Desktop/leo/kernel/arch/arm/include
 @ -I arch/arm/include/generated -I include -I arch/arm/mach-msm/include
-@ -iprefix /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/
+@ -iprefix /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/
 @ -D__USES_INITFINI__ -D __KERNEL__ -D __LINUX_ARM_ARCH__=7 -U arm
 @ -D KBUILD_STR(s)=#s -D KBUILD_BASENAME=KBUILD_STR(asm_offsets)
 @ -D KBUILD_MODNAME=KBUILD_STR(asm_offsets)
-@ -isystem /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/include
-@ -include /home/dev/Desktop/leo/kernel/include/linux/kconfig.h
+@ -isystem /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/../lib/gcc/arm-eabi/4.6.2/include
+@ -include /home/AndroPlus/Desktop/leo/kernel/include/linux/kconfig.h
 @ -MD arch/arm/kernel/.asm-offsets.s.d arch/arm/kernel/asm-offsets.c
 @ -mlittle-endian -marm -mabi=aapcs-linux -mno-thumb-interwork
 @ -mcpu=cortex-a15 -msoft-float -mfpu=vfp
@@ -428,9 +428,9 @@ main:
 	.file 5 "include/linux/capability.h"
 	.file 6 "include/linux/time.h"
 	.file 7 "include/linux/sched.h"
-	.file 8 "/home/dev/Desktop/leo/kernel/arch/arm/include/asm/spinlock_types.h"
+	.file 8 "/home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/spinlock_types.h"
 	.file 9 "include/linux/spinlock_types.h"
-	.file 10 "/home/dev/Desktop/leo/kernel/arch/arm/include/asm/processor.h"
+	.file 10 "/home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/processor.h"
 	.file 11 "include/asm-generic/atomic-long.h"
 	.file 12 "include/linux/rbtree.h"
 	.file 13 "include/linux/cpumask.h"
@@ -439,12 +439,12 @@ main:
 	.file 16 "include/linux/wait.h"
 	.file 17 "include/linux/completion.h"
 	.file 18 "include/linux/mm_types.h"
-	.file 19 "/home/dev/Desktop/leo/kernel/arch/arm/include/asm/pgtable-2level-types.h"
-	.file 20 "/home/dev/Desktop/leo/kernel/arch/arm/include/asm/mmu.h"
+	.file 19 "/home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/pgtable-2level-types.h"
+	.file 20 "/home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/mmu.h"
 	.file 21 "include/linux/mm.h"
 	.file 22 "include/asm-generic/cputime.h"
 	.file 23 "include/linux/sem.h"
-	.file 24 "/home/dev/Desktop/leo/kernel/arch/arm/include/asm/signal.h"
+	.file 24 "/home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/signal.h"
 	.file 25 "include/asm-generic/signal-defs.h"
 	.file 26 "include/asm-generic/siginfo.h"
 	.file 27 "include/linux/signal.h"
@@ -473,22 +473,22 @@ main:
 	.file 50 "include/linux/pm.h"
 	.file 51 "include/linux/device.h"
 	.file 52 "include/linux/pm_wakeup.h"
-	.file 53 "/home/dev/Desktop/leo/kernel/arch/arm/include/asm/device.h"
+	.file 53 "/home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/device.h"
 	.file 54 "include/linux/dma-mapping.h"
 	.file 55 "include/linux/dma-attrs.h"
 	.file 56 "include/linux/dma-direction.h"
 	.file 57 "include/asm-generic/scatterlist.h"
-	.file 58 "/home/dev/Desktop/leo/kernel/arch/arm/include/asm/cacheflush.h"
-	.file 59 "/home/dev/Desktop/leo/kernel/arch/arm/include/asm/hwcap.h"
+	.file 58 "/home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/cacheflush.h"
+	.file 59 "/home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/hwcap.h"
 	.file 60 "include/linux/printk.h"
 	.file 61 "include/linux/kernel.h"
-	.file 62 "/home/dev/Desktop/leo/kernel/arch/arm/include/asm/spinlock.h"
+	.file 62 "/home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/spinlock.h"
 	.file 63 "include/linux/bug.h"
 	.file 64 "include/asm-generic/percpu.h"
 	.file 65 "include/linux/percpu_counter.h"
 	.file 66 "include/linux/debug_locks.h"
-	.file 67 "/home/dev/Desktop/leo/kernel/arch/arm/include/asm/dma-mapping.h"
-	.file 68 "/home/dev/Desktop/leo/kernel/arch/arm/include/asm/cachetype.h"
+	.file 67 "/home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/dma-mapping.h"
+	.file 68 "/home/AndroPlus/Desktop/leo/kernel/arch/arm/include/asm/cachetype.h"
 	.section	.debug_info,"",%progbits
 .Ldebug_info0:
 	.4byte	0x5451
@@ -12485,6 +12485,8 @@ main:
 	.ascii	"raw_lock\000"
 .LASF209:
 	.ascii	"cpumask_t\000"
+.LASF459:
+	.ascii	"zoneref\000"
 .LASF752:
 	.ascii	"read\000"
 .LASF548:
@@ -12519,8 +12521,6 @@ main:
 	.ascii	"counter\000"
 .LASF695:
 	.ascii	"prev_sum_exec_runtime\000"
-.LASF1000:
-	.ascii	"/home/dev/Desktop/leo/kernel\000"
 .LASF87:
 	.ascii	"exit_signal\000"
 .LASF893:
@@ -13759,8 +13759,8 @@ main:
 	.ascii	"maxrss\000"
 .LASF10:
 	.ascii	"char\000"
-.LASF459:
-	.ascii	"zoneref\000"
+.LASF1000:
+	.ascii	"/home/AndroPlus/Desktop/leo/kernel\000"
 .LASF472:
 	.ascii	"prio_list\000"
 .LASF674:

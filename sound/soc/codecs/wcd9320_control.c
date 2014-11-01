@@ -23,6 +23,8 @@
 
 struct snd_soc_codec *wcd9320_codec;
 
+int  uhqa_mode = 1;
+
 bool hplanagain_con = false;
 bool hpranagain_con = false;
 bool hpldiggain_con = false;
@@ -311,6 +313,41 @@ _BIAS_CONTROL_(linedac_bias, "LineOut DAC PowerBias",
 _BIAS_CONTROL_(spkdac_bias,  "Speaker DAC PowerBias", 
 		TAIKO_A_SPKR_DRV_BIAS_PA, TAIKO_A_SPKR_DRV_BIAS_PA__POR);
 
+static ssize_t hph_uhqa_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+{
+	sprintf(buf, "Ultra High Quality Audio Mode: %s\n", uhqa_mode ? "on" : "off");
+
+	return strlen(buf);
+}
+
+static ssize_t hph_uhqa_store(struct kobject *kobj, struct kobj_attribute *attr, const char *buf, size_t count)
+{
+	if (sysfs_streq(buf, "on")) {
+		/*
+		 * Need to restart HPH to trigger dapm events to update ClassH state
+		 */
+		uhqa_mode = 1;
+
+		if (hpwidget) {
+			taiko_write(wcd9320_codec, TAIKO_A_RX_HPH_L_PA_CTL, 0x48);
+			taiko_write(wcd9320_codec, TAIKO_A_RX_HPH_R_PA_CTL, 0x48);
+			taiko_write(wcd9320_codec, TAIKO_A_RX_HPH_BIAS_PA,  0xAA);
+			snd_soc_update_bits(wcd9320_codec, TAIKO_A_RX_HPH_CHOP_CTL, 0x20, 0x00);
+		}
+
+		return count;
+	}
+
+	if (sysfs_streq(buf, "off")) {
+		uhqa_mode = 0;
+
+		return count;
+	}
+
+	return -EINVAL;
+}
+static struct kobj_attribute hph_uhqa_interface = __ATTR(hph_uhqa, 0644, hph_uhqa_show, hph_uhqa_store);
+
 static struct attribute *taiko_control_attrs[] = {
 	&version_interface.attr,
 	&hplana_gain_interface.attr,
@@ -324,6 +361,7 @@ static struct attribute *taiko_control_attrs[] = {
 	&eardac_bias_interface.attr,
 	&linedac_bias_interface.attr,
 	&spkdac_bias_interface.attr,
+	&hph_uhqa_interface.attr,
 	NULL,
 };
 

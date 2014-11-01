@@ -66,10 +66,6 @@ static atomic_t kp_taiko_priv;
 static int spkr_drv_wrnd_param_set(const char *val,
 				   const struct kernel_param *kp);
 static int spkr_drv_wrnd = 1;
-static int high_perf_mode;
-module_param(high_perf_mode, int,
-			S_IRUGO | S_IWUSR | S_IWGRP);
-MODULE_PARM_DESC(high_perf_mode, "enable/disable class AB config for hph");
 
 static struct kernel_param_ops spkr_drv_wrnd_param_ops = {
 	.set = spkr_drv_wrnd_param_set,
@@ -3282,14 +3278,14 @@ static int taiko_hphl_dac_event(struct snd_soc_dapm_widget *w,
 	case SND_SOC_DAPM_PRE_PMU:
 		snd_soc_update_bits(codec, TAIKO_A_CDC_CLK_RDAC_CLK_EN_CTL,
 							0x02, 0x02);
-		if (!high_perf_mode) {
+		if (!uhqa_mode) {
 			wcd9xxx_clsh_fsm(codec, &taiko_p->clsh_d,
 						 WCD9XXX_CLSH_STATE_HPHL,
 						 WCD9XXX_CLSH_REQ_ENABLE,
 						 WCD9XXX_CLSH_EVENT_PRE_DAC);
 		} else {
 			wcd9xxx_enable_high_perf_mode(codec, &taiko_p->clsh_d,
-						WCD9XXX_NON_UHQA_MODE,
+						uhqa_mode,
 						WCD9XXX_CLSAB_STATE_HPHL,
 						WCD9XXX_CLSAB_REQ_ENABLE);
 		}
@@ -3324,14 +3320,14 @@ static int taiko_hphr_dac_event(struct snd_soc_dapm_widget *w,
 							0x04, 0x04);
 		snd_soc_update_bits(codec, w->reg, 0x40, 0x40);
 
-		if (!high_perf_mode) {
+		if (!uhqa_mode) {
 			wcd9xxx_clsh_fsm(codec, &taiko_p->clsh_d,
 						 WCD9XXX_CLSH_STATE_HPHR,
 						 WCD9XXX_CLSH_REQ_ENABLE,
 						 WCD9XXX_CLSH_EVENT_PRE_DAC);
 		} else {
 			wcd9xxx_enable_high_perf_mode(codec, &taiko_p->clsh_d,
-						WCD9XXX_NON_UHQA_MODE,
+						uhqa_mode,
 						WCD9XXX_CLSAB_STATE_HPHR,
 						WCD9XXX_CLSAB_REQ_ENABLE);
 		}
@@ -3513,7 +3509,7 @@ static int taiko_hph_pa_event(struct snd_soc_dapm_widget *w,
 		pr_debug("%s: sleep %d us after %s PA enable\n", __func__,
 				pa_settle_time, w->name);
 
-		if (!high_perf_mode) {
+		if (!uhqa_mode) {
 			wcd9xxx_clsh_fsm(codec, &taiko->clsh_d,
 						 req_clsh_state,
 						 WCD9XXX_CLSH_REQ_ENABLE,
@@ -3531,6 +3527,8 @@ static int taiko_hph_pa_event(struct snd_soc_dapm_widget *w,
 			taiko_write(codec, TAIKO_A_CDC_RX1_VOL_CTL_B2_CTL, hpldiggain);
 		if (hprdiggain_con)
 			taiko_write(codec, TAIKO_A_CDC_RX2_VOL_CTL_B2_CTL, hprdiggain);
+		if (uhqa_mode)
+			taiko_write(codec, TAIKO_A_RX_HPH_BIAS_PA, TAIKO_A_RX_HPH_BIAS_PA__POR);
 #endif
 
 		break;
@@ -3548,7 +3546,7 @@ static int taiko_hph_pa_event(struct snd_soc_dapm_widget *w,
 		/* Let MBHC module know PA turned off */
 		wcd9xxx_resmgr_notifier_call(&taiko->resmgr, e_post_off);
 
-		if (!high_perf_mode) {
+		if (!uhqa_mode) {
 			wcd9xxx_clsh_fsm(codec, &taiko->clsh_d,
 						 req_clsh_state,
 						 WCD9XXX_CLSH_REQ_DISABLE,

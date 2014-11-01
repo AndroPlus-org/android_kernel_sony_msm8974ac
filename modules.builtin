@@ -63,6 +63,7 @@ kernel/crypto/krng.ko
 kernel/block/deadline-iosched.ko
 kernel/block/row-iosched.ko
 kernel/block/cfq-iosched.ko
+kernel/block/sio-iosched.ko
 kernel/block/test-iosched.ko
 kernel/drivers/base/firmware_class.ko
 kernel/drivers/base/regmap/regmap-i2c.ko

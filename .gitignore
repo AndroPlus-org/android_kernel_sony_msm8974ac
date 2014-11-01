@@ -1,0 +1,10 @@
+*.tmp_vmlinux*
+vmlinux
+vmlinux.o
+
+tmp/
+*.tmp
+*.bak
+*.swp
+*.o
+*.*~

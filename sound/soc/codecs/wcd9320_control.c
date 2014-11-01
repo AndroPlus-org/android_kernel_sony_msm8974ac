@@ -290,10 +290,13 @@ static ssize_t _file##_store(struct kobject *kobj, 			\
 	if (!sscanf(buf, "%u", &per))					\
 		return -EINVAL;						\
 									\
-	if (per < 0 || per > 100)					\
+	if (per < 0)							\
 		return -EINVAL;						\
 									\
 	regval = (u32)(_por * per / 100);				\
+									\
+	if (regval > 0xff)						\
+		regval = 0xff;						\
 									\
 	taiko_write(wcd9320_codec, _reg, regval);			\
 									\
@@ -341,6 +344,11 @@ static ssize_t hph_uhqa_store(struct kobject *kobj, struct kobj_attribute *attr,
 	if (sysfs_streq(buf, "off")) {
 		uhqa_mode = 0;
 
+		taiko_write(wcd9320_codec, TAIKO_A_RX_HPH_L_PA_CTL, 0x40);
+		taiko_write(wcd9320_codec, TAIKO_A_RX_HPH_R_PA_CTL, 0x40);
+		taiko_write(wcd9320_codec, TAIKO_A_RX_HPH_BIAS_PA,  0x55);
+		snd_soc_update_bits(wcd9320_codec, TAIKO_A_RX_HPH_CHOP_CTL, 0x20, 0x20);
+
 		return count;
 	}
 
@@ -369,6 +377,15 @@ static struct attribute_group taiko_control_interface_group = {
 	.attrs = taiko_control_attrs,
 };
 
+static struct attribute *taiko_debug_attrs[] = {
+	NULL,
+};
+
+static struct attribute_group taiko_debug_interface_group = {
+	.attrs = taiko_debug_attrs,
+	.name  = "debug",
+};
+
 static struct kobject *taiko_control_kobject;
 
 static int __init taiko_control_init(void)
@@ -382,6 +399,11 @@ static int __init taiko_control_init(void)
 	ret = sysfs_create_group(taiko_control_kobject, &taiko_control_interface_group);
 	if (ret) {
 		kobject_put(taiko_control_kobject);
+	}
+
+	ret = sysfs_create_group(taiko_control_kobject, &taiko_debug_interface_group);
+	if (ret) {
+		pr_err("Taiko Control: Failed to create debug sysfs group\n");
 	}
 
 	return ret;

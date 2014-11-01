@@ -1,0 +1,6 @@
+kernel/drivers/platform/msm/qpnp-pwm.ko
+kernel/drivers/platform/msm/qpnp-power-on.ko
+kernel/drivers/platform/msm/qpnp-clkdiv.ko
+kernel/drivers/platform/msm/qpnp-coincell.ko
+kernel/drivers/platform/msm/qpnp-revid.ko
+kernel/drivers/platform/msm/mpmtime.ko

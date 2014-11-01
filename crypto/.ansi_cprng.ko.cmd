@@ -1,0 +1,1 @@
+cmd_crypto/ansi_cprng.ko := /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL -r  -T /home/dev/Desktop/leo/kernel/scripts/module-common.lds --build-id  -o crypto/ansi_cprng.ko crypto/ansi_cprng.o crypto/ansi_cprng.mod.o

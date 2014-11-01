@@ -1,0 +1,2 @@
+kernel/drivers/net/slip/slip.ko
+kernel/drivers/net/slip/slhc.ko

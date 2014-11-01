@@ -1,0 +1,4 @@
+kernel/drivers/input/touchscreen/clearpad_rmi_dev.ko
+kernel/drivers/input/touchscreen/clearpad_core.ko
+kernel/drivers/input/touchscreen/clearpad_i2c.ko
+kernel/drivers/input/touchscreen/gen_vkeys.ko

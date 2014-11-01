@@ -1,0 +1,1 @@
+cmd_drivers/media/dvb/frontends/stv0900.o := /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/media/dvb/frontends/stv0900.o drivers/media/dvb/frontends/stv0900_core.o drivers/media/dvb/frontends/stv0900_sw.o 

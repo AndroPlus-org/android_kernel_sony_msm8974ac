@@ -1,0 +1,11 @@
+kernel/drivers/gpu/ion/ion.ko
+kernel/drivers/gpu/ion/ion_heap.ko
+kernel/drivers/gpu/ion/ion_page_pool.ko
+kernel/drivers/gpu/ion/ion_system_heap.ko
+kernel/drivers/gpu/ion/ion_carveout_heap.ko
+kernel/drivers/gpu/ion/ion_chunk_heap.ko
+kernel/drivers/gpu/ion/ion_cp_heap.ko
+kernel/drivers/gpu/ion/ion_removed_heap.ko
+kernel/drivers/gpu/msm/msm_kgsl_core.ko
+kernel/drivers/gpu/msm/msm_adreno.ko
+kernel/drivers/gpu/msm/msm_z180.ko

@@ -1,0 +1,11 @@
+kernel/drivers/usb/usb-common.ko
+kernel/drivers/usb/core/usbcore.ko
+kernel/drivers/usb/dwc3/dwc3.ko
+kernel/drivers/usb/dwc3/dwc3-msm.ko
+kernel/drivers/usb/dwc3/dwc3-exynos.ko
+kernel/drivers/usb/gadget/udc-core.ko
+kernel/drivers/usb/host/ehci-hcd.ko
+kernel/drivers/usb/host/xhci-hcd.ko
+kernel/drivers/usb/misc/ehset.ko
+kernel/drivers/usb/otg/msm_otg.ko
+kernel/drivers/usb/storage/usb-storage.ko

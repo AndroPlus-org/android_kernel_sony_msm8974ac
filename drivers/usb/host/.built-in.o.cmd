@@ -1,0 +1,1 @@
+cmd_drivers/usb/host/built-in.o :=  /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/usb/host/built-in.o drivers/usb/host/ehci-hcd.o drivers/usb/host/xhci-hcd.o drivers/usb/host/host_ext_event.o 

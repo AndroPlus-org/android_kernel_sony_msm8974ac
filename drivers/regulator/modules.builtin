@@ -1,0 +1,3 @@
+kernel/drivers/regulator/fixed.ko
+kernel/drivers/regulator/stub-regulator.ko
+kernel/drivers/regulator/qpnp-regulator.ko

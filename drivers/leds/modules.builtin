@@ -1,0 +1,4 @@
+kernel/drivers/leds/led-class.ko
+kernel/drivers/leds/leds-qpnp.ko
+kernel/drivers/leds/ledtrig-backlight.ko
+kernel/drivers/leds/ledtrig-default-on.ko

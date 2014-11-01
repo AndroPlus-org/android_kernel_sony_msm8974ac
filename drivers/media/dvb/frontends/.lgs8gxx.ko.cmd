@@ -1,0 +1,1 @@
+cmd_drivers/media/dvb/frontends/lgs8gxx.ko := /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL -r  -T /home/dev/Desktop/leo/kernel/scripts/module-common.lds --build-id  -o drivers/media/dvb/frontends/lgs8gxx.ko drivers/media/dvb/frontends/lgs8gxx.o drivers/media/dvb/frontends/lgs8gxx.mod.o

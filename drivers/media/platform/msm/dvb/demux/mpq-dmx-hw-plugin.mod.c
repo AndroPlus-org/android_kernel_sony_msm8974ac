@@ -1,0 +1,126 @@
+#include <linux/module.h>
+#include <linux/vermagic.h>
+#include <linux/compiler.h>
+
+MODULE_INFO(vermagic, VERMAGIC_STRING);
+
+struct module __this_module
+__attribute__((section(".gnu.linkonce.this_module"))) = {
+ .name = KBUILD_MODNAME,
+ .init = init_module,
+#ifdef CONFIG_MODULE_UNLOAD
+ .exit = cleanup_module,
+#endif
+ .arch = MODULE_ARCH_INIT,
+};
+
+MODULE_INFO(intree, "Y");
+
+static const struct modversion_info ____versions[]
+__used
+__attribute__((section("__versions"))) = {
+	{ 0xdb2ab789, "module_layout" },
+	{ 0x88ce27bb, "tspp_close_stream" },
+	{ 0xd6eda75c, "dvb_ringbuffer_free" },
+	{ 0x18236af0, "mpq_streambuffer_data_avail" },
+	{ 0xc5e9c169, "ion_import_dma_buf" },
+	{ 0xaee29f3d, "dvb_ringbuffer_init" },
+	{ 0xf2802c60, "mpq_streambuffer_get_data_rw_offset" },
+	{ 0xf04e8ea0, "mpq_streambuffer_terminate" },
+	{ 0xb4b4f2c8, "mpq_streambuffer_init" },
+	{ 0xe6da44a, "set_normalized_timespec" },
+	{ 0xab9db7cb, "ion_unmap_kernel" },
+	{ 0x528c709d, "simple_read_from_buffer" },
+	{ 0x178ba18c, "_raw_spin_unlock" },
+	{ 0xd6ee688f, "vmalloc" },
+	{ 0x1a7fe83c, "tspp_allocate_buffers" },
+	{ 0x15692c87, "param_ops_int" },
+	{ 0x2e5810c6, "__aeabi_unwind_cpp_pr1" },
+	{ 0x85647ea2, "dvb_dmx_init" },
+	{ 0x6f6d27d2, "mpq_streambuffer_pkt_dispose" },
+	{ 0xc8b57c27, "autoremove_wake_function" },
+	{ 0x52a52336, "tspp_get_ref_clk_counter" },
+	{ 0x529cf303, "dvb_dmx_swfilter_packet" },
+	{ 0x34184afe, "current_kernel_time" },
+	{ 0x4863f57b, "tspp_remove_filter" },
+	{ 0xa643ae93, "tspp_unregister_notification" },
+	{ 0x12b629d9, "tspp_open_channel" },
+	{ 0x6f189d7a, "ion_free" },
+	{ 0xf14f2add, "mpq_streambuffer_data_write" },
+	{ 0xf087137d, "__dynamic_pr_debug" },
+	{ 0xb642480, "dvb_dmx_get_pattern" },
+	{ 0xead782da, "ion_handle_get_size" },
+	{ 0xd5152710, "sg_next" },
+	{ 0x55837517, "mutex_unlock" },
+	{ 0x999e8297, "vfree" },
+	{ 0xe9c24300, "mpq_adapter_unregister_stream_if" },
+	{ 0xe0a64f78, "debugfs_create_file" },
+	{ 0xdd7f8939, "kthread_create_on_node" },
+	{ 0x63e5e977, "tspp_open_stream" },
+	{ 0x3992ec29, "mpq_adapter_get" },
+	{ 0xa7ecf324, "__init_waitqueue_head" },
+	{ 0x8782ed5a, "debugfs_create_u32" },
+	{ 0xc039ece2, "mpq_adapter_get_stream_if" },
+	{ 0x907a28f9, "msm_ion_do_cache_op" },
+	{ 0xfa2a45e, "__memzero" },
+	{ 0x7f4f78a9, "tspp_register_notification" },
+	{ 0x5f754e5a, "memset" },
+	{ 0x7a63e42f, "ion_share_dma_buf_fd" },
+	{ 0xba05683b, "ion_map_kernel" },
+	{ 0x8fe41d5b, "dvb_dmxdev_release" },
+	{ 0xa22ee5e6, "mutex_lock_interruptible" },
+	{ 0x3bf89010, "__mutex_init" },
+	{ 0x27e1a049, "printk" },
+	{ 0x20c55ae0, "sscanf" },
+	{ 0x3fbae908, "kthread_stop" },
+	{ 0xd729ec94, "mpq_streambuffer_pkt_write" },
+	{ 0x5bd39a74, "dvb_dmx_video_pattern_search" },
+	{ 0xd088162e, "tspp_add_filter" },
+	{ 0xe970ef5f, "ion_handle_get_flags" },
+	{ 0x1d1744fc, "mutex_lock" },
+	{ 0x9b3304cc, "dvb_dmx_swfilter_format" },
+	{ 0xb03382d1, "fput" },
+	{ 0xd8075bc7, "dvb_dmx_release" },
+	{ 0x22df9a07, "ion_alloc" },
+	{ 0x59a7b43, "dvb_ringbuffer_read" },
+	{ 0x40a9b349, "vzalloc" },
+	{ 0xd7f01925, "dvb_dmx_notify_section_event" },
+	{ 0x730a0aa2, "tspp_close_channel" },
+	{ 0xaa1983b1, "tspp_get_buffer" },
+	{ 0xf0fdf6cb, "__stack_chk_fail" },
+	{ 0x1000e51, "schedule" },
+	{ 0x65969154, "mpq_streambuffer_pkt_next" },
+	{ 0xda518697, "mpq_adapter_register_stream_if" },
+	{ 0xc09978d4, "ion_sg_table" },
+	{ 0xee9aeac0, "dvb_ringbuffer_avail" },
+	{ 0x47d20585, "mpq_streambuffer_get_buffer_handle" },
+	{ 0x56858989, "tspp_release_buffer" },
+	{ 0x6ae034d4, "wake_up_process" },
+	{ 0x2776630a, "qseecom_send_command" },
+	{ 0x699e08cd, "mpq_streambuffer_data_free" },
+	{ 0xc4097c34, "_raw_spin_lock" },
+	{  0xf1338, "__wake_up" },
+	{ 0xd2965f6f, "kthread_should_stop" },
+	{ 0x44366cfc, "simple_write_to_buffer" },
+	{ 0xd0181486, "ion_phys" },
+	{ 0x9d669763, "memcpy" },
+	{ 0x69ff5332, "prepare_to_wait" },
+	{ 0x1780a046, "mpq_streambuffer_data_write_deposit" },
+	{ 0x1e5bd96, "fget" },
+	{ 0xf9e73082, "scnprintf" },
+	{ 0x26714f2f, "ion_client_destroy" },
+	{ 0xbc3d21af, "finish_wait" },
+	{ 0xefd6cf06, "__aeabi_unwind_cpp_pr0" },
+	{ 0x8f678b07, "__stack_chk_guard" },
+	{ 0xfac72b5a, "qseecom_start_app" },
+	{ 0xb81960ca, "snprintf" },
+	{ 0xaf62a7c2, "qseecom_shutdown_app" },
+	{ 0xe2425d18, "msm_ion_client_create" },
+	{ 0x78f6ff86, "dvb_dmxdev_init" },
+};
+
+static const char __module_depends[]
+__used
+__attribute__((section(".modinfo"))) =
+"depends=tspp,dvb-core,mpq-adapter";
+

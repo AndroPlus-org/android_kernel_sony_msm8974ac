@@ -1,0 +1,1 @@
+cmd_drivers/crypto/msm/qcrypto.ko := /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL -r  -T /home/dev/Desktop/leo/kernel/scripts/module-common.lds --build-id  -o drivers/crypto/msm/qcrypto.ko drivers/crypto/msm/qcrypto.o drivers/crypto/msm/qcrypto.mod.o

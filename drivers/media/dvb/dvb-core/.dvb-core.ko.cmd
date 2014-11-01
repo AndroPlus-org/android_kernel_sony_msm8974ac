@@ -1,0 +1,1 @@
+cmd_drivers/media/dvb/dvb-core/dvb-core.ko := /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL -r  -T /home/dev/Desktop/leo/kernel/scripts/module-common.lds --build-id  -o drivers/media/dvb/dvb-core/dvb-core.ko drivers/media/dvb/dvb-core/dvb-core.o drivers/media/dvb/dvb-core/dvb-core.mod.o

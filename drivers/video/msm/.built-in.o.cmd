@@ -1,0 +1,1 @@
+cmd_drivers/video/msm/built-in.o :=  /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/video/msm/built-in.o drivers/video/msm/mdss/built-in.o drivers/video/msm/logo.o 

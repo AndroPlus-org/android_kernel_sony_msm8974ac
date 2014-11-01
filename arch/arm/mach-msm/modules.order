@@ -1,0 +1,3 @@
+kernel/arch/arm/mach-msm/reset_modem.ko
+kernel/arch/arm/mach-msm/dma_test.ko
+kernel/arch/arm/mach-msm/msm-buspm-dev.ko

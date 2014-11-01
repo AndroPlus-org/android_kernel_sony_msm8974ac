@@ -1,0 +1,2 @@
+kernel/drivers/misc/eeprom/eeprom_93cx6.ko
+kernel/drivers/misc/tspp.ko

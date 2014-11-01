@@ -1,0 +1,1 @@
+cmd_drivers/cpuidle/governors/built-in.o :=  /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/cpuidle/governors/built-in.o drivers/cpuidle/governors/ladder.o drivers/cpuidle/governors/menu.o 

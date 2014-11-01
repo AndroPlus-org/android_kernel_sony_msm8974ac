@@ -1,0 +1,1 @@
+cmd_drivers/net/ppp/built-in.o :=  /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/net/ppp/built-in.o drivers/net/ppp/ppp_generic.o drivers/net/ppp/ppp_async.o drivers/net/ppp/bsd_comp.o drivers/net/ppp/ppp_deflate.o drivers/net/ppp/ppp_mppe.o drivers/net/ppp/pppox.o drivers/net/ppp/pppolac.o drivers/net/ppp/pppopns.o 

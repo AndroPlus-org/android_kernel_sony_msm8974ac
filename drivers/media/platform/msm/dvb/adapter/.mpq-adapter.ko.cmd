@@ -1,0 +1,1 @@
+cmd_drivers/media/platform/msm/dvb/adapter/mpq-adapter.ko := /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL -r  -T /home/dev/Desktop/leo/kernel/scripts/module-common.lds --build-id  -o drivers/media/platform/msm/dvb/adapter/mpq-adapter.ko drivers/media/platform/msm/dvb/adapter/mpq-adapter.o drivers/media/platform/msm/dvb/adapter/mpq-adapter.mod.o

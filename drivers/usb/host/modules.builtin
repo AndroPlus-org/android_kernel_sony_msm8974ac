@@ -1,0 +1,2 @@
+kernel/drivers/usb/host/ehci-hcd.ko
+kernel/drivers/usb/host/xhci-hcd.ko

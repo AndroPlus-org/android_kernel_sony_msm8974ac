@@ -1,0 +1,3 @@
+kernel/sound/soc/codecs/snd-soc-wcd9320.ko
+kernel/sound/soc/codecs/snd-soc-msm-stub.ko
+kernel/sound/soc/codecs/snd-soc-tfa98xx.ko

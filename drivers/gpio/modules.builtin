@@ -1,0 +1,3 @@
+kernel/drivers/gpio/gpio-msm-common.ko
+kernel/drivers/gpio/gpio-msm-v3.ko
+kernel/drivers/gpio/qpnp-pin.ko

@@ -1,0 +1,1 @@
+cmd_drivers/gud/mckernelapi.ko := /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL -r  -T /home/dev/Desktop/leo/kernel/scripts/module-common.lds --build-id  -o drivers/gud/mckernelapi.ko drivers/gud/mckernelapi.o drivers/gud/mckernelapi.mod.o

@@ -1,0 +1,14 @@
+kernel/drivers/input/input-core.ko
+kernel/drivers/input/mousedev.ko
+kernel/drivers/input/evdev.ko
+kernel/drivers/input/joystick/xpad.ko
+kernel/drivers/input/keyboard/atkbd.ko
+kernel/drivers/input/keyboard/gpio_keys.ko
+kernel/drivers/input/misc/bu520x1nvx.ko
+kernel/drivers/input/misc/hbtp_input.ko
+kernel/drivers/input/misc/uinput.ko
+kernel/drivers/input/mouse/psmouse.ko
+kernel/drivers/input/touchscreen/clearpad_rmi_dev.ko
+kernel/drivers/input/touchscreen/clearpad_core.ko
+kernel/drivers/input/touchscreen/clearpad_i2c.ko
+kernel/drivers/input/touchscreen/gen_vkeys.ko

@@ -1,0 +1,1 @@
+cmd_drivers/input/input-core.o := /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/input/input-core.o drivers/input/input.o drivers/input/input-compat.o drivers/input/input-mt.o drivers/input/ff-core.o 

@@ -1,0 +1,1 @@
+cmd_sound/soc/samsung/built-in.o :=  rm -f sound/soc/samsung/built-in.o; /home/dev/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ar rcsD sound/soc/samsung/built-in.o

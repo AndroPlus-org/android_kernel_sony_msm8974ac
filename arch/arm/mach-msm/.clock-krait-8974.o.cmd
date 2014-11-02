@@ -3,6 +3,7 @@ cmd_arch/arm/mach-msm/clock-krait-8974.o := /home/AndroPlus/Desktop/leo/kernel/s
 source_arch/arm/mach-msm/clock-krait-8974.o := arch/arm/mach-msm/clock-krait-8974.c
 
 deps_arch/arm/mach-msm/clock-krait-8974.o := \
+    $(wildcard include/config/cpu/voltage/table.h) \
   include/linux/kernel.h \
     $(wildcard include/config/lbdaf.h) \
     $(wildcard include/config/preempt/voluntary.h) \

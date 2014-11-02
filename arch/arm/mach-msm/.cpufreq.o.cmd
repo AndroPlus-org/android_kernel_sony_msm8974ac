@@ -3,6 +3,7 @@ cmd_arch/arm/mach-msm/cpufreq.o := /home/AndroPlus/Desktop/leo/kernel/scripts/gc
 source_arch/arm/mach-msm/cpufreq.o := arch/arm/mach-msm/cpufreq.c
 
 deps_arch/arm/mach-msm/cpufreq.o := \
+    $(wildcard include/config/cpu/voltage/table.h) \
     $(wildcard include/config/debug/fs.h) \
     $(wildcard include/config/msm/cpu/freq/set/min/max.h) \
     $(wildcard include/config/msm/cpu/freq/min.h) \

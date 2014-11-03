@@ -320,7 +320,6 @@ void __init msm8974_add_drivers(void)
 #ifdef CONFIG_LCD_KCAL
 	msm_add_lcd_kcal_devices();
 #endif
-	msm_init_wifi();
 
 }
 

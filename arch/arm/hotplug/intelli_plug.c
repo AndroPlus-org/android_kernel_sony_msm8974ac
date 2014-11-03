@@ -58,6 +58,9 @@ module_param(intelli_plug_active, uint, 0644);
 static unsigned int touch_boost_active = 1;
 module_param(touch_boost_active, uint, 0644);
 
+static unsigned int nr_run_profile_sel = 0;
+module_param(nr_run_profile_sel, uint, 0644);
+
 //default to something sane rather than zero
 static unsigned int sampling_time = DEF_SAMPLING_MS;
 
@@ -184,10 +187,7 @@ static unsigned int calculate_thread_stats(void)
 
 	for (nr_run = 1; nr_run < threshold_size; nr_run++) {
 		unsigned int nr_threshold;
-		if (!eco_mode_active)
-			nr_threshold = nr_run_thresholds_full[nr_run - 1];
-		else
-			nr_threshold = nr_run_thresholds_eco[nr_run - 1];
+		nr_threshold = current_profile[nr_run - 1];
 
 		if (nr_run_last <= nr_run)
 			nr_threshold += nr_run_hysteresis;

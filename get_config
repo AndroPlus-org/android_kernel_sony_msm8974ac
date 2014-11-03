@@ -8,4 +8,4 @@ CUR_TC=/home/doomlord/android-toolchain-eabi-linaro-4.6-2011.10/bin/
 
 ### compile kernel
 ARCH=arm CROSS_COMPILE=${CUR_TC}arm-eabi- make sirius_defconfig
-#ARCH=arm CROSS_COMPILE=~/arm-linux-androideabi-4.7/bin/arm-linux-androideabi- make sirius_defconfig
+#ARCH=arm CROSS_COMPILE=~/arm-linux-androideabi-4.7/bin/arm-linux-androideabi- make leo_defconfig

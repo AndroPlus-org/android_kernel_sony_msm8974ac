@@ -1,1 +1,0 @@
-cmd_drivers/media/platform/msm/dvb/adapter/mpq-adapter.o := /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/media/platform/msm/dvb/adapter/mpq-adapter.o drivers/media/platform/msm/dvb/adapter/mpq_adapter.o drivers/media/platform/msm/dvb/adapter/mpq_stream_buffer.o 

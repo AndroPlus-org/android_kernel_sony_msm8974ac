@@ -1,1 +1,0 @@
-cmd_drivers/media/platform/msm/dvb/demux/mpq-dmx-hw-plugin.o := /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/media/platform/msm/dvb/demux/mpq-dmx-hw-plugin.o drivers/media/platform/msm/dvb/demux/mpq_dmx_plugin_common.o drivers/media/platform/msm/dvb/demux/mpq_sdmx.o drivers/media/platform/msm/dvb/demux/mpq_dmx_plugin_tspp_v1.o 

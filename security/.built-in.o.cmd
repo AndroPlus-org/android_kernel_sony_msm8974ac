@@ -1,1 +1,0 @@
-cmd_security/built-in.o :=  /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o security/built-in.o security/keys/built-in.o security/commoncap.o security/min_addr.o security/security.o security/capability.o security/inode.o security/selinux/built-in.o security/lsm_audit.o security/sony/built-in.o 

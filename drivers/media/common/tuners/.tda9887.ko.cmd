@@ -1,1 +1,0 @@
-cmd_drivers/media/common/tuners/tda9887.ko := /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL -r  -T /home/AndroPlus/Desktop/leo/kernel/scripts/module-common.lds --build-id  -o drivers/media/common/tuners/tda9887.ko drivers/media/common/tuners/tda9887.o drivers/media/common/tuners/tda9887.mod.o

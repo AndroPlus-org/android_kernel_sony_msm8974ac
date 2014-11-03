@@ -1,1 +1,0 @@
-cmd_drivers/input/misc/built-in.o :=  /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/input/misc/built-in.o drivers/input/misc/bu520x1nvx.o drivers/input/misc/hbtp_input.o drivers/input/misc/uinput.o 

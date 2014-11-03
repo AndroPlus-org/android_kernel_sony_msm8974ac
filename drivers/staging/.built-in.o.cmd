@@ -1,1 +1,0 @@
-cmd_drivers/staging/built-in.o :=  /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/staging/built-in.o drivers/staging/staging.o drivers/staging/serial/built-in.o drivers/staging/media/built-in.o drivers/staging/android/built-in.o 

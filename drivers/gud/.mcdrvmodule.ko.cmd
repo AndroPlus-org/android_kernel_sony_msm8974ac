@@ -1,1 +1,0 @@
-cmd_drivers/gud/mcdrvmodule.ko := /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL -r  -T /home/AndroPlus/Desktop/leo/kernel/scripts/module-common.lds --build-id  -o drivers/gud/mcdrvmodule.ko drivers/gud/mcdrvmodule.o drivers/gud/mcdrvmodule.mod.o

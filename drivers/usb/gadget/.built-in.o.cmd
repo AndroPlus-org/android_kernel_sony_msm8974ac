@@ -1,1 +1,0 @@
-cmd_drivers/usb/gadget/built-in.o :=  /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/usb/gadget/built-in.o drivers/usb/gadget/udc-core.o drivers/usb/gadget/g_android.o 

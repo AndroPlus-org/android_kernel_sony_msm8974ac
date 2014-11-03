@@ -1,1 +1,0 @@
-cmd_drivers/input/touchscreen/built-in.o :=  /home/AndroPlus/android-toolchain-eabi-linaro-4.6-2011.10/bin/arm-eabi-ld -EL    -r -o drivers/input/touchscreen/built-in.o drivers/input/touchscreen/clearpad_rmi_dev.o drivers/input/touchscreen/clearpad_core.o drivers/input/touchscreen/clearpad_i2c.o drivers/input/touchscreen/gen_vkeys.o 

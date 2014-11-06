@@ -89,7 +89,7 @@ Module.symvers
 System.map
 vmlinux
 kernel/config_data.h
-boot.img
+boot*.img
 dt.img
 dtbTool
 dtbToolCM

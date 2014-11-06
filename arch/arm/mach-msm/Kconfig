@@ -1891,12 +1891,6 @@ config MSM_CPU_FREQ_MIN
 
 endif # CPU_FREQ_MSM
 
-config CPU_OC
-	bool "allow 2.457 GHz OC bin"
-	default n
-	help
-	  Unlock the CPU Overclock freq speed @ 2.457 GHz
-
 config MSM_CPUFREQ_LIMITER
 	tristate "MSM CPU frequency limiter"
 	default n

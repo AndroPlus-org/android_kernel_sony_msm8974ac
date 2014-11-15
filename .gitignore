@@ -85,6 +85,8 @@ GTAGS
 *~
 \#*#
 
+arch/arm/boot/compressed/piggy.xzkern
+arch/arm/boot/*.dtb
 Module.symvers
 System.map
 vmlinux

@@ -57,7 +57,7 @@ static ssize_t hplana_gain_show(struct kobject *kobj, struct kobj_attribute *att
 	u32 vol = taiko_read(wcd9320_codec, TAIKO_A_RX_HPH_L_GAIN) & TAIKO_HPH_VOL_MASK;
 	u32 usr = hplanagain & TAIKO_HPH_VOL_MASK;
 
-	sprintf(buf,   "Control: %s\n", hplanagain_con ? "on" : "off");
+	sprintf(buf,   "Status: %s\n", hplanagain_con ? "on" : "off");
 	sprintf(buf, "%sRegister: %d (%#04x %#04x)\n", buf, vol, vol, taiko_read(wcd9320_codec, TAIKO_A_RX_HPH_L_GAIN));
 	sprintf(buf, "%sUser: %d (%#04x %#04x)\n", buf, usr, usr, hplanagain);
 
@@ -114,7 +114,7 @@ static ssize_t hprana_gain_show(struct kobject *kobj, struct kobj_attribute *att
 	u32 vol = taiko_read(wcd9320_codec, TAIKO_A_RX_HPH_R_GAIN) & TAIKO_HPH_VOL_MASK;
 	u32 usr = hpranagain & TAIKO_HPH_VOL_MASK;
 
-	sprintf(buf,   "Control: %s\n", hpranagain_con ? "on" : "off");
+	sprintf(buf,   "Status: %s\n", hpranagain_con ? "on" : "off");
 	sprintf(buf, "%sRegister: %d (%#04x %#04x)\n", buf, vol, vol, taiko_read(wcd9320_codec, TAIKO_A_RX_HPH_R_GAIN));
 	sprintf(buf, "%sUser: %d (%#04x %#04x)\n", buf, usr, usr, hpranagain);
 
@@ -173,7 +173,7 @@ static ssize_t _file##_show(struct kobject *kobj, 			\
 	u32 reg = taiko_read(wcd9320_codec, _reg);			\
 	u32 usr = _uval;						\
 									\
-	sprintf(buf,   "Control: %s\n", _con ? "on" : "off");		\
+	sprintf(buf,   "Status: %s\n", _con ? "on" : "off");		\
 	sprintf(buf, "%sRegister: %d (%#04x)\n", buf, reg, reg);	\
 	sprintf(buf, "%sUser: %d (%#04x)\n", buf, usr, usr);		\
 									\

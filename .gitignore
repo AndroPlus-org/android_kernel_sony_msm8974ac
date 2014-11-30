@@ -85,6 +85,7 @@ GTAGS
 *~
 \#*#
 
+usr/initramfs_data.cpio
 arch/arm/boot/compressed/piggy.xzkern
 arch/arm/boot/*.dtb
 Module.symvers

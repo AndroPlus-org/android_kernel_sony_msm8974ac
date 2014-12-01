@@ -97,7 +97,6 @@ static unsigned int NwNs_Threshold[8] = {12, 0, 20, 7, 25, 10, 0, 18};
 static unsigned int TwTs_Threshold[8] = {140, 0, 140, 190, 140, 190, 0, 190};
 
 extern unsigned int get_rq_info(void);
-extern unsigned long acpuclk_get_rate(int);
 
 unsigned int state = MSM_MPDEC_IDLE;
 bool was_paused = false;
@@ -109,46 +108,35 @@ static void unboost_cpu(int cpu);
 #endif
 static cputime64_t mpdec_paused_until = 0;
 
-static unsigned long get_rate(int cpu) {
-	return acpuclk_get_rate(cpu);
-}
 
 static int get_slowest_cpu(void) {
 	int i, cpu = 0;
 	unsigned long rate, slow_rate = 0;
-
-	for (i = 1; i < CONFIG_NR_CPUS; i++) {
-		if (!cpu_online(i))
-			continue;
-		rate = get_rate(i);
-		if (slow_rate == 0) {
-			cpu = i;
-			slow_rate = rate;
-			continue;
-		}
-		if ((rate <= slow_rate) && (slow_rate != 0)) {
-			cpu = i;
-			slow_rate = rate;
+	struct cpufreq_policy *policy;
+	for_each_online_cpu(cpu){
+		policy = cpufreq_cpu_get(i);
+		if(policy != NULL && policy){
+			rate = policy->cur;
+			if(rate < slow_rate || slow_rate == 0){
+				slow_rate = rate;
+				cpu = i;
+			}
 		}
 	}
 
-	return cpu;
+	return cpu - 1;
 }
 
 static unsigned long get_slowest_cpu_rate(void) {
-	int i = 0;
+	int cpu = 0;
 	unsigned long rate, slow_rate = 0;
-
-	for (i = 0; i < CONFIG_NR_CPUS; i++) {
-		if (!cpu_online(i))
-			continue;
-		rate = get_rate(i);
-		if ((rate < slow_rate) && (slow_rate != 0)) {
-			slow_rate = rate;
-			continue;
-		}
-		if (slow_rate == 0) {
-			slow_rate = rate;
+	struct cpufreq_policy *policy;
+	for_each_online_cpu(cpu){
+		policy = cpufreq_cpu_get(cpu);
+		if(policy != NULL && policy){
+			rate = policy->cur;
+			if(rate < slow_rate || slow_rate == 0)
+				slow_rate = rate;
 		}
 	}
 
@@ -173,6 +161,7 @@ static void mpdec_cpu_down(int cpu) {
 	cputime64_t on_time = 0;
 	if (cpu_online(cpu)) {
 		mutex_lock(&per_cpu(msm_mpdec_cpudata, cpu).hotplug_mutex);
+		// TODO : can't get past this point !
 		cpu_down(cpu);
 		on_time = (ktime_to_ms(ktime_get()) - per_cpu(msm_mpdec_cpudata, cpu).on_time);
 		per_cpu(msm_mpdec_cpudata, cpu).online = false;
@@ -195,6 +184,7 @@ static int mp_decision(void) {
 	static cputime64_t last_time;
 	cputime64_t current_time;
 	cputime64_t this_time = 0;
+	unsigned long slowest_rate;
 
 	if (state == MSM_MPDEC_DISABLED)
 		return MSM_MPDEC_DISABLED;
@@ -217,16 +207,15 @@ static int mp_decision(void) {
 			if ((total_time >= TwTs_Threshold[index]) &&
 				(nr_cpu_online < msm_mpdec_tuners_ins.max_cpus)) {
 				new_state = MSM_MPDEC_UP;
-				pr_info(MPDEC_TAG"Slowest cpu rate : %lu\n", get_slowest_cpu_rate());
-				// TODO : Temporarilly disabled idle freq because get_slowest_cpu_rate doesn't work.
-// 				if (get_slowest_cpu_rate() <=  msm_mpdec_tuners_ins.idle_freq)
-// 					new_state = MSM_MPDEC_IDLE;
+				if (get_slowest_cpu_rate() <=  msm_mpdec_tuners_ins.idle_freq)
+					new_state = MSM_MPDEC_IDLE;
 			}
 		} else if ((nr_cpu_online > 1) && (rq_depth <= NwNs_Threshold[index+1])) {
 			if ((total_time >= TwTs_Threshold[index+1]) &&
 				(nr_cpu_online > msm_mpdec_tuners_ins.min_cpus)) {
 				new_state = MSM_MPDEC_DOWN;
-				if (get_slowest_cpu_rate() > msm_mpdec_tuners_ins.idle_freq)
+				slowest_rate = get_slowest_cpu_rate();
+				if (slowest_rate == 0 || slowest_rate > msm_mpdec_tuners_ins.idle_freq)
 					new_state = MSM_MPDEC_IDLE;
 			}
 		} else {
@@ -296,7 +285,6 @@ static void msm_mpdec_work_thread(struct work_struct *work) {
 		break;
 	case MSM_MPDEC_UP:
 		cpu = cpumask_next_zero(0, cpu_online_mask);
-		pr_info(MPDEC_TAG"We try to put cpu %d up", cpu);
 		if (cpu < nr_cpu_ids) {
 			if ((per_cpu(msm_mpdec_cpudata, cpu).online == false) && (!cpu_online(cpu))) {
 				mpdec_cpu_up(cpu);

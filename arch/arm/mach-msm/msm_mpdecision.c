@@ -43,7 +43,7 @@
 #define CREATE_TRACE_POINTS
 #include <trace/events/mpdcvs_trace.h>
 
-#define DEBUG 1
+#define DEBUG 0
 
 DEFINE_PER_CPU(struct msm_mpdec_cpudata_t, msm_mpdec_cpudata);
 EXPORT_PER_CPU_SYMBOL_GPL(msm_mpdec_cpudata);
@@ -112,32 +112,26 @@ static cputime64_t mpdec_paused_until = 0;
 static int get_slowest_cpu(void) {
 	int i, cpu = 0;
 	unsigned long rate, slow_rate = 0;
-	struct cpufreq_policy *policy;
-	for_each_online_cpu(cpu){
-		policy = cpufreq_cpu_get(i);
-		if(policy != NULL && policy){
-			rate = policy->cur;
-			if(rate < slow_rate || slow_rate == 0){
+	for_each_online_cpu(i){
+		if(i != 0){
+			rate = cpufreq_quick_get(i);
+			if(rate <= slow_rate || slow_rate == 0){
 				slow_rate = rate;
 				cpu = i;
 			}
 		}
 	}
 
-	return cpu - 1;
+	return cpu;
 }
 
 static unsigned long get_slowest_cpu_rate(void) {
 	int cpu = 0;
 	unsigned long rate, slow_rate = 0;
-	struct cpufreq_policy *policy;
 	for_each_online_cpu(cpu){
-		policy = cpufreq_cpu_get(cpu);
-		if(policy != NULL && policy){
-			rate = policy->cur;
-			if(rate < slow_rate || slow_rate == 0)
-				slow_rate = rate;
-		}
+		rate = cpufreq_quick_get(cpu);
+		if(rate < slow_rate || slow_rate == 0)
+			slow_rate = rate;
 	}
 
 	return slow_rate;

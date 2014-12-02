@@ -19,10 +19,29 @@
 #include <linux/input.h>
 #include <linux/slab.h>
 #include <linux/workqueue.h>
+#include <linux/sched.h>
 
 #define HOTPLUG_INFO_TAG	"[HOTPLUG] : "
 
-#define BOOST_DURATION		1000 /* ms */
+#define BOOST_DURATION		100 /* ms */
+#define IDLE_THRESHOLD		500
+
+#define PLUG_IN_CORE_1_THRESHOLD	2000
+#define PLUG_IN_CORE_2_THRESHOLD	3000
+#define PLUG_IN_CORE_3_THRESHOLD	3000
+
+#define PLUG_IN_CORE_1_DELAY		1
+#define PLUG_IN_CORE_2_DELAY		3
+#define PLUG_IN_CORE_3_DELAY		3
+
+#define PLUG_OUT_CORE_1_THRESHOLD	2000
+#define PLUG_OUT_CORE_2_THRESHOLD	3000
+#define PLUG_OUT_CORE_3_THRESHOLD	3000
+
+#define PLUG_OUT_CORE_1_DELAY		1
+#define PLUG_OUT_CORE_2_DELAY		3
+#define PLUG_OUT_CORE_3_DELAY		3
+
 
 static struct workqueue_struct *hotplug_wq;
 static struct delayed_work hotplug_work;
@@ -30,13 +49,76 @@ static struct delayed_work hotplug_work;
 static unsigned long boost_duration;
 static struct timer_list unboost_timer;
 
+static unsigned long idle_threshold = IDLE_THRESHOLD;
+static int singlecore = true;
+
+static unsigned long plug_in_threshold[] = {
+	0,
+	PLUG_IN_CORE_1_THRESHOLD,
+	PLUG_IN_CORE_2_THRESHOLD,
+	PLUG_IN_CORE_3_THRESHOLD,
+	~0
+}
+
+static unsigned int delay_in;
+static unsigned int plug_in_delay[] = {
+	0,
+	PLUG_IN_CORE_1_DELAY,
+	PLUG_IN_CORE_2_DELAY,
+	PLUG_IN_CORE_3_DELAY
+}
+
+static unsigned long plug_out_threshold[] = {
+	0,
+	PLUG_OUT_CORE_1_THRESHOLD,
+	PLUG_OUT_CORE_2_THRESHOLD,
+	PLUG_OUT_CORE_3_THRESHOLD,
+	0
+}
+
+static unsigned int delay_out;
+static unsigned int plug_out_delay[] = {
+	0,
+	PLUG_OUT_CORE_1_DELAY,
+	PLUG_OUT_CORE_2_DELAY,
+	PLUG_OUT_CORE_3_DELAY
+}
+
+extern unsigned long avg_nr_running(void);
+extern unsigned long avg_cpu_nr_running(unsigned int cpu);
+
 /*
  * Main function of the hotplug
  */
 static void hotplug(struct work_struct *work){
-	pr_info(HOTPLUG_INFO_TAG"Executing main work !");
+	int online_cpu_count;
+	unsigned long load = avg_nr_running();
 
-	queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(4000));
+	pr_info(HOTPLUG_INFO_TAG"nr is : %lu !\n", load);
+
+	// We minimize the work when calculations are not
+	// needed to spare resources when cpu is almost idle
+	if(load < idle_threshold && singlecore)
+		goto delay_work;
+
+	online_cpu_count = num_online_cpus();
+	
+	if(load > plug_in_threshold[online_cpu_count]){
+		delay_out = plug_out_delay[online_cpu_count];
+		if(delay_in > 0)
+			delay_in--;
+		else
+			plug_in();
+	} else if(load < plug_out_threshold[online_cpu_count]){
+		delay_in = plug_in_delay[online_cpu_count];
+		if(delay_out > 0)
+			delay_out--;
+		else
+			plug_out();
+	}
+
+delay_work:
+	queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(1000));
 }
 
 
@@ -44,7 +126,7 @@ static void hotplug(struct work_struct *work){
  * Boost / Unboost cpu when the screen is touched
  */
 static void unboost_cpu(unsigned long data){
-	pr_info(HOTPLUG_INFO_TAG"Cpu unboosted !");
+	pr_info(HOTPLUG_INFO_TAG"Cpu unboosted !\n");
 }
 
 static void hotplug_input_event(struct input_handle *handle,
@@ -54,8 +136,9 @@ static void hotplug_input_event(struct input_handle *handle,
 		mod_timer(&unboost_timer, jiffies + boost_duration);
 		return;
 	}
+	is_idle = false;
 	mod_timer(&unboost_timer, jiffies + boost_duration);
-	pr_info(HOTPLUG_INFO_TAG"Boosting Cpu !");
+	pr_info(HOTPLUG_INFO_TAG"Boosting Cpu !\n");
 }
 
 /* 

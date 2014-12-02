@@ -1941,6 +1941,12 @@ config MSM_MPDEC
 	  This enables kernel based multi core control.
 	  (up/down hotplug based on load)
 
+config FAST_HOTPLUG
+	bool "Enable fast hotplug"
+	default n
+	help
+	  Kernel based core control.
+
 if CPU_FREQ_MSM
 
 config MSM_CPU_FREQ_SET_MIN_MAX

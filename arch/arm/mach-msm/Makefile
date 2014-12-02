@@ -395,6 +395,8 @@ else
 obj-$(CONFIG_MSM_DCVS) += msm_mpdecision_qcom.o
 endif
 
+obj-$(CONFIG_FAST_HOTPLUG) += fast_hotplug.o
+
 obj-$(CONFIG_MSM_RUN_QUEUE_STATS) += msm_rq_stats.o
 obj-$(CONFIG_MSM_SHOW_RESUME_IRQ) += msm_show_resume_irq.o
 obj-$(CONFIG_BT_MSM_PINTEST)  += btpintest.o

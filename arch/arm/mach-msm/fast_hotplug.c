@@ -21,6 +21,7 @@
 #include <linux/workqueue.h>
 #include <linux/sched.h>
 #include <linux/cpufreq.h>
+#include <linux/module.h>
 
 #define HOTPLUG_INFO_TAG	"[HOTPLUG] : "
 
@@ -56,46 +57,84 @@ static struct workqueue_struct *hotplug_wq;
 static struct delayed_work hotplug_work;
 
 
-static unsigned long boost_duration;
+static unsigned long boost_duration = BOOST_DURATION;
+module_param(boost_duration, ulong, 0644);
+
 static struct timer_list unboost_timer;
 static int is_boosted = false;
 
 static unsigned long idle_threshold = IDLE_THRESHOLD;
+module_param(idle_threshold, ulong, 0644);
 static unsigned long threshold_to_boost = THRESHOLD_TO_BOOST;
+module_param(threshold_to_boost, ulong, 0644);
+
 static int singlecore = false;
 
-static unsigned long plug_in_threshold[] = {
-	0,
-	PLUG_IN_CORE_1_THRESHOLD,
-	PLUG_IN_CORE_2_THRESHOLD,
-	PLUG_IN_CORE_3_THRESHOLD,
-	~0
+unsigned long plug_in_core_1_threshold = PLUG_IN_CORE_1_THRESHOLD;
+unsigned long plug_in_core_2_threshold = PLUG_IN_CORE_2_THRESHOLD;
+unsigned long plug_in_core_3_threshold = PLUG_IN_CORE_3_THRESHOLD;
+module_param(plug_in_core_1_threshold, ulong, 0644);
+module_param(plug_in_core_2_threshold, ulong, 0644);
+module_param(plug_in_core_3_threshold, ulong, 0644);
+
+unsigned int plug_in_core_1_delay = PLUG_IN_CORE_1_DELAY;
+unsigned int plug_in_core_2_delay = PLUG_IN_CORE_2_DELAY;
+unsigned int plug_in_core_3_delay = PLUG_IN_CORE_3_DELAY;
+module_param(plug_in_core_1_delay, uint, 0644);
+module_param(plug_in_core_2_delay, uint, 0644);
+module_param(plug_in_core_3_delay, uint, 0644);
+
+unsigned long plug_out_core_1_threshold = PLUG_OUT_CORE_1_THRESHOLD;
+unsigned long plug_out_core_2_threshold = PLUG_OUT_CORE_2_THRESHOLD;
+unsigned long plug_out_core_3_threshold = PLUG_OUT_CORE_3_THRESHOLD;
+module_param(plug_out_core_1_threshold, ulong, 0644);
+module_param(plug_out_core_2_threshold, ulong, 0644);
+module_param(plug_out_core_3_threshold, ulong, 0644);
+
+unsigned int plug_out_core_1_delay = PLUG_OUT_CORE_1_DELAY;
+unsigned int plug_out_core_2_delay = PLUG_OUT_CORE_2_DELAY;
+unsigned int plug_out_core_3_delay = PLUG_OUT_CORE_3_DELAY;
+module_param(plug_out_core_1_delay, uint, 0644);
+module_param(plug_out_core_2_delay, uint, 0644);
+module_param(plug_out_core_3_delay, uint, 0644);
+
+unsigned long zero = 0;
+unsigned long max = ~0;
+unsigned int izero = 0;
+unsigned int imax = ~0;
+
+static unsigned long *plug_in_threshold[] = {
+	&zero,
+	&plug_in_core_1_threshold,
+	&plug_in_core_2_threshold,
+	&plug_in_core_3_threshold,
+	&max
 };
 
 static unsigned int delay_in;
-static unsigned int plug_in_delay[] = {
-	0,
-	PLUG_IN_CORE_1_DELAY,
-	PLUG_IN_CORE_2_DELAY,
-	PLUG_IN_CORE_3_DELAY,
-	~0
+static unsigned int *plug_in_delay[] = {
+	&izero,
+	&plug_in_core_1_delay,
+	&plug_in_core_2_delay,
+	&plug_in_core_3_delay,
+	&imax
 };
 
-static unsigned long plug_out_threshold[] = {
-	0,
-	PLUG_OUT_CORE_1_THRESHOLD,
-	PLUG_OUT_CORE_2_THRESHOLD,
-	PLUG_OUT_CORE_3_THRESHOLD,
-	0
+static unsigned long *plug_out_threshold[] = {
+	&zero,
+	&plug_out_core_1_threshold,
+	&plug_out_core_2_threshold,
+	&plug_out_core_3_threshold,
+	&zero
 };
 
 static unsigned int delay_out;
-static unsigned int plug_out_delay[] = {
-	0,
-	PLUG_OUT_CORE_1_DELAY,
-	PLUG_OUT_CORE_2_DELAY,
-	PLUG_OUT_CORE_3_DELAY,
-	0
+static unsigned int *plug_out_delay[] = {
+	&izero,
+	&plug_out_core_1_delay,
+	&plug_out_core_2_delay,
+	&plug_out_core_3_delay,
+	&izero
 };
 
 extern unsigned long avg_nr_running(void);
@@ -162,16 +201,16 @@ static void hotplug(struct work_struct *work){
 		plug_in(online_cpu_count);
 
 	// If we have enough load, we decrement the delay until we can plug in
-	} else if(load > plug_in_threshold[online_cpu_count]){
-		delay_out = plug_out_delay[online_cpu_count];
+	} else if(load > *(plug_in_threshold[online_cpu_count])){
+		delay_out = *(plug_out_delay[online_cpu_count]);
 		if(delay_in > 0){
 			pr_info(HOTPLUG_INFO_TAG"We decrement the in delay %d from %d\n", online_cpu_count - 1, delay_out);
 			delay_in--;
 		}
 		else
 			plug_in(online_cpu_count);
-	} else if(!is_boosted && load < plug_out_threshold[online_cpu_count - 1]){
-		delay_in = plug_in_delay[online_cpu_count -1];
+	} else if(!is_boosted && load < *(plug_out_threshold[online_cpu_count - 1])){
+		delay_in = *(plug_in_delay[online_cpu_count -1]);
 		if(delay_out > 0){
 			pr_info(HOTPLUG_INFO_TAG"We decrement the out delay %d from %d\n", online_cpu_count - 1, delay_out);
 			delay_out--;
@@ -181,8 +220,8 @@ static void hotplug(struct work_struct *work){
 
 	// Nothing special happens, we just reset the delays
 	} else {
-		delay_out = plug_out_delay[online_cpu_count];
-		delay_in = plug_in_delay[online_cpu_count];
+		delay_out = *(plug_out_delay[online_cpu_count]);
+		delay_in = *(plug_in_delay[online_cpu_count]);
 	}
 
 delay_work:
@@ -202,11 +241,11 @@ static void hotplug_input_event(struct input_handle *handle,
 		unsigned int type, unsigned int code, int value)
 {
 	if(is_boosted){
-		mod_timer(&unboost_timer, jiffies + boost_duration);
+		mod_timer(&unboost_timer, jiffies + msecs_to_jiffies(boost_duration));
 		return;
 	}
 	is_boosted = true;
-	mod_timer(&unboost_timer, jiffies + boost_duration);
+	mod_timer(&unboost_timer, jiffies + msecs_to_jiffies(boost_duration));
 
 }
 
@@ -286,7 +325,6 @@ static int __init hotplug_init(void)
 	rc = input_register_handler(&hotplug_input_handler);
 
 
-	boost_duration = msecs_to_jiffies(BOOST_DURATION);
 	unboost_timer.function = unboost_cpu;
 	unboost_timer.expires = jiffies;
 	init_timer(&unboost_timer);

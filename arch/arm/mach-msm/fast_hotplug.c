@@ -116,13 +116,14 @@ module_param(plug_out_core_3_delay, uint, 0644);
 unsigned long zero = 0;
 unsigned long max = ~0;
 unsigned int izero = 0;
-unsigned int imax = ~0;
 
 static unsigned long *plug_in_threshold[] = {
 	&zero,
 	&plug_in_core_1_threshold,
+#if CONFIG_NR_CPUS > 2
 	&plug_in_core_2_threshold,
 	&plug_in_core_3_threshold,
+#endif
 	&max
 };
 
@@ -130,16 +131,20 @@ static unsigned int delay_in;
 static unsigned int *plug_in_delay[] = {
 	&izero,
 	&plug_in_core_1_delay,
+#if CONFIG_NR_CPUS > 2
 	&plug_in_core_2_delay,
 	&plug_in_core_3_delay,
-	&imax
+#endif
+	&izero
 };
 
 static unsigned long *plug_out_threshold[] = {
 	&zero,
 	&plug_out_core_1_threshold,
+#if CONFIG_NR_CPUS > 2
 	&plug_out_core_2_threshold,
 	&plug_out_core_3_threshold,
+#endif
 	&zero
 };
 
@@ -147,8 +152,10 @@ static unsigned int delay_out;
 static unsigned int *plug_out_delay[] = {
 	&izero,
 	&plug_out_core_1_delay,
+#if CONFIG_NR_CPUS > 2
 	&plug_out_core_2_delay,
 	&plug_out_core_3_delay,
+#endif
 	&izero
 };
 

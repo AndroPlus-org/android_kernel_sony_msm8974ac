@@ -27,7 +27,9 @@
 // #define DEBUG_ENABLED		1
 #define HOTPLUG_INFO_TAG	"[HOTPLUG] : "
 
-#define CPU_COUNT		4
+#ifndef CONFIG_NR_CPUS
+#define CONFIG_NR_CPUS		4
+#endif
 
 #define REFRESH_RATE		100  /* ms */
 
@@ -78,6 +80,10 @@ module_param(screen_off_singlecore, int, 0644);
 static int is_sleeping = false;
 
 static int singlecore = false;
+static int max_cpu_on = CONFIG_NR_CPUS;
+module_param(max_cpu_on, int, 0644);
+static int min_cpu_on = 1;
+module_param(min_cpu_on, int, 0644);
 
 unsigned long plug_in_core_1_threshold = PLUG_IN_CORE_1_THRESHOLD;
 unsigned long plug_in_core_2_threshold = PLUG_IN_CORE_2_THRESHOLD;
@@ -167,6 +173,10 @@ static int get_slowest_cpu(void){
 
 static void plug_in(int online_cpu_count){
 	int cpu;
+
+	if(online_cpu_count >= max_cpu_on)
+		return;
+
 	mutex_lock(&mutex);
 	singlecore = false;
 	for_each_possible_cpu(cpu){
@@ -183,6 +193,10 @@ static void plug_in(int online_cpu_count){
 #endif
 }
 static void plug_out(int online_cpu_count){
+
+	if(online_cpu_count <= min_cpu_on)
+		return;
+
 	mutex_lock(&mutex);
 	cpu_down(get_slowest_cpu());
 	if(online_cpu_count <= 2){
@@ -212,7 +226,7 @@ static void hotplug(struct work_struct *work){
 
 	online_cpu_count = num_online_cpus();
 #ifdef DEBUG_ENABLED
-	pr_info(HOTPLUG_INFO_TAG"The load is %lu, we have %d cpu online and the in threshold is : %lu. The delay is %d, out : %lu, %d", load, online_cpu_count, plug_in_threshold[online_cpu_count], plug_in_delay[online_cpu_count], plug_out_threshold[online_cpu_count - 1], plug_out_delay[online_cpu_count - 1]);
+	pr_info(HOTPLUG_INFO_TAG"The load is %lu, we have %d cpu online and the in threshold is : %lu. The delay is %d, out : %lu, %d and singlecore : %d", load, online_cpu_count, *plug_in_threshold[online_cpu_count], *plug_in_delay[online_cpu_count], *plug_out_threshold[online_cpu_count - 1], *plug_out_delay[online_cpu_count - 1], singlecore);
 #endif
 	
 	// If boosted, we don't hesitate to plug in cores if there is some load
@@ -378,6 +392,7 @@ static void hotplug_late_resume(struct power_suspend *h) {
 #ifdef DEBUG_ENABLED
 	pr_info(HOTPLUG_INFO_TAG"Screen on, let's boost the cpu !");
 #endif
+	is_sleeping = false;
 	is_boosted = true;
 	plug_in(num_online_cpus());
 	mutex_lock(&mutex);

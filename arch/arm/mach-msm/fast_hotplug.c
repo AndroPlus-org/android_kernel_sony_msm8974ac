@@ -22,6 +22,7 @@
 #include <linux/sched.h>
 #include <linux/cpufreq.h>
 #include <linux/module.h>
+#include <linux/powersuspend.h>
 
 #define HOTPLUG_INFO_TAG	"[HOTPLUG] : "
 
@@ -34,6 +35,10 @@
 #define IDLE_THRESHOLD		500
 
 #define THRESHOLD_TO_BOOST		3000
+
+
+#define SCREEN_OFF_SINGLECORE		1
+
 
 #define PLUG_IN_CORE_1_THRESHOLD	2500
 #define PLUG_IN_CORE_2_THRESHOLD	4000
@@ -67,6 +72,11 @@ static unsigned long idle_threshold = IDLE_THRESHOLD;
 module_param(idle_threshold, ulong, 0644);
 static unsigned long threshold_to_boost = THRESHOLD_TO_BOOST;
 module_param(threshold_to_boost, ulong, 0644);
+
+static int screen_off_singlecore = SCREEN_OFF_SINGLECORE;
+module_param(screen_off_singlecore, int, 0644);
+
+static int is_sleeping = false;
 
 static int singlecore = false;
 
@@ -145,6 +155,8 @@ static int get_slowest_cpu(void){
 	int cpu, slowest_cpu = 1;
 	unsigned long load, min_load = ~0;
 	for_each_online_cpu(cpu){
+		if(cpu == 0)
+			continue;
 		load = avg_cpu_nr_running((unsigned int)cpu);
 		if(load < min_load){
 			min_load = load;
@@ -203,18 +215,14 @@ static void hotplug(struct work_struct *work){
 	// If we have enough load, we decrement the delay until we can plug in
 	} else if(load > *(plug_in_threshold[online_cpu_count])){
 		delay_out = *(plug_out_delay[online_cpu_count]);
-		if(delay_in > 0){
-			pr_info(HOTPLUG_INFO_TAG"We decrement the in delay %d from %d\n", online_cpu_count - 1, delay_out);
+		if(delay_in > 0)
 			delay_in--;
-		}
 		else
 			plug_in(online_cpu_count);
 	} else if(!is_boosted && load < *(plug_out_threshold[online_cpu_count - 1])){
 		delay_in = *(plug_in_delay[online_cpu_count -1]);
-		if(delay_out > 0){
-			pr_info(HOTPLUG_INFO_TAG"We decrement the out delay %d from %d\n", online_cpu_count - 1, delay_out);
+		if(delay_out > 0)
 			delay_out--;
-		}
 		else
 			plug_out(online_cpu_count);
 
@@ -225,7 +233,11 @@ static void hotplug(struct work_struct *work){
 	}
 
 delay_work:
+	if(is_sleeping)
+		return;
+	mutex_lock(&mutex);
 	queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(REFRESH_RATE));
+	mutex_unlock(&mutex);
 }
 
 
@@ -316,6 +328,43 @@ static struct input_handler hotplug_input_handler = {
 };
 
 /*
+ * Suspend / Resume
+ */
+
+
+static void hotplug_power_suspend(struct power_suspend *h) {
+	int cpu;
+	if(screen_off_singlecore){
+		mutex_lock(&mutex);
+		flush_workqueue(hotplug_wq);
+		for_each_online_cpu(cpu){
+			if(cpu == 0)
+				continue;
+			pr_info(HOTPLUG_INFO_TAG"Bringing cpu %d down\n", cpu);
+			cpu_down(cpu);
+		}
+		singlecore = true;
+		is_sleeping = true;
+		mutex_unlock(&mutex);
+	}
+}
+
+static void hotplug_late_resume(struct power_suspend *h) {
+	pr_info(HOTPLUG_INFO_TAG"Screen on, let's boost the cpu !");
+	mutex_lock(&mutex);
+	is_boosted = true;
+	plug_in(num_online_cpus());
+	mod_timer(&unboost_timer, jiffies + msecs_to_jiffies(boost_duration));
+	queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(1));
+	mutex_unlock(&mutex);
+
+}
+
+static struct power_suspend hotplug_power_suspend_handler = {
+	.suspend = hotplug_power_suspend,
+	.resume = hotplug_late_resume,
+};
+/*
  * Initialization of the module
  */
 static int __init hotplug_init(void)
@@ -330,11 +379,12 @@ static int __init hotplug_init(void)
 	init_timer(&unboost_timer);
 
 	hotplug_wq = alloc_workqueue("hotplug", WQ_HIGHPRI | WQ_UNBOUND, 1);
-// 	boost_wq = alloc_workqueue("boost", WQ_HIGHPRI | WQ_UNBOUND, 1);
 
-// 	INIT_DELAYED_WORK(&boost_work, boost_cpu);
 	INIT_DELAYED_WORK(&hotplug_work, hotplug);
-	queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(1000));
+
+	register_power_suspend(&hotplug_power_suspend_handler);
+
+	queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(REFRESH_RATE));
 
 	pr_info(HOTPLUG_INFO_TAG"Hotplug succesfully initialized !");
 	return 0;

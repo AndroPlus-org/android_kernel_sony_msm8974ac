@@ -240,9 +240,13 @@ static void hotplug(struct work_struct *work){
 	}
 
 delay_work:
-	if(is_sleeping)
-		return;
+	// If we don't lock and check for sleep here, we might queue a
+	// new work just after the power suspend function flushed the work queue
 	mutex_lock(&mutex);
+	if(is_sleeping){
+		mutex_unlock(&mutex);
+		return;
+	}
 	queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(REFRESH_RATE));
 	mutex_unlock(&mutex);
 }
@@ -254,7 +258,8 @@ delay_work:
 static void unboost_cpu(unsigned long data){
 	is_boosted = false;
 	
-	// This is a good, quiet occasion to change the idle threshold in case the plug in frequency has been changed
+	// This is a good, quiet occasion to change the idle threshold
+	// in case the plug in frequency has been changed
 	idle_threshold = *(plug_in_threshold[1]);
 #ifdef DEBUG_ENABLED
 	pr_info(HOTPLUG_INFO_TAG"Cpu unboosted !\n");
@@ -373,9 +378,9 @@ static void hotplug_late_resume(struct power_suspend *h) {
 #ifdef DEBUG_ENABLED
 	pr_info(HOTPLUG_INFO_TAG"Screen on, let's boost the cpu !");
 #endif
-	mutex_lock(&mutex);
 	is_boosted = true;
 	plug_in(num_online_cpus());
+	mutex_lock(&mutex);
 	mod_timer(&unboost_timer, jiffies + msecs_to_jiffies(boost_duration));
 	queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(1));
 	mutex_unlock(&mutex);

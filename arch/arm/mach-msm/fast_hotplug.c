@@ -24,6 +24,8 @@
 #include <linux/module.h>
 #include <linux/powersuspend.h>
 
+#define FAST_HOTPLUG_ENABLED	1
+
 // #define DEBUG_ENABLED		1
 #define HOTPLUG_INFO_TAG	"[HOTPLUG] : "
 
@@ -56,6 +58,15 @@
 #define PLUG_OUT_CORE_1_DELAY		3
 #define PLUG_OUT_CORE_2_DELAY		2
 #define PLUG_OUT_CORE_3_DELAY		1
+
+static int fast_hotplug_enabled = FAST_HOTPLUG_ENABLED;
+static int enable_fast_hotplug(const char *val, const struct kernel_param *kp);
+
+static struct kernel_param_ops params_ops_enable = {
+       .set = enable_fast_hotplug,
+       .get = param_get_uint,
+};
+module_param_cb(fast_hotplug_enabled, &params_ops_enable, &fast_hotplug_enabled, 0644);
 
 static DEFINE_MUTEX(mutex);
 
@@ -162,6 +173,39 @@ static unsigned int *plug_out_delay[] = {
 extern unsigned long avg_nr_running(void);
 extern unsigned long avg_cpu_nr_running(unsigned int cpu);
 
+
+static struct power_suspend hotplug_power_suspend_handler;
+static void plug_in(int online_cpu_count);
+
+static int enable_fast_hotplug(const char *val, const struct kernel_param *kp){
+	int cpu;
+	int ret = param_set_bool(val, kp);
+	if(!fast_hotplug_enabled){
+		pr_info(HOTPLUG_INFO_TAG"Fast hotplug disabled\n");
+		mutex_lock(&mutex);
+		flush_workqueue(hotplug_wq);
+		for_each_possible_cpu(cpu){
+			if(cpu == 0)
+				continue;
+			cpu_up(cpu);
+		}
+		is_sleeping = true;
+		mutex_unlock(&mutex);
+	} else {
+		pr_info(HOTPLUG_INFO_TAG"Fast hotplug enabled\n");
+		mutex_lock(&mutex);
+		is_sleeping = false;
+		is_boosted = true;
+
+		flush_workqueue(hotplug_wq);
+
+		mod_timer(&unboost_timer, jiffies + msecs_to_jiffies(boost_duration));
+		queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(1));
+		mutex_unlock(&mutex);
+	}
+
+	return ret;
+}
 
 static int get_slowest_cpu(void){
 	int cpu, slowest_cpu = 1;
@@ -375,7 +419,7 @@ static struct input_handler hotplug_input_handler = {
 
 static void hotplug_power_suspend(struct power_suspend *h) {
 	int cpu;
-	if(screen_off_singlecore){
+	if(fast_hotplug_enabled && screen_off_singlecore){
 		mutex_lock(&mutex);
 		flush_workqueue(hotplug_wq);
 #ifdef DEBUG_ENABLED
@@ -396,17 +440,18 @@ static void hotplug_power_suspend(struct power_suspend *h) {
 }
 
 static void hotplug_late_resume(struct power_suspend *h) {
+	if(fast_hotplug_enabled){
 #ifdef DEBUG_ENABLED
-	pr_info(HOTPLUG_INFO_TAG"Screen on, let's boost the cpu !");
+		pr_info(HOTPLUG_INFO_TAG"Screen on, let's boost the cpu !");
 #endif
-	is_sleeping = false;
-	is_boosted = true;
-	plug_in(num_online_cpus());
-	mutex_lock(&mutex);
-	mod_timer(&unboost_timer, jiffies + msecs_to_jiffies(boost_duration));
-	queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(1));
-	mutex_unlock(&mutex);
-
+		is_sleeping = false;
+		is_boosted = true;
+		plug_in(num_online_cpus());
+		mutex_lock(&mutex);
+		mod_timer(&unboost_timer, jiffies + msecs_to_jiffies(boost_duration));
+		queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(1));
+		mutex_unlock(&mutex);
+	}
 }
 
 static struct power_suspend hotplug_power_suspend_handler = {

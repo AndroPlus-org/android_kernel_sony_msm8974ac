@@ -512,6 +512,9 @@ static struct input_handler mpdec_input_handler = {
 
 static void msm_mpdec_suspend(struct work_struct * msm_mpdec_suspend_work) {
 	int cpu = nr_cpu_ids;
+	if(state == MSM_MPDEC_DISABLED)
+		return;
+
 #ifdef CONFIG_MSM_MPDEC_INPUTBOOST_CPUMIN
 	is_screen_on = false;
 #endif
@@ -540,6 +543,8 @@ static DECLARE_WORK(msm_mpdec_suspend_work, msm_mpdec_suspend);
 
 static void msm_mpdec_resume(struct work_struct * msm_mpdec_suspend_work) {
 	int cpu = nr_cpu_ids;
+	if(state == MSM_MPDEC_DISABLED)
+		return;
 #ifdef CONFIG_MSM_MPDEC_INPUTBOOST_CPUMIN
 	is_screen_on = true;
 #endif

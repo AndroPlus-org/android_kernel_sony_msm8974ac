@@ -98,7 +98,7 @@ static unsigned int TwTs_Threshold[8] = {140, 0, 140, 190, 140, 190, 0, 190};
 
 extern unsigned int get_rq_info(void);
 
-unsigned int state = MSM_MPDEC_IDLE;
+unsigned int state = MSM_MPDEC_DISABLED;
 bool was_paused = false;
 #ifdef CONFIG_MSM_MPDEC_INPUTBOOST_CPUMIN
 bool is_screen_on = true;

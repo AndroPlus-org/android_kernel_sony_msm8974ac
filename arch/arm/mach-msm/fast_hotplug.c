@@ -24,6 +24,7 @@
 #include <linux/module.h>
 #include <linux/powersuspend.h>
 
+// #define DEBUG_ENABLED		1
 #define HOTPLUG_INFO_TAG	"[HOTPLUG] : "
 
 #define CPU_COUNT		4
@@ -31,8 +32,6 @@
 #define REFRESH_RATE		100  /* ms */
 
 #define BOOST_DURATION		1000 /* ms */
-#define BOOST_FREQ		(1190 * 1000)
-#define IDLE_THRESHOLD		500
 
 #define THRESHOLD_TO_BOOST		3000
 
@@ -68,7 +67,7 @@ module_param(boost_duration, ulong, 0644);
 static struct timer_list unboost_timer;
 static int is_boosted = false;
 
-static unsigned long idle_threshold = IDLE_THRESHOLD;
+static unsigned long idle_threshold = PLUG_IN_CORE_1_THRESHOLD;
 module_param(idle_threshold, ulong, 0644);
 static unsigned long threshold_to_boost = THRESHOLD_TO_BOOST;
 module_param(threshold_to_boost, ulong, 0644);
@@ -179,17 +178,23 @@ static void plug_in(int online_cpu_count){
 		}
 	}
 	mutex_unlock(&mutex);
+#ifdef DEBUG_ENABLED
 	pr_info(HOTPLUG_INFO_TAG"Plugged in a core !");
+#endif
 }
 static void plug_out(int online_cpu_count){
 	mutex_lock(&mutex);
 	cpu_down(get_slowest_cpu());
 	if(online_cpu_count <= 2){
 		singlecore = true;
+#ifdef DEBUG_ENABLED
 		pr_info(HOTPLUG_INFO_TAG"Now running in single core");
+#endif
 	}
 	mutex_unlock(&mutex);
+#ifdef DEBUG_ENABLED
 	pr_info(HOTPLUG_INFO_TAG"Plugged out a core !");
+#endif
 }
 
 /*
@@ -206,7 +211,9 @@ static void hotplug(struct work_struct *work){
 		goto delay_work;
 
 	online_cpu_count = num_online_cpus();
-// 	pr_info(HOTPLUG_INFO_TAG"The load is %lu, we have %d cpu online and the in threshold is : %lu. The delay is %d, out : %lu, %d", load, online_cpu_count, plug_in_threshold[online_cpu_count], plug_in_delay[online_cpu_count], plug_out_threshold[online_cpu_count - 1], plug_out_delay[online_cpu_count - 1]);
+#ifdef DEBUG_ENABLED
+	pr_info(HOTPLUG_INFO_TAG"The load is %lu, we have %d cpu online and the in threshold is : %lu. The delay is %d, out : %lu, %d", load, online_cpu_count, plug_in_threshold[online_cpu_count], plug_in_delay[online_cpu_count], plug_out_threshold[online_cpu_count - 1], plug_out_delay[online_cpu_count - 1]);
+#endif
 	
 	// If boosted, we don't hesitate to plug in cores if there is some load
 	if(is_boosted && load > threshold_to_boost && singlecore){
@@ -245,8 +252,13 @@ delay_work:
  * Boost / Unboost cpu when the screen is touched
  */
 static void unboost_cpu(unsigned long data){
-	is_boosted = false,
+	is_boosted = false;
+	
+	// This is a good, quiet occasion to change the idle threshold in case the plug in frequency has been changed
+	idle_threshold = *(plug_in_threshold[1]);
+#ifdef DEBUG_ENABLED
 	pr_info(HOTPLUG_INFO_TAG"Cpu unboosted !\n");
+#endif
 }
 
 static void hotplug_input_event(struct input_handle *handle,
@@ -257,6 +269,9 @@ static void hotplug_input_event(struct input_handle *handle,
 		return;
 	}
 	is_boosted = true;
+#ifdef DEBUG_ENABLED
+	pr_info(HOTPLUG_INFO_TAG"Cpu boosted !\n");
+#endif
 	mod_timer(&unboost_timer, jiffies + msecs_to_jiffies(boost_duration));
 
 }
@@ -337,10 +352,15 @@ static void hotplug_power_suspend(struct power_suspend *h) {
 	if(screen_off_singlecore){
 		mutex_lock(&mutex);
 		flush_workqueue(hotplug_wq);
+#ifdef DEBUG_ENABLED
+		pr_info(HOTPLUG_INFO_TAG"Screen off\n");
+#endif
 		for_each_online_cpu(cpu){
 			if(cpu == 0)
 				continue;
+#ifdef DEBUG_ENABLED
 			pr_info(HOTPLUG_INFO_TAG"Bringing cpu %d down\n", cpu);
+#endif
 			cpu_down(cpu);
 		}
 		singlecore = true;
@@ -350,7 +370,9 @@ static void hotplug_power_suspend(struct power_suspend *h) {
 }
 
 static void hotplug_late_resume(struct power_suspend *h) {
+#ifdef DEBUG_ENABLED
 	pr_info(HOTPLUG_INFO_TAG"Screen on, let's boost the cpu !");
+#endif
 	mutex_lock(&mutex);
 	is_boosted = true;
 	plug_in(num_online_cpus());
@@ -386,7 +408,7 @@ static int __init hotplug_init(void)
 
 	queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(REFRESH_RATE));
 
-	pr_info(HOTPLUG_INFO_TAG"Hotplug succesfully initialized !");
+	pr_info(HOTPLUG_INFO_TAG"Fast hotplug succesfully initialized !");
 	return 0;
 }
 

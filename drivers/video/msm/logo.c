@@ -167,9 +167,9 @@ static void __init draw_logo(void)
 
 int __init logo_init(void)
 {
-	if (display_on_in_boot)
-		printk(KERN_INFO "Skip drawing logo. Already drawn in boot.\n");
-	else if (!load_565rle_image(INIT_IMAGE_FILE))
+// 	if (display_on_in_boot)
+// 		printk(KERN_INFO "Skip drawing logo. Already drawn in boot.\n");
+ 	if (!load_565rle_image(INIT_IMAGE_FILE))
 		draw_logo();
 
 	return 0;

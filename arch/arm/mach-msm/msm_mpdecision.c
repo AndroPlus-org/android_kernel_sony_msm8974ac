@@ -155,7 +155,6 @@ static void mpdec_cpu_down(int cpu) {
 	cputime64_t on_time = 0;
 	if (cpu_online(cpu)) {
 		mutex_lock(&per_cpu(msm_mpdec_cpudata, cpu).hotplug_mutex);
-		// TODO : can't get past this point !
 		cpu_down(cpu);
 		on_time = (ktime_to_ms(ktime_get()) - per_cpu(msm_mpdec_cpudata, cpu).on_time);
 		per_cpu(msm_mpdec_cpudata, cpu).online = false;

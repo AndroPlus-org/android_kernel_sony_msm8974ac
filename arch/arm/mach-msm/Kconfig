@@ -1140,6 +1140,51 @@ config MACH_FSM9XXX_SURF
 	  chipset based SURF evaluation board and
 	  FFA board.
 
+config MACH_SONY_SIRIUS
+	depends on ARCH_MSM8974
+	bool "Sony Mobile Sirius"
+	help
+	  Support for the SONY Mobile Sirius device.
+	  It is based on QCOM MSM8974 AB chipset.
+	  If you enable this config,
+	  Please use SONY Mobile source tree.
+
+config MACH_SONY_CASTOR
+	depends on ARCH_MSM8974
+	bool "Sony Mobile Castor"
+	help
+	  Support for the SONY Mobile Castor device.
+	  It is based on QCOM MSM8974 AB chipset.
+	  If you enable this config,
+	  Please use SONY Mobile source tree.
+
+config MACH_SONY_CASTOR_BRAZIL
+	depends on ARCH_MSM8974
+	bool "Sony Mobile Castor Brazil"
+	help
+	  Support for the SONY Mobile Castor Brazil device.
+	  It is based on QCOM MSM8974 AB chipset.
+	  If you enable this config,
+	  Please use SONY Mobile source tree.
+
+config MACH_SONY_CASTOR_WINDY
+	depends on ARCH_MSM8974
+	bool "Sony Mobile Castor Windy"
+	help
+	  Support for the SONY Mobile Castor Windy device.
+	  It is based on QCOM APQ8074 AB chipset.
+	  If you enable this config,
+	  Please use SONY Mobile source tree.
+
+config MACH_SONY_CANOPUS
+	depends on ARCH_MSM8974
+	bool "Sony Mobile Canopus"
+	help
+	  Support for the SONY Mobile Canopus device.
+	  It is based on QCOM MSM8974 AB chipset.
+	  If you enable this config,
+	  Please use SONY Mobile source tree.
+
 config MACH_SONY_LEO
 	depends on ARCH_MSM8974
 	bool "Sony Mobile Leo"
@@ -1155,6 +1200,24 @@ config MACH_SONY_ARIES
 	help
 	  Support for the SONY Mobile Aries device.
 	  It is based on QCOM MSM8974 AC chipset.
+	  If you enable this config,
+	  Please use SONY Mobile source tree.
+
+config MACH_SONY_SCORPION
+	depends on ARCH_MSM8974
+	bool "Sony Mobile Scorpion"
+	help
+	  Support for the SONY Mobile Scorpion device.
+	  It is based on QCOM MSM8974 AC chipset.
+	  If you enable this config,
+	  Please use SONY Mobile source tree.
+
+config MACH_SONY_SCORPION_WINDY
+	depends on ARCH_MSM8974
+	bool "Sony Mobile Scorpion Windy"
+	help
+	  Support for the SONY Mobile Scorpion Windy device.
+	  It is based on QCOM APQ8074 AC chipset.
 	  If you enable this config,
 	  Please use SONY Mobile source tree.
 

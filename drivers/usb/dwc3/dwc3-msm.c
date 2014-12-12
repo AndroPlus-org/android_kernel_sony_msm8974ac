@@ -205,6 +205,8 @@ struct dwc3_msm {
 	struct clk		*sleep_clk;
 	struct clk		*hsphy_sleep_clk;
 	struct clk		*utmi_clk;
+	unsigned int		utmi_clk_rate;
+	struct clk		*utmi_clk_src;
 	struct regulator	*hsusb_3p3;
 	struct regulator	*hsusb_1p8;
 	struct regulator	*hsusb_vddcx;
@@ -1480,6 +1482,48 @@ static void dwc3_msm_ss_phy_reg_init(struct dwc3_msm *mdwc)
 				0x07f03f07, 0x07f01605);
 }
 
+static void dwc3_msm_update_ref_clk(struct dwc3_msm *mdwc)
+{
+	u32 guctl, gfladj = 0;
+
+	guctl = dwc3_msm_read_reg(mdwc->base, DWC3_GUCTL);
+	guctl &= ~DWC3_GUCTL_REFCLKPER;
+
+	/* GFLADJ register is used starting with revision 2.50a */
+	if (dwc3_msm_read_reg(mdwc->base, DWC3_GSNPSID) >= DWC3_REVISION_250A) {
+		gfladj = dwc3_msm_read_reg(mdwc->base, DWC3_GFLADJ);
+		gfladj &= ~DWC3_GFLADJ_REFCLK_240MHZDECR_PLS1;
+		gfladj &= ~DWC3_GFLADJ_REFCLK_240MHZ_DECR;
+		gfladj &= ~DWC3_GFLADJ_REFCLK_LPM_SEL;
+		gfladj &= ~DWC3_GFLADJ_REFCLK_FLADJ;
+	}
+
+	/* Refer to SNPS Databook Table 6-55 for calculations used */
+	switch (mdwc->utmi_clk_rate) {
+	case 19200000:
+		guctl |= 52 << __ffs(DWC3_GUCTL_REFCLKPER);
+		gfladj |= 12 << __ffs(DWC3_GFLADJ_REFCLK_240MHZ_DECR);
+		gfladj |= DWC3_GFLADJ_REFCLK_240MHZDECR_PLS1;
+		gfladj |= DWC3_GFLADJ_REFCLK_LPM_SEL;
+		gfladj |= 200 << __ffs(DWC3_GFLADJ_REFCLK_FLADJ);
+		break;
+	case 24000000:
+		guctl |= 41 << __ffs(DWC3_GUCTL_REFCLKPER);
+		gfladj |= 10 << __ffs(DWC3_GFLADJ_REFCLK_240MHZ_DECR);
+		gfladj |= DWC3_GFLADJ_REFCLK_LPM_SEL;
+		gfladj |= 2032 << __ffs(DWC3_GFLADJ_REFCLK_FLADJ);
+		break;
+	default:
+		dev_warn(mdwc->dev, "Unsupported utmi_clk_rate: %u\n",
+				mdwc->utmi_clk_rate);
+		break;
+	}
+
+	dwc3_msm_write_reg(mdwc->base, DWC3_GUCTL, guctl);
+	if (gfladj)
+		dwc3_msm_write_reg(mdwc->base, DWC3_GFLADJ, gfladj);
+}
+
 /* Initialize QSCRATCH registers for HSPHY and SSPHY operation */
 static void dwc3_msm_qscratch_reg_init(struct dwc3_msm *mdwc,
 						unsigned event_status)
@@ -1588,6 +1632,7 @@ static void dwc3_msm_notify_event(struct dwc3 *dwc, unsigned event)
 				"DWC3_CONTROLLER_POST_RESET_EVENT received\n");
 		dwc3_msm_qscratch_reg_init(mdwc,
 					DWC3_CONTROLLER_POST_RESET_EVENT);
+		dwc3_msm_update_ref_clk(mdwc);
 		dwc->tx_fifo_size = mdwc->tx_fifo_size;
 		break;
 	case DWC3_CONTROLLER_POST_INITIALIZATION_EVENT:
@@ -1740,6 +1785,33 @@ static void dwc3_chg_block_reset(struct dwc3_msm *mdwc)
 	if (chg_ctrl & 0x3F)
 		dev_err(mdwc->dev, "%s Unable to reset chg_det block: %x\n",
 						 __func__, chg_ctrl);
+}
+
+static void dwc3_chg_disable_det(struct dwc3_msm *mdwc)
+{
+	u32 chg_ctrl;
+
+	dwc3_msm_write_reg(mdwc->base, CHARGING_DET_CTRL_REG, 0x0);
+	msleep(20);
+
+	chg_ctrl = dwc3_msm_read_reg(mdwc->base, CHARGING_DET_CTRL_REG);
+	if (chg_ctrl & 0x3F)
+		dev_err(mdwc->dev, "%s Unable to reset chg_det block: %x\n",
+						 __func__, chg_ctrl);
+}
+
+static void dwc3_pulldown_dp(struct dwc3_charger *charger, bool pulldown)
+{
+	struct dwc3_msm *mdwc = container_of(charger, struct dwc3_msm, charger);
+
+	if (pulldown) {
+		dev_dbg(mdwc->dev,
+			"to pulldown the D+ line, enable secondary_det\n");
+		dwc3_chg_enable_secondary_det(mdwc);
+	} else {
+		dev_dbg(mdwc->dev, "disable secondary_det\n");
+		dwc3_chg_disable_det(mdwc);
+	}
 }
 
 static const char *chg_to_string(enum dwc3_chg_type chg_type)
@@ -2573,7 +2645,7 @@ static void dwc3_ext_notify_online(void *ctx, int on)
 
 		notify_otg = true;
 		dwc3_start_chg_det(&mdwc->charger, false);
-	} else {
+	} else if (ext_inused) {
 		/* external client offline; tell OTG about cached ID/BSV */
 		if (mdwc->ext_xceiv.id != mdwc->id_state) {
 			mdwc->ext_xceiv.id = mdwc->id_state;
@@ -2582,6 +2654,10 @@ static void dwc3_ext_notify_online(void *ctx, int on)
 
 		mdwc->ext_xceiv.bsv = mdwc->vbus_active;
 		notify_otg |= mdwc->vbus_active;
+	} else {
+		dev_dbg(mdwc->dev, "%s: not inused, ignore a disconnection\n",
+								__func__);
+		return;
 	}
 
 	dev_info(mdwc->dev, "%s: set bsv=%d, id=%d\n", __func__,
@@ -3097,11 +3173,35 @@ static int __devinit dwc3_msm_probe(struct platform_device *pdev)
 	}
 	clk_prepare_enable(mdwc->hsphy_sleep_clk);
 
+	ret = of_property_read_u32(node, "qcom,utmi-clk-rate",
+				   (u32 *)&mdwc->utmi_clk_rate);
+	if (ret)
+		mdwc->utmi_clk_rate = 60000000;
+
 	mdwc->utmi_clk = devm_clk_get(&pdev->dev, "utmi_clk");
 	if (IS_ERR(mdwc->utmi_clk)) {
 		dev_err(&pdev->dev, "failed to get utmi_clk\n");
 		ret = PTR_ERR(mdwc->utmi_clk);
 		goto disable_sleep_a_clk;
+	}
+
+	if (mdwc->utmi_clk_rate == 24000000) {
+		/*
+		 * For setting utmi clock to 24MHz, first set 48MHz on parent
+		 * clock "utmi_clk_src" and then set divider 2 on child branch
+		 * "utmi_clk".
+		 */
+		mdwc->utmi_clk_src = devm_clk_get(&pdev->dev, "utmi_clk_src");
+		if (IS_ERR(mdwc->utmi_clk_src)) {
+			dev_err(&pdev->dev, "failed to get utmi_clk_src\n");
+			ret = PTR_ERR(mdwc->utmi_clk_src);
+			goto disable_sleep_a_clk;
+		}
+		clk_set_rate(mdwc->utmi_clk_src, 48000000);
+		/* 1 means divide utmi_clk_src by 2 */
+		clk_set_rate(mdwc->utmi_clk, 1);
+	} else {
+		clk_set_rate(mdwc->utmi_clk, mdwc->utmi_clk_rate);
 	}
 	clk_prepare_enable(mdwc->utmi_clk);
 
@@ -3413,6 +3513,7 @@ static int __devinit dwc3_msm_probe(struct platform_device *pdev)
 			!(mdwc->otg_xceiv->flags & ENABLE_SECONDARY_PHY)) {
 		/* Skip charger detection for simulator targets */
 		if (!mdwc->charger.skip_chg_detect) {
+			mdwc->charger.pulldown_dp = dwc3_pulldown_dp;
 			mdwc->charger.start_detection = dwc3_start_chg_det;
 			ret = dwc3_set_charger(mdwc->otg_xceiv->otg,
 					&mdwc->charger);

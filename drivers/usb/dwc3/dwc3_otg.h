@@ -93,6 +93,9 @@ struct dwc3_charger {
 	/* to notify OTG about charger detection completion, provided by OTG */
 	void	(*notify_detection_complete)(struct usb_otg *otg,
 						struct dwc3_charger *charger);
+
+	/* pulldown the D+ line, provided by external charger module */
+	void	(*pulldown_dp)(struct dwc3_charger *charger, bool pulldown);
 };
 
 /* for external charger driver */

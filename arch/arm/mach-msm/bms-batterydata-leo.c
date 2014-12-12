@@ -187,15 +187,6 @@ static struct sf_lut rbatt_sf_lg = {
 	}
 };
 
-struct bms_battery_data oem_batt_data = {
-	.fcc			= 3140,
-	.fcc_temp_lut		= &fcc_temp,
-	.pc_temp_ocv_lut	= &pc_temp_ocv,
-	.rbatt_sf_lut		= &rbatt_sf,
-	.default_rbatt_mohm	= 100,
-	.flat_ocv_threshold_uv	= 3800000,
-};
-
 struct bms_battery_data oem_batt_data_somc[BATT_VENDOR_NUM] = {
 	/* BATT_VENDOR_TDK */
 	{
@@ -231,3 +222,6 @@ struct bms_battery_data oem_batt_data_somc[BATT_VENDOR_NUM] = {
 	{
 	},
 };
+
+struct bms_battery_data *bms_batt_data = &oem_batt_data_somc[0];
+int bms_batt_data_num = BATT_VENDOR_NUM;

@@ -867,6 +867,8 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 					 */
 					if (dotg->charger_retry_count ==
 						max_chgr_retry_count) {
+						charger->pulldown_dp(charger,
+									false);
 						dwc3_otg_set_power(phy, 0);
 						qpnp_chg_notify_invalid_usb();
 						pm_runtime_put_sync(phy->dev);
@@ -875,12 +877,16 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 					charger->start_detection(dotg->charger,
 									false);
 
+					charger->pulldown_dp(charger, true);
 					delay = msecs_to_jiffies(100 *
 						dotg->charger_retry_count);
 					work = 1;
 					break;
 				default:
 					dev_dbg(phy->dev, "chg_det started\n");
+					if (dotg->charger_retry_count)
+						charger->pulldown_dp(charger,
+									false);
 					charger->start_detection(charger, true);
 					break;
 				}
@@ -900,8 +906,11 @@ static void dwc3_otg_sm_work(struct work_struct *w)
 				}
 			}
 		} else {
-			if (charger)
+			if (charger) {
 				charger->start_detection(dotg->charger, false);
+				if (dotg->charger_retry_count)
+					charger->pulldown_dp(charger, false);
+			}
 
 			dotg->charger_retry_count = 0;
 			dwc3_otg_set_power(phy, 0);

@@ -20,7 +20,10 @@
 #include <linux/init.h>
 #include <linux/uaccess.h>
 #include <linux/user.h>
+<<<<<<< HEAD
 #include <linux/export.h>
+=======
+>>>>>>> 42b5f07... 23.0.1.A.5.77
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 
@@ -637,6 +640,7 @@ int vfp_restore_user_hwstate(struct user_vfp __user *ufp,
 	return err ? -EFAULT : 0;
 }
 
+<<<<<<< HEAD
 void vfp_kmode_exception(void)
 {
 	/*
@@ -657,6 +661,8 @@ void vfp_kmode_exception(void)
 		pr_crit("BUG: FP instruction issued in kernel mode with FP unit disabled\n");
 }
 
+=======
+>>>>>>> 42b5f07... 23.0.1.A.5.77
 /*
  * VFP hardware can lose all context when a CPU goes offline.
  * As we will be running in SMP mode with CPU hotplug, we will save the

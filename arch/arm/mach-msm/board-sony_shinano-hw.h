@@ -21,6 +21,8 @@ enum sony_hw {
 	HW_UNKNOWN,
 	HW_LEO,
 	HW_LEO_SAMBA,
+	HW_SIRIUS,
+	HW_SIRIUS_SAMBA,
 };
 
 int get_sony_hw(void);

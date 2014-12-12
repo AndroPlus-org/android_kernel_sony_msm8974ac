@@ -3758,7 +3758,8 @@ qpnp_chg_detect_weak_charger(struct qpnp_chg_chip *chip,
 	struct qpnp_somc_params *sp = &chip->somc_params;
 	enum qpnp_chg_chg_path prev_path = sp->prev_charging_path;
 
-	if (!chip->somc_params.enable_report_charger_state)
+	if (!chip->somc_params.enable_report_charger_state ||
+		chip->somc_params.discharging_for_llk)
 		return;
 
 	pr_debug("path: %d -> %d\n", prev_path, charging_path);
@@ -4193,14 +4194,14 @@ qpnp_chg_aicl_work(struct work_struct *work)
 	if (charging_path == QPNP_CHG_PATH_NONE) {
 		chip->somc_params.disabled_rb_detect_cnt = 0;
 		chip->somc_params.aicl_period_cnt = 0;
-		chip->somc_params.mhl_state = 0;
 		goto aicl_work_exit;
 	}
 
 	if (chip->somc_params.disabled_rb_detect_cnt)
 		chip->somc_params.disabled_rb_detect_cnt--;
 
-	if (!chip->somc_params.aicl_period_cnt)
+	if (!chip->somc_params.aicl_period_cnt &&
+		!chip->somc_params.discharging_for_llk)
 		qpnp_chg_somc_aicl(chip, usb_present, dc_present,
 					charging_path);
 

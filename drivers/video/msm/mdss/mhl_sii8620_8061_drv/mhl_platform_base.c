@@ -71,6 +71,11 @@ extern int qpnp_chg_notify_mhl_state(int state);
 
 static void mhl_pf_external_notify(int data)
 {
+	/* noitfy charger of mhl status */
+#ifdef MHL_PMIC_VMIN_SET
+	qpnp_chg_notify_mhl_state(data);
+#endif
+
 	notify_usb_online(usb_ctx, data);
 
 	/* notify HDMI Driver of change of HDMI Clock. */
@@ -195,10 +200,6 @@ void mhl_pf_switch_register_cb(int (*device_discovery)(void *context),
 		rc = device_discovery_cb(context_cb);
 		if (rc == MHL_USB_INUSE) {
 			if (notify_usb_online) {
-#ifdef MHL_PMIC_VMIN_SET
-				/* Found MHL device */
-				qpnp_chg_notify_mhl_state(1);
-#endif
 				mhl_pf_external_notify(1);
 			}
 		}
@@ -264,10 +265,6 @@ static int mhl_pf_switch_device_discovery(void *data,
 		rc = device_discovery_cb(context_cb);
 		if (rc == MHL_USB_INUSE) {
 			if (notify_usb_online) {
-#ifdef MHL_PMIC_VMIN_SET
-				/* Found MHL device */
-				qpnp_chg_notify_mhl_state(1);
-#endif
 				mhl_pf_external_notify(1);
 			}
 		}

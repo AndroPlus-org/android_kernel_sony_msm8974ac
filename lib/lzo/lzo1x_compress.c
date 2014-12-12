@@ -221,6 +221,8 @@ int lzo1x_1_compress(const unsigned char *in, size_t in_len,
 			*op++ = (t - 3);
 		} else {
 			size_t tt = t - 18;
+
+
 			*op++ = 0;
 			while (tt > 255) {
 				tt -= 255;
@@ -251,3 +253,4 @@ EXPORT_SYMBOL_GPL(lzo1x_1_compress);
 
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("LZO1X-1 Compressor");
+

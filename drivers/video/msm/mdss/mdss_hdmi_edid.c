@@ -1,5 +1,5 @@
 /* Copyright (c) 2010-2014, The Linux Foundation. All rights reserved.
- * Copyright (C) 2013 Sony Mobile Communications AB.
+ * Copyright (c) 2014 Sony Mobile Communications Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * NOTE: This file has been modified by Sony Mobile Communications AB.
+ * NOTE: This file has been modified by Sony Mobile Communications Inc.
  * Modifications are licensed under the License.
  */
 
@@ -962,12 +962,24 @@ static void hdmi_edid_add_sink_3d_format(struct hdmi_edid_sink_data *sink_data,
 		string, added ? "added" : "NOT added");
 } /* hdmi_edid_add_sink_3d_format */
 
+#define HDMI_VFRMT_3840x2160p24_16_9_CEA_VIC 93
+#define HDMI_VFRMT_3840x2160p30_16_9_CEA_VIC 95
+
 static void hdmi_edid_add_sink_video_format(
 	struct hdmi_edid_sink_data *sink_data, u32 video_format)
 {
-	const struct msm_hdmi_mode_timing_info *timing =
-		hdmi_get_supported_mode(video_format);
-	u32 supported = timing != NULL;
+	const struct msm_hdmi_mode_timing_info *timing;
+	u32 supported;
+	int i;
+
+	if (video_format == HDMI_VFRMT_3840x2160p30_16_9_CEA_VIC)
+		video_format = HDMI_VFRMT_3840x2160p30_16_9;
+
+	if (video_format == HDMI_VFRMT_3840x2160p24_16_9_CEA_VIC)
+		video_format = HDMI_VFRMT_3840x2160p24_16_9;
+
+	timing = hdmi_get_supported_mode(video_format);
+	supported = timing != NULL;
 
 	if (video_format >= HDMI_VFRMT_MAX) {
 		DEV_ERR("%s: video format: %s is not supported\n", __func__,
@@ -980,6 +992,12 @@ static void hdmi_edid_add_sink_video_format(
 		supported ? "Supported" : "Not-Supported");
 
 	if (supported) {
+		/* do not multi registration */
+		for (i = 0; i < sink_data->num_of_elements; ++i) {
+			if (video_format == sink_data->disp_mode_list[i])
+				return;
+		}
+
 		/* todo: MHL */
 		sink_data->disp_mode_list[sink_data->num_of_elements++] =
 			video_format;

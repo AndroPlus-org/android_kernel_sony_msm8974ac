@@ -1016,6 +1016,7 @@ static void getStageInfo(struct ad7146_chip *ad7146)
 		last_stage_num);
 	dev_dbg(ad7146->dev, "sensor_int_enable  = %d\n",
 		ad7146->sensor_int_enable);
+	return;
 }
 
 static ssize_t store_dac_mid_value(struct device *dev,
@@ -1629,6 +1630,7 @@ static void cap_sensor_dev_unregister(struct cap_sensor_dev *cdev)
 	ad7146_sysfs_remove(cdev->dev);
 	dev_set_drvdata(cdev->dev, NULL);
 	device_destroy(cap_sensor_class, MKDEV(0, 1));
+	return;
 }
 
 static void ad7146_hys_comp_neg(struct ad7146_chip *ad7146,
@@ -1649,6 +1651,7 @@ static void ad7146_hys_comp_neg(struct ad7146_chip *ad7146,
 	dev_dbg(ad7146->dev,
 		"N STG%d S:AMB 0x%x, T:HT 0x%x -> HYS:0x%x\n",
 		index, sf_ambient, high_threshold, result);
+	return;
 }
 
 static void ad7146_hys_comp_pos(struct ad7146_chip *ad7146,
@@ -1669,6 +1672,7 @@ static void ad7146_hys_comp_pos(struct ad7146_chip *ad7146,
 	dev_dbg(ad7146->dev,
 		"P STG%d S:AMB 0x%x, T:HT 0x%x -> HYS_POS:0x%x\n",
 		index, sf_ambient, high_threshold, result);
+	return;
 }
 
 /* set switch event routine */
@@ -1871,6 +1875,7 @@ static void switch_set_work(struct work_struct *work)
 	if (tm_val && !ad7146->i2c_err_flag &&
 		((pwr_data & PWR_MODE_SHUTDOWN) != PWR_MODE_SHUTDOWN))
 		schedule_delayed_work(&ad7146->work, msecs_to_jiffies(tm_val));
+	return;
 }
 
 static irqreturn_t ad7146_isr(int irq, void *handle)
@@ -1976,6 +1981,7 @@ static void resume_set_work(struct work_struct *work)
 		if (!rc)
 			ad7146_pad_setting(ad7146, ad7146->pad_enable_state);
 	}
+	return;
 }
 
 static int ad7146_hw_detect(struct ad7146_chip *ad7146)
@@ -2395,8 +2401,10 @@ err_out:
 	return -ENODEV;
 }
 
-void ad7146_remove(struct ad7146_chip *ad7146)
+static void ad7146_shutdown(struct i2c_client *client)
 {
+	struct ad7146_chip *ad7146 = i2c_get_clientdata(client);
+
 	free_irq(ad7146->irq, ad7146);
 	cancel_delayed_work(&ad7146->work);
 	cancel_work_sync(&ad7146->calib_work);
@@ -2406,10 +2414,11 @@ void ad7146_remove(struct ad7146_chip *ad7146)
 	switch_dev_unregister(&ad7146->sw_stg1);
 	switch_dev_unregister(&ad7146->sw_stg0);
 	switch_dev_unregister(&ad7146->sw_state);
+	vreg_turn_off(ad7146);
 	kzfree(ad7146->dac_cal_buffer);
 	kzfree(ad7146->sw);
 	kzfree(ad7146);
-	vreg_turn_off(ad7146);
+	return;
 }
 
 #ifdef CONFIG_PM
@@ -2443,13 +2452,6 @@ int ad7146_i2c_resume(struct device *dev)
 static SIMPLE_DEV_PM_OPS(ad7146_pm, ad7146_i2c_suspend, ad7146_i2c_resume);
 #endif
 
-static int ad7146_i2c_remove(struct i2c_client *client)
-{
-	struct ad7146_chip *chip = i2c_get_clientdata(client);
-	ad7146_remove(chip);
-	return 0;
-}
-
 static const struct i2c_device_id ad7146_id[] = {
 	{ "ad7146_NORM", 0 },
 	{ "ad7146_PROX", 1 },
@@ -2465,7 +2467,7 @@ struct i2c_driver ad7146_i2c_driver = {
 #endif
 	},
 	.probe    = ad7146_probe,
-	.remove   = ad7146_i2c_remove,
+	.shutdown = ad7146_shutdown,
 	.id_table = ad7146_id,
 };
 
@@ -2478,6 +2480,7 @@ module_init(ad7146_i2c_init);
 static __exit void ad7146_i2c_exit(void)
 {
 	i2c_del_driver(&ad7146_i2c_driver);
+	return;
 }
 module_exit(ad7146_i2c_exit);
 MODULE_DESCRIPTION("Analog Devices ad7146 Sensor Driver");

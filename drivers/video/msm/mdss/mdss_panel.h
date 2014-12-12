@@ -181,6 +181,9 @@ struct lcd_panel_info {
 	u32 te_c_mode_45fps_1;
 	u32 te_c_cmds_num;
 	u32 te_c_payload_num;
+	u32 chenge_fps_cmds_num;
+	u32 chenge_fps_payload_num;
+	char change_fps_susres_mode;
 };
 
 

@@ -929,18 +929,41 @@ exit:
 
 static int clearpad_set_cover_status(struct clearpad_t *this)
 {
-	int rc;
+	int rc = 0;
+	u8 bufstr[3] = {0};
+
+	rc = clearpad_set_glove_mode(this,
+			this->cover.status ? true : this->glove.enabled);
+	if (rc)
+		goto exit;
+
+	rc = clearpad_get_block(SYNF(this, F12_2D, CTRL, 0x09), bufstr, 3);
+	if (rc)
+		goto exit;
+
+	if (this->cover.status)
+		bufstr[F12_2D_CTRL_REPORT_AS_FINGER] |=
+					REPORT_GLOVE_AS_FINGER;
+	else
+		bufstr[F12_2D_CTRL_REPORT_AS_FINGER] &=
+					~REPORT_GLOVE_AS_FINGER;
+
+	rc = clearpad_put_block(SYNF(this, F12_2D, CTRL, 0x09), bufstr, 3);
+	if (rc)
+		goto exit;
 
 	rc = clearpad_put(SYNF(this, F51_CUSTOM, CTRL, 0x00),
 			this->cover.status ? 0x03 : 0x00);
 	if (rc)
 		goto exit;
+
 	rc = clearpad_put_bit(SYNF(this, F54_ANALOG, COMMAND, 0x00),
 			ANALOG_COMMAND_FORCE_UPDATE,
 			ANALOG_COMMAND_FORCE_UPDATE);
+exit:
 	if (rc)
 		dev_err(&this->pdev->dev, "failed to set cover status");
-exit:
+
 	return rc;
 }
 
@@ -2952,8 +2975,8 @@ err_ret:
 
 static int clearpad_handle_gesture(struct clearpad_t *this)
 {
-	u8 wakeint;
-	int rc;
+	u8 wakeint = 0;
+	int rc = -EIO;
 
 	if (clearpad_is_valid_function(this, SYN_F11_2D)) {
 		rc = clearpad_get_block(SYNF(this, F11_2D, DATA,

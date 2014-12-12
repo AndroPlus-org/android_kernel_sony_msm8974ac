@@ -3839,19 +3839,19 @@ static int set_battery_data(struct qpnp_bms_chip *chip)
 		batt_data = &palladium_1500_data;
 	} else if (chip->batt_type == BATT_OEM) {
 		if (!chip->somc_params.batt_vendor_num) {
-			pr_err("Could not setting vendor id data\n");
-			batt_data = &oem_batt_data;
+			pr_err("No use battery vendor id\n");
+			batt_data = bms_batt_data;
 		} else {
 			rc = select_battery_vendor(chip);
-			if (rc < 0)
+			if (rc < 0 || rc >= bms_batt_data_num)
 				return rc;
-			batt_data = &oem_batt_data_somc[rc];
+			batt_data = bms_batt_data + rc;
 			chip->r_sense_uohm =
-				oem_batt_data_somc[rc].r_sense_uohm;
+				batt_data->r_sense_uohm;
 			chip->ocv_high_threshold_uv =
-				oem_batt_data_somc[rc].ocv_high_threshold_uv;
+				batt_data->ocv_high_threshold_uv;
 			chip->ocv_low_threshold_uv =
-				oem_batt_data_somc[rc].ocv_low_threshold_uv;
+				batt_data->ocv_low_threshold_uv;
 		}
 	} else if (chip->batt_type == BATT_QRD_4V35_2000MAH) {
 		batt_data = &QRD_4v35_2000mAh_data;

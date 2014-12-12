@@ -2588,6 +2588,21 @@ static struct snd_soc_dai_link msm8974_common_dai_links[] = {
 		.ops = &msm8974_slimbus_2_be_ops,
 	},
 	{
+		.name = "VoWLAN",
+		.stream_name = "VoWLAN",
+		.cpu_dai_name   = "VoWLAN",
+		.platform_name  = "msm-pcm-voice",
+		.dynamic = 1,
+		.trigger = {SND_SOC_DPCM_TRIGGER_POST,
+			    SND_SOC_DPCM_TRIGGER_POST},
+		.no_host_mode = SND_SOC_DAI_LINK_NO_HOST,
+		.ignore_suspend = 1,
+		.ignore_pmdown_time = 1,
+		.codec_dai_name = "snd-soc-dummy-dai",
+		.codec_name = "snd-soc-dummy",
+		.be_id = MSM_FRONTEND_DAI_VOWLAN,
+	},
+	{
 		.name = "MSM8974 Media9",
 		.stream_name = "MultiMedia9",
 		.cpu_dai_name   = "MultiMedia9",
@@ -2601,6 +2616,22 @@ static struct snd_soc_dai_link msm8974_common_dai_links[] = {
 		/* this dainlink has playback support */
 		.ignore_pmdown_time = 1,
 		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA9,
+	},
+	/* High-Res Audio DSEE Mode */
+	{
+		.name = "MSM8974 Media10",
+		.stream_name = "MultiMedia10",
+		.cpu_dai_name   = "MultiMedia10",
+		.platform_name  = "msm-pcm-dsp.3",
+		.dynamic = 1,
+		.trigger = {SND_SOC_DPCM_TRIGGER_POST,
+			    SND_SOC_DPCM_TRIGGER_POST},
+		.codec_dai_name = "snd-soc-dummy-dai",
+		.codec_name = "snd-soc-dummy",
+		.ignore_suspend = 1,
+		/* this dainlink has playback support */
+		.ignore_pmdown_time = 1,
+		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA10,
 	},
 	/* Backend BT/FM DAI Links */
 	{
@@ -2931,23 +2962,6 @@ static struct snd_soc_dai_link msm8974_common_dai_links[] = {
 		.be_id = MSM_BACKEND_DAI_VOICE2_PLAYBACK_TX,
 		.be_hw_params_fixup = msm_be_hw_params_fixup,
 		.ignore_suspend = 1,
-	},
-	/* 61 */
-	/* High-Res Audio DSEE Mode */
-	{
-		.name = "MSM8974 Media10",
-		.stream_name = "MultiMedia10",
-		.cpu_dai_name   = "MultiMedia10",
-		.platform_name  = "msm-pcm-dsp.3",
-		.dynamic = 1,
-		.trigger = {SND_SOC_DPCM_TRIGGER_POST,
-					SND_SOC_DPCM_TRIGGER_POST},
-		.codec_dai_name = "snd-soc-dummy-dai",
-		.codec_name = "snd-soc-dummy",
-		.ignore_suspend = 1,
-		/* this dainlink has playback support */
-		.ignore_pmdown_time = 1,
-		.be_id = MSM_FRONTEND_DAI_MULTIMEDIA10,
 	},
 };
 

@@ -3,8 +3,7 @@
  *
  * Copyright (C) 2010 Google, Inc.
  * Author: Mike Lockwood <lockwood@android.com>
- * Copyright (C) 2011 Sony Ericsson Mobile Communications AB.
- * Copyright (C) 2012-2013 Sony Mobile Communications AB.
+ * Copyright (C) 2011 Sony Mobile Communications Inc.
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -1206,6 +1205,12 @@ static int mtp_ctrlrequest(struct usb_composite_dev *cdev,
 			total = sizeof(*head) + (sizeof(*func) * func_num);
 
 			/* header section */
+			if (w_length < total &&
+				w_length >= (sizeof(*head) + sizeof(*func))) {
+				total = w_length;
+				func_num = (total - sizeof(*head)) /
+					sizeof(*func);
+			}
 			head->dwLength = total;
 			head->bcdVersion = __constant_cpu_to_le16(0x0100);
 			head->wIndex = __constant_cpu_to_le16(4);

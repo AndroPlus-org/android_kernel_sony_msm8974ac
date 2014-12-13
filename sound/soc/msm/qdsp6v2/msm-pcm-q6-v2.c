@@ -39,9 +39,6 @@
 
 static struct audio_locks the_locks;
 
-#define PCM_MASTER_VOL_MAX_STEPS	0x2000
-static const DECLARE_TLV_DB_LINEAR(msm_pcm_vol_gain, 0,
-				PCM_MASTER_VOL_MAX_STEPS);
 struct snd_msm {
 	struct snd_card *card;
 	struct snd_pcm *pcm;

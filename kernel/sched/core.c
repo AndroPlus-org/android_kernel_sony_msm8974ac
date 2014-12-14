@@ -2207,6 +2207,52 @@ unsigned long this_cpu_load(void)
 }
 
 #if defined(CONFIG_INTELLI_PLUG) || defined(CONFIG_FAST_HOTPLUG)
+#define LAST_NR_ARRAY_LENGTH	30
+
+
+unsigned int show_nr_running = 0;
+module_param(show_nr_running, uint, 0644);
+
+unsigned long current_nr_running = 0;
+module_param(current_nr_running, ulong, 0644);
+
+unsigned long last_max = 0;
+module_param(last_max, ulong, 0644);
+unsigned long last_min = 0;
+module_param(last_min, ulong, 0644);
+
+unsigned long last_max_ar[LAST_NR_ARRAY_LENGTH];
+unsigned int last_min_ar[LAST_NR_ARRAY_LENGTH];
+
+static int last_min_ar_initialized = 0;
+
+static int index_max = 0;
+static int index_min = 0;
+
+static void get_last_max_nr(unsigned long new_value){
+	int i;
+	unsigned long ret = 0;
+	last_max_ar[index_max++ % LAST_NR_ARRAY_LENGTH] = new_value;
+
+	for(i = 0; i < LAST_NR_ARRAY_LENGTH; i++){
+		if(last_max_ar[i] > ret)
+			ret = last_max_ar[i];
+	}
+	last_max = ret;
+}
+
+static void get_last_min_nr(unsigned long new_value){
+	int i;
+	unsigned long ret = ~0;
+	last_min_ar[index_min++ % LAST_NR_ARRAY_LENGTH] = (unsigned int)new_value;
+
+	for(i = 0; i < LAST_NR_ARRAY_LENGTH; i++){
+		if(last_min_ar[i] < ret)
+			ret = (unsigned long)last_min_ar[i];
+	}
+	last_min = ret;
+}
+
 unsigned long avg_nr_running(void)
 {
 	unsigned long i, sum = 0;
@@ -2230,6 +2276,17 @@ unsigned long avg_nr_running(void)
 		}
 
 		sum += ave_nr_running;
+	}
+
+	if(show_nr_running){
+		if(!last_min_ar_initialized){
+			for(i = 0; i < LAST_NR_ARRAY_LENGTH; i++)
+				last_min_ar[i] = ~0;
+			last_min_ar_initialized = 1;
+		}
+		current_nr_running = sum;
+		get_last_max_nr(sum);
+		get_last_min_nr(sum);
 	}
 
 	return sum;

@@ -6858,6 +6858,11 @@ static int taiko_codec_probe(struct snd_soc_codec *codec)
 	struct wcd9xxx *core = dev_get_drvdata(codec->dev->parent);
 	struct wcd9xxx_core_resource *core_res;
 
+#ifdef CONFIG_SOUND_CONTROL_HAX_3_GPL
+	pr_info("taiko codec probe...\n");
+	fauxsound_codec_ptr = codec;
+#endif
+
 	codec->control_data = dev_get_drvdata(codec->dev->parent);
 	control = codec->control_data;
 
@@ -7154,3 +7159,4 @@ module_exit(taiko_codec_exit);
 
 MODULE_DESCRIPTION("Taiko codec driver");
 MODULE_LICENSE("GPL v2");
+

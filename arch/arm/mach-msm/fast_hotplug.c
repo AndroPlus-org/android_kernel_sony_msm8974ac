@@ -43,20 +43,20 @@
 #define SCREEN_OFF_SINGLECORE		1
 
 
-#define PLUG_IN_CORE_1_THRESHOLD	2500
-#define PLUG_IN_CORE_2_THRESHOLD	4000
-#define PLUG_IN_CORE_3_THRESHOLD	4500
+#define PLUG_IN_CORE_1_THRESHOLD	2800
+#define PLUG_IN_CORE_2_THRESHOLD	5000
+#define PLUG_IN_CORE_3_THRESHOLD	7000
 
 #define PLUG_IN_CORE_1_DELAY		1
 #define PLUG_IN_CORE_2_DELAY		3
 #define PLUG_IN_CORE_3_DELAY		3
 
 #define PLUG_OUT_CORE_1_THRESHOLD	2500
-#define PLUG_OUT_CORE_2_THRESHOLD	3000
-#define PLUG_OUT_CORE_3_THRESHOLD	3500
+#define PLUG_OUT_CORE_2_THRESHOLD	4000
+#define PLUG_OUT_CORE_3_THRESHOLD	6000
 
-#define PLUG_OUT_CORE_1_DELAY		3
-#define PLUG_OUT_CORE_2_DELAY		2
+#define PLUG_OUT_CORE_1_DELAY		2
+#define PLUG_OUT_CORE_2_DELAY		1
 #define PLUG_OUT_CORE_3_DELAY		1
 
 static int fast_hotplug_enabled = FAST_HOTPLUG_ENABLED;
@@ -226,19 +226,17 @@ static int get_slowest_cpu(void){
 }
 
 static void plug_in(int online_cpu_count){
-	int cpu;
+	int i;
 
 	if(online_cpu_count >= max_cpu_on)
 		return;
 
 	mutex_lock(&mutex);
 	singlecore = false;
-	for_each_possible_cpu(cpu){
-		if(cpu != 0){
-			if(!cpu_online(cpu)){
-				cpu_up(cpu);
-				break;
-			}
+	for(i = (CONFIG_NR_CPUS - 1); i > 0; i--){
+		if(!cpu_online(i)){
+			cpu_up(i);
+			break;
 		}
 	}
 	mutex_unlock(&mutex);

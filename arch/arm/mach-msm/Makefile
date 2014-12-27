@@ -487,5 +487,3 @@ CFLAGS_board-rdtags.o  := \
 	
 CFLAGS_board-8974-console.o += -Idrivers/staging/android
 obj-$(CONFIG_ALUCARD_HOTPLUG) += alucard_hotplug.o
-
-obj-$(CONFIG_BRICKED_HOTPLUG) += bricked_hotplug.o

@@ -37,7 +37,7 @@
 #include <linux/moduleparam.h>
 #include <linux/notifier.h>
 #include <asm/cputime.h>
-#include <linux/earlysuspend.h>
+#include <linux/powersuspend.h>
 
 
 /******************** Tunable parameters: ********************/
@@ -824,6 +824,15 @@ static void smartass_late_resume(struct early_suspend *handler) {
 		smartass_suspend(i,0);
 }
 
+static struct early_suspend smartass_power_suspend = {
+        .suspend = smartass_early_suspend,
+        .resume = smartass_late_resume,
+#ifdef CONFIG_MACH_HERO
+        .level = EARLY_SUSPEND_LEVEL_DISABLE_FB + 1,
+#endif
+};
+
+
 static int __init cpufreq_smartass_init(void)
 {
 	unsigned int i;
@@ -870,7 +879,7 @@ static int __init cpufreq_smartass_init(void)
 
 	INIT_WORK(&freq_scale_work, cpufreq_smartass_freq_change_time_work);
 
-	register_early_suspend(&smartass_power_suspend);
+	register_power_suspend(&smartass_power_suspend);
 
 	return cpufreq_register_governor(&cpufreq_gov_smartass_h3);
 }

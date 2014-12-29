@@ -55,7 +55,7 @@ struct f_hidg {
 };
 
 /* Hacky device list to fix f_hidg_write being called after device destroyed.
-   It covers only most common race conditions, there will be rare crashes anyway. */
+ It covers only most common race conditions, there will be rare crashes anyway. */
 enum { HACKY_DEVICE_LIST_SIZE = 4 };
 static struct f_hidg *hacky_device_list[HACKY_DEVICE_LIST_SIZE];
 static void hacky_device_list_add(struct f_hidg *hidg)
@@ -85,7 +85,7 @@ static int hacky_device_list_check(struct f_hidg *hidg)
 	int i;
 	for (i = 0; i < HACKY_DEVICE_LIST_SIZE; i++) {
 		if (hacky_device_list[i] == hidg) {
-			return 0;
+		return 0;
 		}
 	}
 	return 1;
@@ -308,7 +308,7 @@ static unsigned int f_hidg_poll(struct file *file, poll_table *wait)
 	}
 
 	poll_wait(file, &hidg->read_queue, wait);
-
+	
 	if (hacky_device_list_check(hidg)) {
 		pr_err("%s: trying to poll device %p that was destroyed\n", __func__, hidg);
 		return -EIO;
@@ -619,9 +619,8 @@ static void hidg_unbind(struct usb_configuration *c, struct usb_function *f)
 	/* disable/free request and end point */
 	usb_ep_disable(hidg->in_ep);
 	/* TODO: calling this function crash kernel,
-	   not calling this funct ion crash kernel inside f_hidg_write */
+	not calling this funct ion crash kernel inside f_hidg_write */
 	/* usb_ep_dequeue(hidg->in_ep, hidg->req); */
-
 	kfree(hidg->req->buf);
 	usb_ep_free_request(hidg->in_ep, hidg->req);
 

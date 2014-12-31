@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * Author: Erasmux
@@ -43,79 +43,79 @@
 /******************** Tunable parameters: ********************/
 
 /*
-* The "ideal" frequency to use when awake. The governor will ramp up faster
-* towards the ideal frequency and slower after it has passed it. Similarly,
-* lowering the frequency towards the ideal frequency is faster than below it.
-*/
+ * The "ideal" frequency to use when awake. The governor will ramp up faster
+ * towards the ideal frequency and slower after it has passed it. Similarly,
+ * lowering the frequency towards the ideal frequency is faster than below it.
+ */
 #define DEFAULT_AWAKE_IDEAL_FREQ (1350*1000)
 static unsigned int awake_ideal_freq;
 
 /*
-* The "ideal" frequency to use when suspended.
-* When set to 0, the governor will not track the suspended state (meaning
-* that practically when sleep_ideal_freq==0 the awake_ideal_freq is used
-* also when suspended).
-*/
+ * The "ideal" frequency to use when suspended.
+ * When set to 0, the governor will not track the suspended state (meaning
+ * that practically when sleep_ideal_freq==0 the awake_ideal_freq is used
+ * also when suspended).
+ */
 #define DEFAULT_SLEEP_IDEAL_FREQ (384*1000)
 static unsigned int sleep_ideal_freq;
 
 /*
-* Freqeuncy delta when ramping up above the ideal freqeuncy.
-* Zero disables and causes to always jump straight to max frequency.
-* When below the ideal freqeuncy we always ramp up to the ideal freq.
-*/
+ * Freqeuncy delta when ramping up above the ideal freqeuncy.
+ * Zero disables and causes to always jump straight to max frequency.
+ * When below the ideal freqeuncy we always ramp up to the ideal freq.
+ */
 #define DEFAULT_RAMP_UP_STEP (810*1000)
 static unsigned int ramp_up_step;
 
 /*
-* Freqeuncy delta when ramping down below the ideal freqeuncy.
-* Zero disables and will calculate ramp down according to load heuristic.
-* When above the ideal freqeuncy we always ramp down to the ideal freq.
-*/
+ * Freqeuncy delta when ramping down below the ideal freqeuncy.
+ * Zero disables and will calculate ramp down according to load heuristic.
+ * When above the ideal freqeuncy we always ramp down to the ideal freq.
+ */
 #define DEFAULT_RAMP_DOWN_STEP (384*1000)
 static unsigned int ramp_down_step;
 
 /*
-* CPU freq will be increased if measured load > max_cpu_load;
-*/
+ * CPU freq will be increased if measured load > max_cpu_load;
+ */
 #define DEFAULT_MAX_CPU_LOAD 85
 static unsigned long max_cpu_load;
 
 /*
-* CPU freq will be decreased if measured load < min_cpu_load;
-*/
+ * CPU freq will be decreased if measured load < min_cpu_load;
+ */
 #define DEFAULT_MIN_CPU_LOAD 70
 static unsigned long min_cpu_load;
 
 /*
-* The minimum amount of time to spend at a frequency before we can ramp up.
-* Notice we ignore this when we are below the ideal frequency.
-*/
+ * The minimum amount of time to spend at a frequency before we can ramp up.
+ * Notice we ignore this when we are below the ideal frequency.
+ */
 #define DEFAULT_UP_RATE_US 48000;
 static unsigned long up_rate_us;
 
 /*
-* The minimum amount of time to spend at a frequency before we can ramp down.
-* Notice we ignore this when we are above the ideal frequency.
-*/
+ * The minimum amount of time to spend at a frequency before we can ramp down.
+ * Notice we ignore this when we are above the ideal frequency.
+ */
 #define DEFAULT_DOWN_RATE_US 49000;
 static unsigned long down_rate_us;
 
 /*
-* The frequency to set when waking up from sleep.
-* When sleep_ideal_freq=0 this will have no effect.
-*/
+ * The frequency to set when waking up from sleep.
+ * When sleep_ideal_freq=0 this will have no effect.
+ */
 #define DEFAULT_SLEEP_WAKEUP_FREQ 99999999
 static unsigned int sleep_wakeup_freq;
 
 /*
-* Sampling rate, I highly recommend to leave it at 2.
-*/
+ * Sampling rate, I highly recommend to leave it at 2.
+ */
 #define DEFAULT_SAMPLE_RATE_JIFFIES 2
 static unsigned int sample_rate_jiffies;
 
 
-/*************** End of tunables ***************/ 
+/*************** End of tunables ***************/
 
 
 static void (*pm_idle_old)(void);
@@ -165,7 +165,7 @@ static unsigned long debug_mask;
 static int cpufreq_governor_smartass_h3(struct cpufreq_policy *policy,
 		unsigned int event);
 
-#define TRANSITION_LATENCY_LIMIT (10 * 1000 * 1000)
+#define TRANSITION_LATENCY_LIMIT                (10 * 1000 * 1000)
 #ifndef CONFIG_CPU_FREQ_DEFAULT_GOV_SMARTASSH3
 static
 #endif
@@ -175,6 +175,7 @@ struct cpufreq_governor cpufreq_gov_smartass_h3 = {
 	.max_transition_latency = TRANSITION_LATENCY_LIMIT,
 	.owner = THIS_MODULE,
 };
+
 
 inline static void smartass_update_min_max(struct smartass_info_s *this_smartass, struct cpufreq_policy *policy, int suspend) {
 	if (suspend) {
@@ -230,9 +231,9 @@ inline static int target_freq(struct cpufreq_policy *policy, struct smartass_inf
 			      int new_freq, int old_freq, int prefered_relation) {
 	int index, target;
 	struct cpufreq_frequency_table *table = this_smartass->freq_table;
-
 	if (new_freq == old_freq)
 		return 0;
+
 	new_freq = validate_freq(policy,new_freq);
 	if (new_freq == old_freq)
 		return 0;
@@ -268,10 +269,8 @@ inline static int target_freq(struct cpufreq_policy *policy, struct smartass_inf
 	else target = new_freq;
 
 	__cpufreq_driver_target(policy, target, prefered_relation);
-
 	dprintk(SMARTASS_DEBUG_JUMPS,"SmartassQ: jumping from %d to %d => %d (%d)\n",
 		old_freq,new_freq,target,policy->cur);
-
 	return target;
 }
 
@@ -809,7 +808,6 @@ static void smartass_suspend(int cpu, int suspend)
 		new_freq = validate_freq(policy,sleep_wakeup_freq);
 
 		dprintk(SMARTASS_DEBUG_JUMPS,"SmartassS: awaking at %d\n",new_freq);
-
 		__cpufreq_driver_target(policy, new_freq,
 					CPUFREQ_RELATION_L);
 	} else {
@@ -844,14 +842,13 @@ static void smartass_late_resume(struct early_suspend *handler) {
 		smartass_suspend(i,0);
 }
 
-static struct early_suspend smartass_power_suspend = {
-        .suspend = smartass_early_suspend,
-        .resume = smartass_late_resume,
+static struct power_suspend smartass_power_suspend = {
+	.suspend = smartass_early_suspend,
+	.resume = smartass_late_resume,
 #ifdef CONFIG_MACH_HERO
-        .level = EARLY_SUSPEND_LEVEL_DISABLE_FB + 1,
+	.level = EARLY_SUSPEND_LEVEL_DISABLE_FB + 1,
 #endif
 };
-
 
 static int __init cpufreq_smartass_init(void)
 {
@@ -890,13 +887,13 @@ static int __init cpufreq_smartass_init(void)
 		this_smartass->timer.data = i;
 		work_cpumask_test_and_clear(i);
 	}
-
+	
 	// Scale up is high priority
-	up_wq = create_workqueue("ksmartass_up");
-	down_wq = create_workqueue("ksmartass_down");
+	up_wq = alloc_workqueue("ksmartass_up", WQ_HIGHPRI, 1);
+	down_wq = alloc_workqueue("ksmartass_down", 0, 1);
 	if (!up_wq || !down_wq)
 		return -ENOMEM;
-
+	
 	idle_notifier_register(&cpufreq_idle_nb);
 	INIT_WORK(&freq_scale_work, cpufreq_smartass_freq_change_time_work);
 	register_power_suspend(&smartass_power_suspend);
@@ -922,5 +919,6 @@ module_exit(cpufreq_smartass_exit);
 MODULE_AUTHOR ("Erasmux, moded by H3ROS & C3C0");
 MODULE_DESCRIPTION ("'cpufreq_smartassH3' - A smart cpufreq governor");
 MODULE_LICENSE ("GPL");
+
 
 

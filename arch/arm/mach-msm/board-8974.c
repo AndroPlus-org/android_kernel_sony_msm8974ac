@@ -223,7 +223,15 @@ void __init msm_8974_reserve(void)
 	int ret;
 	phys_addr_t start;
 	struct membank* bank;
+#endif
 
+#ifdef CONFIG_ANDROID_PERSISTENT_RAM
+	reserve_persistent_ram();
+#endif
+	reserve_info = &msm8974_reserve_info;
+	of_scan_flat_dt(dt_scan_for_memory_reserve, msm8974_reserve_table);
+
+#ifdef CONFIG_KEXEC_HARDBOOT
 	if (meminfo.nr_banks < 2) {
 		pr_err("%s: not enough membank\n", __func__);
 		return;
@@ -237,12 +245,6 @@ void __init msm_8974_reserve(void)
 	else
 		pr_err("Failed to reserve space for hardboot page at 0x%X!\n", start);
 #endif
-
-#ifdef CONFIG_ANDROID_PERSISTENT_RAM
-	reserve_persistent_ram();
-#endif
-	reserve_info = &msm8974_reserve_info;
-	of_scan_flat_dt(dt_scan_for_memory_reserve, msm8974_reserve_table);
 	msm_reserve();
 }
 

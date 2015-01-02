@@ -35,6 +35,9 @@
 #define UPDATE_BUSY_VAL		1000000
 #define UPDATE_BUSY		50
 
+// AP: default max pwrlevel is 1 instead of 0, to not start with OC
+#define DEFAULT_MAX_PWRLEVEL	1
+
 /*
  * Expected delay for post-interrupt processing on A3xx.
  * The delay may be longer, gradually increase the delay
@@ -1100,7 +1103,7 @@ int kgsl_pwrctrl_init(struct kgsl_device *device)
 
 	/* Initialize the user and thermal clock constraints */
 
-	pwr->max_pwrlevel = 0;
+	pwr->max_pwrlevel = DEFAULT_MAX_PWRLEVEL; // AP: define default max power level to not start with OC
 	pwr->min_pwrlevel = pdata->num_levels - 2;
 	pwr->thermal_pwrlevel = 0;
 

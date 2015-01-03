@@ -59,7 +59,7 @@ fi
 ### D5833
 ./mkbootimg --cmdline "androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0xb7 ehci-hcd.park=3 dwc3.maximum_speed=high dwc3_msm.prop_chg_detect=Y" --base 0x00000000 --kernel ../final_files/zImage --ramdisk ramdiskD5833.cpio.gz --ramdisk_offset 0x02000000 -o boot_D5833.img --dt ../final_files/dt.img --tags_offset 0x01E00000
 
-### Build kernel for Z3 Tablet Compact
+### Build kernel for Z3 Tablet Compact SGP621
 rm ./arch/arm/boot/msm8974*.dtb
 
 ### get defconfig
@@ -84,6 +84,32 @@ fi
 
 ### SGP621
 ./mkbootimg --cmdline "androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0xb7 ehci-hcd.park=3 dwc3.maximum_speed=high dwc3_msm.prop_chg_detect=Y" --base 0x00000000 --kernel ../final_files/zImage --ramdisk ramdiskSGP621.cpio.gz --ramdisk_offset 0x02000000 -o boot_SGP621.img --dt ../final_files/dt.img --tags_offset 0x01E00000
+
+### Build kernel for Z3 Tablet Compact SGP611
+rm ./arch/arm/boot/msm8974*.dtb
+
+### get defconfig
+ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make scorpion_windy_defconfig
+
+### compile kernel
+ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make CONFIG_DEBUG_SECTION_MISMATCH=y CONFIG_NO_ERROR_ON_MISMATCH=y -j8
+
+echo "checking for compiled kernel..."
+if [ -f arch/arm/boot/zImage ]
+then
+
+echo "generating device tree..."
+./dtbToolCM --force-v2 -o ../final_files/dt.img -s 2048 -p ./scripts/dtc/ ./arch/arm/boot/
+
+### copy zImage
+cp arch/arm/boot/zImage ../final_files/.
+
+echo "DONE"
+
+fi
+
+### SGP611
+./mkbootimg --cmdline "androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0xb7 ehci-hcd.park=3 dwc3.maximum_speed=high dwc3_msm.prop_chg_detect=Y" --base 0x00000000 --kernel ../final_files/zImage --ramdisk ramdiskSGP611.cpio.gz --ramdisk_offset 0x02000000 -o boot_SGP611.img --dt ../final_files/dt.img --tags_offset 0x01E00000
 
 ### Build kernel for Z2
 rm ./arch/arm/boot/msm8974*.dtb

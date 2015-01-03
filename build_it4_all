@@ -145,3 +145,4 @@ dd if=./boot_D5803.img of=/mnt/hgfs/VMShare/デスクトップ/boot_D5803.img
 dd if=./boot_D5833.img of=/mnt/hgfs/VMShare/デスクトップ/boot_D5833.img
 dd if=./boot_D6503.img of=/mnt/hgfs/VMShare/デスクトップ/boot_D6503.img
 dd if=./boot_SGP621.img of=/mnt/hgfs/VMShare/デスクトップ/boot_SGP621.img
+dd if=./boot_SGP611.img of=/mnt/hgfs/VMShare/デスクトップ/boot_SGP611.img

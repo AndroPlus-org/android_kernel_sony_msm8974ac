@@ -1,7 +1,7 @@
 ### GCC 4.9.x
 
 if [ ! -e ./arch/arm/boot/msm8974pro-ac-shinano_leo.dtb ]; then
-rm ./arch/arm/boot/msm8974*.dtb
+rm ./arch/arm/boot/*.dtb
 fi
 
 ### get defconfig

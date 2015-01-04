@@ -59,6 +59,7 @@ fi
 ### D5833
 ./mkbootimg --cmdline "androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0xb7 ehci-hcd.park=3 dwc3.maximum_speed=high dwc3_msm.prop_chg_detect=Y" --base 0x00000000 --kernel ../final_files/zImage --ramdisk ramdiskD5833.cpio.gz --ramdisk_offset 0x02000000 -o boot_D5833.img --dt ../final_files/dt.img --tags_offset 0x01E00000
 
+<< "#__CO__"
 ### Build kernel for Z3 Tablet Compact SGP621
 rm ./arch/arm/boot/*.dtb
 
@@ -110,6 +111,7 @@ fi
 
 ### SGP611
 ./mkbootimg --cmdline "androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0xb7 ehci-hcd.park=3 dwc3.maximum_speed=high dwc3_msm.prop_chg_detect=Y" --base 0x00000000 --kernel ../final_files/zImage --ramdisk ramdiskSGP611.cpio.gz --ramdisk_offset 0x02000000 -o boot_SGP611.img --dt ../final_files/dt.img --tags_offset 0x01E00000
+#__CO__
 
 ### Build kernel for Z2
 rm ./arch/arm/boot/*.dtb
@@ -139,10 +141,12 @@ fi
 
 
 ### Copy img to my desktop
-dd if=./boot_D6603.img of=/mnt/hgfs/VMShare/デスクトップ/boot_D6603.img
-dd if=./boot_D6653.img of=/mnt/hgfs/VMShare/デスクトップ/boot_D6653.img
-dd if=./boot_D5803.img of=/mnt/hgfs/VMShare/デスクトップ/boot_D5803.img
-dd if=./boot_D5833.img of=/mnt/hgfs/VMShare/デスクトップ/boot_D5833.img
-dd if=./boot_D6503.img of=/mnt/hgfs/VMShare/デスクトップ/boot_D6503.img
-dd if=./boot_SGP621.img of=/mnt/hgfs/VMShare/デスクトップ/boot_SGP621.img
-dd if=./boot_SGP611.img of=/mnt/hgfs/VMShare/デスクトップ/boot_SGP611.img
+dd if=./boot_D6603.img of=/mnt/hgfs/VMShare/Android Image Kitchen20/boot_D6603.img
+dd if=./boot_D6653.img of=/mnt/hgfs/VMShare/Android Image Kitchen20/boot_D6653.img
+dd if=./boot_D5803.img of=/mnt/hgfs/VMShare/Android Image Kitchen20/boot_D5803.img
+dd if=./boot_D5833.img of=/mnt/hgfs/VMShare/Android Image Kitchen20/boot_D5833.img
+dd if=./boot_D6503.img of=/mnt/hgfs/VMShare/Android Image Kitchen20/boot_D6503.img
+<< "#__CO__"
+dd if=./boot_SGP621.img of=/mnt/hgfs/VMShare/Android Image Kitchen20/boot_SGP621.img
+dd if=./boot_SGP611.img of=/mnt/hgfs/VMShare/Android Image Kitchen20/boot_SGP611.img
+#__CO__

@@ -28,4 +28,4 @@ fi
 ./mkbootimg --cmdline "androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0xb7 ehci-hcd.park=3 dwc3.maximum_speed=high dwc3_msm.prop_chg_detect=Y" --base 0x00000000 --kernel ../final_files/zImage --ramdisk ramdiskD6603.cpio.gz --ramdisk_offset 0x02000000 -o boot_D6603.img --dt ../final_files/dt.img --tags_offset 0x01E00000
 
 ### Copy img to my desktop
-dd if=./boot_D6603.img of=/mnt/hgfs/VMShare/デスクトップ/boot_D6603.img
+dd if=./boot_D6603.img of="/mnt/hgfs/VMShare/Android Image Kitchen20/boot_D6603.img"

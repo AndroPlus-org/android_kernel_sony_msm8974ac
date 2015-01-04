@@ -141,12 +141,12 @@ fi
 
 
 ### Copy img to my desktop
-dd if=./boot_D6603.img of=/mnt/hgfs/VMShare/Android Image Kitchen20/boot_D6603.img
-dd if=./boot_D6653.img of=/mnt/hgfs/VMShare/Android Image Kitchen20/boot_D6653.img
-dd if=./boot_D5803.img of=/mnt/hgfs/VMShare/Android Image Kitchen20/boot_D5803.img
-dd if=./boot_D5833.img of=/mnt/hgfs/VMShare/Android Image Kitchen20/boot_D5833.img
-dd if=./boot_D6503.img of=/mnt/hgfs/VMShare/Android Image Kitchen20/boot_D6503.img
+dd if=./boot_D6603.img of="/mnt/hgfs/VMShare/Android Image Kitchen20/boot_D6603.img"
+dd if=./boot_D6653.img of="/mnt/hgfs/VMShare/Android Image Kitchen20/boot_D6653.img"
+dd if=./boot_D5803.img of="/mnt/hgfs/VMShare/Android Image Kitchen20/boot_D5803.img"
+dd if=./boot_D5833.img of="/mnt/hgfs/VMShare/Android Image Kitchen20/boot_D5833.img"
+dd if=./boot_D6503.img of="/mnt/hgfs/VMShare/Android Image Kitchen20/boot_D6503.img"
 << "#__CO__"
-dd if=./boot_SGP621.img of=/mnt/hgfs/VMShare/Android Image Kitchen20/boot_SGP621.img
-dd if=./boot_SGP611.img of=/mnt/hgfs/VMShare/Android Image Kitchen20/boot_SGP611.img
+dd if=./boot_SGP621.img of="/mnt/hgfs/VMShare/Android Image Kitchen20/boot_SGP621.img"
+dd if=./boot_SGP611.img of="/mnt/hgfs/VMShare/Android Image Kitchen20/boot_SGP611.img"
 #__CO__

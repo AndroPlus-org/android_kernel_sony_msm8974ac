@@ -21,7 +21,23 @@
 #define PLAT_PHYS_OFFSET UL(CONFIG_PHYS_OFFSET)
 
 #if defined(CONFIG_KEXEC_HARDBOOT)
+#if defined(CONFIG_MACH_SONY_ARIES)
+#define KEXEC_HB_PAGE_ADDR		UL(0x80200000)
+#else
+#error "Adress for kexec hardboot page not defined"
+#endif
+#endif
+
+#if defined(CONFIG_KEXEC_HARDBOOT)
 #if defined(CONFIG_MACH_SONY_SIRIUS)
+#define KEXEC_HB_PAGE_ADDR		UL(0x80200000)
+#else
+#error "Adress for kexec hardboot page not defined"
+#endif
+#endif
+
+#if defined(CONFIG_KEXEC_HARDBOOT)
+#if defined(CONFIG_MACH_SONY_LEO)
 #define KEXEC_HB_PAGE_ADDR		UL(0x80200000)
 #else
 #error "Adress for kexec hardboot page not defined"

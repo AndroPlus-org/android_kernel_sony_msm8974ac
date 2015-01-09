@@ -131,9 +131,7 @@
 	rpm-regulator-smpb4 {
 		status = "okay";
 		pm8841_s4: regulator-s4 {
-			/* set min to retention state */
-			regulator-min-microvolt = <500000>;
-			/* max is set to Normal */
+			regulator-min-microvolt = <815000>;
 			regulator-max-microvolt = <900000>;
 			status = "okay";
 		};
@@ -143,18 +141,15 @@
 			qcom,set = <3>;
 			qcom,use-voltage-corner;
 			regulator-min-microvolt = <1>;
-			/* limit max corner to Turbo state */
-			regulator-max-microvolt = <5>;
-			/* init state start from SVS Krait state */
-			qcom,init-voltage-corner = <2>; /* SVS Krait */
+			regulator-max-microvolt = <7>;
+			qcom,init-voltage-corner = <3>; /* SVS SOC */
 		};
 		pm8841_s4_floor_corner: regulator-s4-floor-corner {
 			compatible = "qcom,rpm-regulator-smd";
 			regulator-name = "8841_s4_floor_corner";
 			qcom,set = <3>;
 			regulator-min-microvolt = <1>;
-			/* limit max corner to Turbo state */
-			regulator-max-microvolt = <5>;
+			regulator-max-microvolt = <7>;
 			qcom,use-voltage-floor-corner;
 			qcom,always-send-voltage;
 		};

@@ -52,6 +52,9 @@
 #include "pm.h"
 #include "modem_notifier.h"
 #include "platsmp.h"
+#ifdef CONFIG_RAMDUMP_TAGS
+#include "board-rdtags.h"
+#endif
 
 #include <asm/setup.h>
 #include <linux/persistent_ram.h>

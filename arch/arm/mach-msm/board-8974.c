@@ -52,18 +52,15 @@
 #include "pm.h"
 #include "modem_notifier.h"
 #include "platsmp.h"
-#ifdef CONFIG_RAMDUMP_TAGS
-#include "board-rdtags.h"
-#endif
+
+#include <asm/setup.h>
+#include <linux/persistent_ram.h>
+#include "board-8974-console.h"
 
 #ifdef CONFIG_KEXEC_HARDBOOT
 #include <linux/memblock.h>
 #include <asm/setup.h>
 #endif
-
-#include <asm/setup.h>
-#include <linux/persistent_ram.h>
-#include "board-8974-console.h"
 
 static struct memtype_reserve msm8974_reserve_table[] __initdata = {
 	[MEMTYPE_SMI] = {
@@ -125,10 +122,6 @@ static struct platform_device ram_console_device = {
 
 void __init msm_8974_reserve(void)
 {
-#if defined(CONFIG_RAMDUMP_TAGS) || defined(CONFIG_CRASH_LAST_LOGS)
-	reserve_debug_memory();
-#endif
-
 #ifdef CONFIG_KEXEC_HARDBOOT
 	// Reserve space for hardboot page - just after ram_console,
 	// at the start of second memory bank
@@ -321,11 +314,6 @@ void __init msm8974_init_very_early(void)
 	msm8974_early_memory();
 }
 
-void __init msm8974_init_early(void)
-{
-	msm_reserve_last_regs();
-}
-
 static const char *msm8974_dt_match[] __initconst = {
 	"qcom,msm8974",
 	"qcom,apq8074",
@@ -341,7 +329,7 @@ DT_MACHINE_START(MSM8974_DT, "Qualcomm MSM 8974 (Flattened Device Tree)")
 	.dt_compat = msm8974_dt_match,
 	.reserve = msm_8974_reserve,
 	.init_very_early = msm8974_init_very_early,
-	.init_early = msm8974_init_early,
 	.restart = msm_restart,
 	.smp = &msm8974_smp_ops,
 MACHINE_END
+

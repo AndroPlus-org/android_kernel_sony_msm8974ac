@@ -74,7 +74,7 @@ struct crash_extras {
 
 typedef u32 note_buf_t[CRASH_NOTE_BYTES / 4];
 
-note_buf_t *crash_notes;
+static note_buf_t *crash_notes;
 
 static inline void dump_regs(struct pt_regs *regs)
 {

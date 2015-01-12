@@ -900,10 +900,7 @@ long wb_do_writeback(struct bdi_writeback *wb, int force_wait)
 		if (force_wait)
 			work->sync_mode = WB_SYNC_ALL;
 
-		/* This trace causes an ICE in gcc4.7
-		 * For more information look into this commits message.
-		 * trace_writeback_exec(bdi, work);
-		 */
+		trace_writeback_exec(bdi, work);
 
 		wrote += wb_writeback(wb, work);
 

@@ -29,19 +29,21 @@
 #include <linux/kernel_stat.h>
 #include <linux/percpu.h>
 #include <linux/mutex.h>
-#include <linux/earlysuspend.h>
+#include <linux/powersuspend.h>
 /*
  * dbs is used in this file as a shortform for demandbased switching
  * It helps to keep variable names smaller, simpler
  */
 
-#define DEF_FREQUENCY_UP_THRESHOLD			CONFIG_LAGFREE_MAX_LOAD
-#define DEF_FREQUENCY_DOWN_THRESHOLD			CONFIG_LAGFREE_MIN_LOAD
-#define FREQ_STEP_DOWN 					CONFIG_LAGFREE_FREQ_STEP_DOWN
-#define FREQ_SLEEP_MAX 					CONFIG_LAGFREE_FREQ_SLEEP_MAX
-#define FREQ_AWAKE_MIN 					CONFIG_LAGFREE_FREQ_AWAKE_MIN
-#define FREQ_STEP_UP_SLEEP_PERCENT 			CONFIG_LAGFREE_FREQ_STEP_UP_SLEEP_PERCENT
+#define DEF_FREQUENCY_UP_THRESHOLD			(50)
+#define DEF_FREQUENCY_DOWN_THRESHOLD		(15)
+#define FREQ_STEP_DOWN 						(160000)
+#define FREQ_SLEEP_MAX 						(320000)
+#define FREQ_AWAKE_MIN 						(384000)
+#define FREQ_STEP_UP_SLEEP_PERCENT 			(20)
 
+#define CPU_FREQ_MIN_TICKS					(10)
+#define CPU_FREQ_SAMPLING_LATENCY_MULTIPLIER (1000)
 /*
  * The polling frequency of this governor depends on the capability of
  * the processor. Default polling frequency is 1000 times the transition
@@ -57,7 +59,7 @@ unsigned int suspended = 0;
 #define MIN_SAMPLING_RATE_RATIO			(2)
 /* for correct statistics, we need at least 10 ticks between each measure */
 #define MIN_STAT_SAMPLING_RATE			\
-	(MIN_SAMPLING_RATE_RATIO * jiffies_to_usecs(CONFIG_CPU_FREQ_MIN_TICKS))
+	(MIN_SAMPLING_RATE_RATIO * jiffies_to_usecs(CPU_FREQ_MIN_TICKS))
 #define MIN_SAMPLING_RATE			\
 			(def_sampling_rate / MIN_SAMPLING_RATE_RATIO)
 #define MAX_SAMPLING_RATE			(500 * def_sampling_rate)
@@ -109,16 +111,18 @@ static struct dbs_tuners dbs_tuners_ins = {
 
 static inline unsigned int get_cpu_idle_time(unsigned int cpu)
 {
+
 	unsigned int add_nice = 0, ret;
 
 	if (dbs_tuners_ins.ignore_nice)
 		add_nice = kcpustat_cpu(cpu).cpustat[CPUTIME_NICE];
 
 	ret = kcpustat_cpu(cpu).cpustat[CPUTIME_IDLE] +
-		kcpustat_cpu(cpu).cpustat[CPUTIME_IOWAIT] +
-		add_nice;
+			kcpustat_cpu(cpu).cpustat[CPUTIME_IOWAIT] +
+			add_nice;
 
 	return ret;
+
 }
 
 /* keep track of frequency transitions */
@@ -555,7 +559,7 @@ static int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 				latency = 1;
 
 			def_sampling_rate = 10 * latency *
-				CONFIG_CPU_FREQ_SAMPLING_LATENCY_MULTIPLIER;
+				CPU_FREQ_SAMPLING_LATENCY_MULTIPLIER;
 
 			if (def_sampling_rate < MIN_STAT_SAMPLING_RATE)
 				def_sampling_rate = MIN_STAT_SAMPLING_RATE;
@@ -617,9 +621,22 @@ struct cpufreq_governor cpufreq_gov_lagfree = {
 	.owner			= THIS_MODULE,
 };
 
+static void lagfree_early_suspend(struct power_suspend *handler) {
+	suspended = 1;
+}
+
+static void lagfree_late_resume(struct power_suspend *handler) {
+	suspended = 0;
+}
+
+static struct power_suspend lagfree_power_suspend = {
+	.suspend = lagfree_early_suspend,
+	.resume = lagfree_late_resume,
+};
+
 static int __init cpufreq_gov_dbs_init(void)
 {
-	register_early_suspend(&lagfree_power_suspend);
+	register_power_suspend(&lagfree_power_suspend);
 	return cpufreq_register_governor(&cpufreq_gov_lagfree);
 }
 
@@ -628,7 +645,7 @@ static void __exit cpufreq_gov_dbs_exit(void)
 	/* Make sure that the scheduled work is indeed not running */
 	flush_scheduled_work();
 
-	unregister_early_suspend(&lagfree_power_suspend);
+	unregister_power_suspend(&lagfree_power_suspend);
 	cpufreq_unregister_governor(&cpufreq_gov_lagfree);
 }
 
@@ -646,5 +663,4 @@ fs_initcall(cpufreq_gov_dbs_init);
 module_init(cpufreq_gov_dbs_init);
 #endif
 module_exit(cpufreq_gov_dbs_exit); 
-
 

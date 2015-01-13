@@ -7,7 +7,7 @@
 #include <linux/usb/g_hid.h>
 
 int hidg_bind_config(struct usb_configuration *c,
- struct hidg_func_descriptor *fdesc, int index);
+			    struct hidg_func_descriptor *fdesc, int index);
 
 int ghid_setup(struct usb_gadget *g, int count);
 

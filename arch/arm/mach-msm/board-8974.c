@@ -61,11 +61,6 @@
 #include <linux/persistent_ram.h>
 #include "board-8974-console.h"
 
-#ifdef CONFIG_KEXEC_HARDBOOT
-#include <linux/memblock.h>
-#include <asm/setup.h>
-#endif
-
 static struct memtype_reserve msm8974_reserve_table[] __initdata = {
 	[MEMTYPE_SMI] = {
 	},
@@ -126,6 +121,7 @@ static struct platform_device lastlogs_device = {
 #define RDTAGS_MEM_SIZE (256 * SZ_1K)
 #define RDTAGS_MEM_DESC_SIZE (256 * SZ_1K)
 #define LAST_LOGS_OFFSET (RDTAGS_MEM_SIZE + RDTAGS_MEM_DESC_SIZE)
+#define KEXEC_HB_OFFSET (RDTAGS_MEM_SIZE + RDTAGS_MEM_DESC_SIZE + LAST_LOGS_OFFSET)
 
 #ifdef CONFIG_CRASH_LAST_LOGS
 #define LAST_LOG_HEADER_SIZE 4096
@@ -177,23 +173,33 @@ static void reserve_debug_memory(void)
 void __init msm_8974_reserve(void)
 {
 #ifdef CONFIG_KEXEC_HARDBOOT
-	// Reserve space for hardboot page - just after ram_console,
-	// at the start of second memory bank
-	struct membank *mb = &meminfo.bank[meminfo.nr_banks - 1];
-	phys_addr_t start = mb->start + SZ_1M + MSM_PERSISTENT_RAM_SIZE;
-
-	int ret = memblock_remove(start, SZ_1M);
-	if(!ret)
-		pr_info("Hardboot page reserved at 0x%X\n", start);
-	else
-		pr_err("Failed to reserve space for hardboot page at 0x%X!\n", start);
+        int ret;
+        phys_addr_t start;
+	struct membank* bank;
 #endif
-
-#ifdef CONFIG_ANDROID_PERSISTENT_RAM
-	reserve_persistent_ram();
+#if defined(CONFIG_RAMDUMP_TAGS) || defined(CONFIG_CRASH_LAST_LOGS)
+	reserve_debug_memory();
 #endif
 	reserve_info = &msm8974_reserve_info;
 	of_scan_flat_dt(dt_scan_for_memory_reserve, msm8974_reserve_table);
+#ifdef CONFIG_KEXEC_HARDBOOT
+        // Reserve space for hardboot page - just after ram_console,
+        // at the start of second memory bank
+
+        if (meminfo.nr_banks < 2) {
+                pr_err("%s: not enough membank\n", __func__);
+                return;
+        }
+
+	bank = &meminfo.bank[1];
+	start = bank->start + bank->size - SZ_1M + KEXEC_HB_OFFSET;
+	ret = memblock_remove(start, SZ_1M);
+        if(!ret)
+                pr_info("Hardboot page reserved at 0x%X\n", start);
+        else
+                pr_err("Failed to reserve space for hardboot page at 0x%X!\n", start);
+#endif
+
 	msm_reserve();
 }
 

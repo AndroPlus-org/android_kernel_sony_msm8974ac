@@ -1,0 +1,31 @@
+### GCC 4.9.x
+
+if [ ! -e ./arch/arm/boot/msm8974pro-ab-shinano_sirius.dtb ]; then
+rm ./arch/arm/boot/*.dtb
+fi
+
+### get defconfig
+ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make sirius_defconfig
+
+### compile kernel
+ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make CONFIG_DEBUG_SECTION_MISMATCH=y CONFIG_NO_ERROR_ON_MISMATCH=y -j8
+
+echo "checking for compiled kernel..."
+if [ -f arch/arm/boot/zImage ]
+then
+
+echo "generating device tree..."
+./dtbToolCM --force-v2 -o ../final_files/dt.img -s 2048 -p ./scripts/dtc/ ./arch/arm/boot/
+
+### copy zImage
+cp arch/arm/boot/zImage ../final_files/. 
+
+echo "DONE"
+
+fi
+
+### D6603
+./mkbootimg --cmdline "androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0xb7 ehci-hcd.park=3 dwc3.maximum_speed=high dwc3_msm.prop_chg_detect=Y" --base 0x00000000 --kernel ../final_files/zImage --ramdisk ramdiskD6503.cpio.gz --ramdisk_offset 0x02000000 -o boot_D6503.img --dt ../final_files/dt.img --tags_offset 0x01E00000
+
+### Copy img to my desktop
+dd if=./boot_D6503.img of="/mnt/hgfs/VMShare/Android Image Kitchen20/boot_D6503.img"

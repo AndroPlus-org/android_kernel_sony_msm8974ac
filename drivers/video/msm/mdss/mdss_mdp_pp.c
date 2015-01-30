@@ -4559,10 +4559,6 @@ static int mdss_mdp_ad_setup(struct msm_fb_data_type *mfd)
 
 	mdata = mfd_to_mdata(mfd);
 
-	mutex_lock(&bl_mfd->bl_lock);
-	bl = bl_mfd->ad_bl_level;
-	mutex_unlock(&bl_mfd->bl_lock);
-
 	mutex_lock(&ad->lock);
 	if (ad->sts != last_sts || ad->state != last_state) {
 		last_sts = ad->sts;

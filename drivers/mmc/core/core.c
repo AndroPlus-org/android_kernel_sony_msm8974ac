@@ -3311,7 +3311,7 @@ void mmc_rescan(struct work_struct *work)
 	mmc_rpm_release(host, &host->class_dev);
  out:
 	if (extend_wakelock)
-		wake_lock_timeout(&host->detect_wake_lock, HZ / 2);
+		wake_lock_timeout(&host->detect_wake_lock, HZ / 4);
 
 	if (host->caps & MMC_CAP_NEEDS_POLL)
 		mmc_schedule_delayed_work(&host->detect, HZ);

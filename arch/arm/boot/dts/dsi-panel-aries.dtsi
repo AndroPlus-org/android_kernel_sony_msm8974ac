@@ -89,6 +89,8 @@
 		qcom,mdss-dsi-pan-fps-update = "dfps_suspend_resume_mode";
 		qcom,cont-splash-enabled;
 		qcom,mdss-dsi-tx-eot-append;
+		qcom,partial-update-enabled;
+		qcom,ulps-enabled;
 
 		somc,driver-ic = <1>;
 		somc,dric-gpio = <&msmgpio 26 0>;
@@ -434,6 +436,8 @@
 		qcom,mdss-dsi-pan-fps-update = "dfps_suspend_resume_mode";
 		qcom,cont-splash-enabled;
 		qcom,mdss-dsi-tx-eot-append;
+		qcom,partial-update-enabled;
+		qcom,ulps-enabled;
 
 		somc,driver-ic = <1>;
 		somc,dric-gpio = <&msmgpio 26 0>;

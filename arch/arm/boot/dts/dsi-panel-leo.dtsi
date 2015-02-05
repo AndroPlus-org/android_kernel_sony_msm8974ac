@@ -1092,6 +1092,7 @@
 		qcom,mdss-dsi-pan-fps-update = "dfps_suspend_resume_mode";
 		qcom,cont-splash-enabled;
 		qcom,partial-update-enabled;
+		qcom,panel-roi-alignment = <900 4 0 2 540 2>;
 		qcom,ulps-enabled;
 
 		somc,driver-ic = <0>;

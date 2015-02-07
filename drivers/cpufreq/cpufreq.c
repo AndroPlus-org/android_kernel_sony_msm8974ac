@@ -462,17 +462,19 @@ int cpufreq_qos_requirement(unsigned int kHz)
 		if (kHz == INT_MAX)
 			kHz = new_policy.cpuinfo.max_freq;
 
+		if (new_policy.min > kHz)
+			goto out;
+
 		pr_info("%s: CPU0 min: %u->%u kHz\n", __func__, new_policy.min, kHz);
 
 		last_min_freq = new_policy.min;
 		new_policy.min = kHz;
-
 		cpufreq_required = 1;
 	} else if (last_min_freq && cpufreq_required) {
 		pr_info("%s: CPU0 min: %u->%u kHz\n", __func__, new_policy.min, last_min_freq);
 
-		cpufreq_required = 0;
 		new_policy.min = last_min_freq;
+		cpufreq_required = 0;
 	} else {
 		goto out;
 	}
@@ -484,6 +486,7 @@ int cpufreq_qos_requirement(unsigned int kHz)
 
 out:
 	mutex_unlock(&cpufreq_qos_lock);
+
 	return ret;
 }
 EXPORT_SYMBOL(cpufreq_qos_requirement);
@@ -570,6 +573,8 @@ static ssize_t store_scaling_governor(struct cpufreq_policy *policy,
 	ret = sscanf(buf, "%15s", str_governor);
 	if (ret != 1)
 		return -EINVAL;
+
+	pr_info("%s: CPU%u: %s", __func__, policy->cpu, buf);
 
 	if (cpufreq_parse_governor(str_governor, &new_policy.policy,
 						&new_policy.governor))

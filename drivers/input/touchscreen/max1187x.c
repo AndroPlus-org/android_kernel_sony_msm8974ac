@@ -718,8 +718,8 @@ static void report_down(struct data *ts,
 	ts->curr_finger_ids |= idbit;
 
 	if (valid) {
-		input_mt_slot(idev, id);
-		input_mt_report_slot_state(idev, tool_type, true);
+		input_report_abs(idev, ABS_MT_TRACKING_ID, id);
+		input_report_abs(idev, ABS_MT_TOOL_TYPE, tool_type);
 		input_report_abs(idev, ABS_MT_POSITION_X, x);
 		input_report_abs(idev, ABS_MT_POSITION_Y, y);
 		if (pdata->pressure_enabled)
@@ -730,6 +730,7 @@ static void report_down(struct data *ts,
 			input_report_abs(idev, ABS_MT_TOUCH_MAJOR, touch_major);
 			input_report_abs(idev, ABS_MT_TOUCH_MINOR, touch_minor);
 		}
+		input_mt_sync(idev);
 	}
 	dev_dbg(dev, "event: %s%s%s %u: [XY %4d %4d ][PMmO %4d %4d %4d %3d ]",
 		!(ts->list_finger_ids & (1 << id)) ? "DOWN" : "MOVE",
@@ -740,33 +741,21 @@ static void report_down(struct data *ts,
 		id, x, y, z, touch_major, touch_minor, orientation);
 }
 
-static void report_up(struct data *ts,
+static void report_up(struct data *ts, int id,
 			struct max1187x_touch_report_extended *e)
 {
 	struct device *dev = &ts->client->dev;
 	struct input_dev *idev = ts->input_dev;
 	u16 raw_tool_type = e->tool_type;
-	u16 tool_type;
-	u16 id = e->finger_id;
 	u16 idbit = 1 << id;
 	bool valid;
-
-	if (raw_tool_type == MXM_TOOL_PEN) {
-		if (ts->pdata->report_pen_as_finger)
-			tool_type = MT_TOOL_FINGER;
-		else
-			tool_type = MT_TOOL_PEN;
-	} else {
-		tool_type = MT_TOOL_FINGER;
-	}
 
 	if (!(ts->list_finger_ids & idbit))
 		return;
 
 	valid = idev->users > 0;
 	if (valid)
-		input_mt_slot(idev, id);
-		input_mt_report_slot_state(idev, tool_type, false);
+		input_mt_sync(idev);
 	dev_dbg(dev, "event: UP%s%s %u\n",
 		valid ? " " : "#",
 		raw_tool_type == MXM_TOOL_FINGER ? "Finger" :
@@ -782,6 +771,7 @@ static void invalidate_all_fingers(struct data *ts)
 
 	dev_dbg(dev, "event: UP all\n");
 	if (ts->input_dev->users) {
+		input_mt_sync(ts->input_dev);
 		input_sync(ts->input_dev);
 	}
 	ts->list_finger_ids = 0;
@@ -2281,8 +2271,6 @@ static int probe(struct i2c_client *client, const struct i2c_device_id *id)
 	__set_bit(EV_ABS, ts->input_dev->evbit);
 	__set_bit(EV_KEY, ts->input_dev->evbit);
 
-	input_mt_init_slots(ts->input_dev,
-				MXM_TOUCH_COUNT_MAX);
 	input_set_abs_params(ts->input_dev, ABS_MT_TRACKING_ID,
 			0, MXM_TOUCH_COUNT_MAX, 0, 0);
 	ts->list_finger_ids = 0;

@@ -28,7 +28,13 @@
 
 //#define DEBUG_CPU_LIMITER
 
+#if defined(CONFIG_MACH_SONY_SIRIUS)
+uint32_t limited_max_freq = 2265600;
+#elif defined(CONFIG_MACH_SONY_ARIES) || defined(CONFIG_MACH_SONY_LEO)
 uint32_t limited_max_freq = 2572800;
+#else
+uint32_t limited_max_freq = 2572800;
+#endif
 
 static int update_cpu_max_freq(int cpu, uint32_t max_freq)
 {

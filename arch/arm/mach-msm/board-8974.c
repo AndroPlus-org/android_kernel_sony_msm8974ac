@@ -249,9 +249,6 @@ void __init msm8974_add_drivers(void)
 #else
  	msm_thermal_device_init();
 #endif
-#ifdef CONFIG_LCD_KCAL
-	msm_add_lcd_kcal_devices();
-#endif
 
 }
 

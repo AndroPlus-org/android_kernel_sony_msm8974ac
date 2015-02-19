@@ -979,7 +979,7 @@ static void dbs_freq_increase(struct cpufreq_policy *p, unsigned int freq)
 			CPUFREQ_RELATION_L : CPUFREQ_RELATION_H);
 }
 
-int input_event_boosted(void)
+static int input_event_boosted(void)
 {
 	unsigned long flags;
 

@@ -37,7 +37,7 @@
 #include <linux/mm_inline.h>
 #include <trace/events/writeback.h>
 #ifdef CONFIG_DYNAMIC_PAGE_WRITEBACK
-#include <linux/earlysuspend.h>
+#include <linux/powersuspend.h>
 #endif
 
 #include "internal.h"
@@ -1697,7 +1697,7 @@ static struct notifier_block __cpuinitdata ratelimit_nb = {
 /*
  * Sets the dirty page writebacks interval for suspended system
  */
-static void dirty_writeback_early_suspend(struct early_suspend *handler)
+static void dirty_writeback_early_suspend(struct power_suspend *handler)
 {
 	if (dyn_dirty_writeback_enabled)
 		set_dirty_writeback_status(false);
@@ -1706,7 +1706,7 @@ static void dirty_writeback_early_suspend(struct early_suspend *handler)
 /*
  * Sets the dirty page writebacks interval for active system
  */
-static void dirty_writeback_late_resume(struct early_suspend *handler)
+static void dirty_writeback_late_resume(struct power_suspend *handler)
 {
 	if (dyn_dirty_writeback_enabled)
 		set_dirty_writeback_status(true);
@@ -1715,7 +1715,7 @@ static void dirty_writeback_late_resume(struct early_suspend *handler)
 /*
  * Struct for the dirty page writeback management during suspend/resume
  */
-static struct early_suspend dirty_writeback_suspend = {
+static struct power_suspend dirty_writeback_suspend = {
 	.suspend = dirty_writeback_early_suspend,
 	.resume = dirty_writeback_late_resume,
 };
@@ -1745,7 +1745,7 @@ void __init page_writeback_init(void)
 
 #ifdef CONFIG_DYNAMIC_PAGE_WRITEBACK
 	/* Register the dirty page writeback management during suspend/resume */
-	register_early_suspend(&dirty_writeback_suspend);
+	register_power_suspend(&dirty_writeback_suspend);
 #endif
 
 	writeback_set_ratelimit();

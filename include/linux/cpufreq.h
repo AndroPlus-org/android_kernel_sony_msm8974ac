@@ -328,8 +328,6 @@ __ATTR(_name, 0644, show_##_name, store_##_name)
  *********************************************************************/
 int cpufreq_get_policy(struct cpufreq_policy *policy, unsigned int cpu);
 int cpufreq_update_policy(unsigned int cpu);
-int cpufreq_update_freq(unsigned int cpu, unsigned int min, unsigned int max);
-int cpufreq_qos_requirement(unsigned int kHz);
 
 #ifdef CONFIG_CPU_FREQ
 /* query the current CPU frequency (in kHz). If zero, cpufreq couldn't detect it */

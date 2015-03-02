@@ -120,9 +120,7 @@ int wcd9xxx_reg_read(
 EXPORT_SYMBOL(wcd9xxx_reg_read);
 
 #ifdef CONFIG_SOUND_CONTROL_HAX_3_GPL
-static int __wcd9xxx_reg_read_safe(
-	struct wcd9xxx *wcd9xxx,
-	unsigned short reg)
+int wcd9xxx_reg_read_safe(struct wcd9xxx *wcd9xxx, unsigned short reg)
 {
 	u8 val;
 	int ret;
@@ -133,14 +131,6 @@ static int __wcd9xxx_reg_read_safe(
 		return ret;
 	else
 		return val;
-}
-
-int wcd9xxx_reg_read_safe(
-	struct wcd9xxx_core_resource *core_res,
-	unsigned short reg)
-{
-	struct wcd9xxx *wcd9xxx = (struct wcd9xxx *) core_res->parent;
-	return __wcd9xxx_reg_read_safe(wcd9xxx, reg);
 }
 EXPORT_SYMBOL_GPL(wcd9xxx_reg_read_safe);
 #endif
@@ -1991,3 +1981,4 @@ module_exit(wcd9xxx_exit);
 MODULE_DESCRIPTION("Codec core driver");
 MODULE_VERSION("1.0");
 MODULE_LICENSE("GPL v2");
+

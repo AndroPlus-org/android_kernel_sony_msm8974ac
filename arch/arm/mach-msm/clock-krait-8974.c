@@ -596,8 +596,6 @@ static void krait_update_uv(int *uv, int num, int boost_uv)
 
 extern bool is_used_by_scaling(unsigned int freq);
 
-static unsigned int cnt;
-
 ssize_t show_UV_mV_table(struct cpufreq_policy *policy, char *buf)
 {
 	int i, freq, len = 0;
@@ -633,11 +631,6 @@ ssize_t store_UV_mV_table(struct cpufreq_policy *policy, char *buf,
 	/* use only master core 0 */
 	int num_levels = cpu_clk[0]->vdd_class->num_levels;
 
-	if (cnt) {
-		cnt = 0;
-		return -EINVAL;
-	}
-
 	/* sanity checks */
 	if (num_levels < 0)
 		return -1;
@@ -660,8 +653,7 @@ ssize_t store_UV_mV_table(struct cpufreq_policy *policy, char *buf,
 
 		/* Non-standard sysfs interface: advance buf */
 		ret = sscanf(buf, "%s", size_cur);
-		cnt = strlen(size_cur);
-		buf += cnt + 1;
+		buf += strlen(size_cur) + 1;
 	}
 	pr_warn("faux123: user voltage table modified!\n");
 

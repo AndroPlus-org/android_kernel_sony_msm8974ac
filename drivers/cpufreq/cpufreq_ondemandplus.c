@@ -132,10 +132,10 @@ static unsigned long down_differential;
 #define DEFAULT_MIN_FREQ 300000
 static u64 allowed_min;
 
-#define DEFAULT_MAX_FREQ 2803200
+#define DEFAULT_MAX_FREQ 2265600
 static u64 allowed_max;
 
-#define DEFAULT_INTER_HIFREQ 2265600
+#define DEFAULT_INTER_HIFREQ 1728000
 static u64 inter_hifreq;
 
 #define DEFAULT_INTER_LOFREQ 300000
@@ -147,11 +147,11 @@ static u64 suspend_frequency;
 #define DEFAULT_INTER_STAYCYCLES 2
 static unsigned long inter_staycycles;
 
-#define DEFAULT_STAYCYCLES_RESETFREQ 960000
+#define DEFAULT_STAYCYCLES_RESETFREQ 652800
 static u64 staycycles_resetfreq;
 
 #define DEFAULT_IO_IS_BUSY 0
-unsigned int io_is_busy;
+static unsigned int io_is_busy;
 
 /*
  * Tunables end
@@ -204,7 +204,7 @@ static void cpufreq_ondemandplus_timer(unsigned long data)
 
         time_in_idle = pcpu->time_in_idle;
         idle_exit_time = pcpu->idle_exit_time;
-        now_idle = get_cpu_idle_time(data, &pcpu->timer_run_time, 0);
+        now_idle = get_cpu_idle_time(data, &pcpu->timer_run_time, io_is_busy);
         smp_wmb();
 
         /* If we raced with cancelling a timer, skip. */
@@ -412,7 +412,7 @@ rearm:
                 }
 
                 pcpu->time_in_idle = get_cpu_idle_time(
-                        data, &pcpu->idle_exit_time, 0);
+                        data, &pcpu->idle_exit_time, io_is_busy);
                 mod_timer(&pcpu->cpu_timer,
                         jiffies + usecs_to_jiffies(timer_rate));
         }
@@ -446,7 +446,7 @@ static void cpufreq_ondemandplus_idle_start(void)
                  */
                 if (!pending) {
                         pcpu->time_in_idle = get_cpu_idle_time(
-                                smp_processor_id(), &pcpu->idle_exit_time, 0);
+                                smp_processor_id(), &pcpu->idle_exit_time, io_is_busy);
                         pcpu->timer_idlecancel = 0;
                         mod_timer(&pcpu->cpu_timer,
                                   jiffies + usecs_to_jiffies(timer_rate));
@@ -497,7 +497,7 @@ static void cpufreq_ondemandplus_idle_end(void)
             pcpu->governor_enabled) {
                 pcpu->time_in_idle =
                         get_cpu_idle_time(smp_processor_id(),
-                                             &pcpu->idle_exit_time, 0);
+                                             &pcpu->idle_exit_time, io_is_busy);
                 pcpu->timer_idlecancel = 0;
                 mod_timer(&pcpu->cpu_timer,
                           jiffies + usecs_to_jiffies(timer_rate));
@@ -857,7 +857,7 @@ static int cpufreq_governor_ondemandplus(struct cpufreq_policy *policy,
                         pcpu->freq_table = freq_table;
                         pcpu->target_set_time_in_idle =
                                 get_cpu_idle_time(j,
-                                             &pcpu->target_set_time, 0);
+                                             &pcpu->target_set_time, io_is_busy);
                         pcpu->governor_enabled = 1;
                         smp_wmb();
                 }
@@ -978,3 +978,4 @@ MODULE_AUTHOR("Mike Chan <mike@android.com>");
 MODULE_DESCRIPTION("'cpufreq_ondemandplus' - A cpufreq governor for "
         "semi-aggressive scaling");
 MODULE_LICENSE("GPL");
+

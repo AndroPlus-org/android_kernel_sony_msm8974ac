@@ -37,8 +37,8 @@
  * It helps to keep variable names smaller, simpler
  */
 
-#define DEF_SAMPLING_DOWN_FACTOR		(2)
-#define MAX_SAMPLING_DOWN_FACTOR		(100000)
+#define DEF_SAMPLING_DOWN_FACTOR		(1)
+#define MAX_SAMPLING_DOWN_FACTOR		(3)
 #define DEF_FREQUENCY_DOWN_DIFFERENTIAL		(5)
 #define DEF_FREQUENCY_UP_THRESHOLD		(70)
 
@@ -58,9 +58,9 @@
 #define DEF_START_DELAY				(0)
 
 #define UP_THRESHOLD_AT_MIN_FREQ		(40)
-#define FREQ_FOR_RESPONSIVENESS			(2265600)
+#define FREQ_FOR_RESPONSIVENESS			(1512000)
 /* for fast decrease */
-#define FREQ_FOR_FAST_DOWN			(1574400)
+#define FREQ_FOR_FAST_DOWN			(702000)
 #define UP_THRESHOLD_AT_FAST_DOWN		(80)
 
 static unsigned int min_sampling_rate;
@@ -82,11 +82,11 @@ struct cpufreq_governor cpufreq_gov_pegasusq = {
 enum {DBS_NORMAL_SAMPLE, DBS_SUB_SAMPLE};
 
 struct cpu_dbs_info_s {
-	cputime64_t prev_cpu_idle;
-	cputime64_t prev_cpu_iowait;
-	cputime64_t prev_cpu_wall;
+	u64 prev_cpu_idle;
+	u64 prev_cpu_iowait;
+	u64 prev_cpu_wall;
 	unsigned int prev_cpu_wall_delta;
-	cputime64_t prev_cpu_nice;
+	u64 prev_cpu_nice;
 	struct cpufreq_policy *cur_policy;
 	struct delayed_work work;
 	struct cpufreq_frequency_table *freq_table;
@@ -166,7 +166,7 @@ static struct dbs_tuners {
 	.freq_for_responsiveness = FREQ_FOR_RESPONSIVENESS,
 };
 
-static inline cputime64_t get_cpu_iowait_time(unsigned int cpu, cputime64_t *wall)
+static inline u64 get_cpu_iowait_time(unsigned int cpu, u64 *wall)
 {
 	u64 iowait_time = get_cpu_iowait_time_us(cpu, wall);
 
@@ -297,7 +297,8 @@ static ssize_t store_ignore_nice_load(struct kobject *a, struct attribute *b,
 		struct cpu_dbs_info_s *dbs_info;
 		dbs_info = &per_cpu(od_cpu_dbs_info, j);
 		dbs_info->prev_cpu_idle = get_cpu_idle_time(j,
-						&dbs_info->prev_cpu_wall, 0);
+						&dbs_info->prev_cpu_wall,
+						dbs_tuners_ins.io_is_busy);
 		if (dbs_tuners_ins.ignore_nice)
 			dbs_info->prev_cpu_nice = kcpustat_cpu(j).cpustat[CPUTIME_NICE];
 	}
@@ -402,6 +403,7 @@ static void dbs_freq_increase(struct cpufreq_policy *p, unsigned int freq)
 static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 {
 	unsigned int max_load_freq;
+	unsigned int max_load = 0;
 
 	struct cpufreq_policy *policy;
 	unsigned int j;
@@ -414,8 +416,8 @@ static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 
 	for_each_cpu(j, policy->cpus) {
 		struct cpu_dbs_info_s *j_dbs_info;
-		cputime64_t cur_wall_time, cur_idle_time, cur_iowait_time;
-		cputime64_t prev_wall_time, prev_idle_time, prev_iowait_time;
+		u64 cur_wall_time, cur_idle_time, cur_iowait_time;
+		u64 prev_wall_time, prev_idle_time, prev_iowait_time;
 		unsigned int idle_time, wall_time, iowait_time;
 		unsigned int load, load_freq;
 		int freq_avg;
@@ -425,7 +427,8 @@ static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 		prev_idle_time = j_dbs_info->prev_cpu_idle;
 		prev_iowait_time = j_dbs_info->prev_cpu_iowait;
 
-		cur_idle_time = get_cpu_idle_time(j, &cur_wall_time, 0);
+		cur_idle_time = get_cpu_idle_time(j, &cur_wall_time,
+				dbs_tuners_ins.io_is_busy);
 		cur_iowait_time = get_cpu_iowait_time(j, &cur_wall_time);
 
 		wall_time = (unsigned int)
@@ -465,6 +468,9 @@ static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 
 		load = 100 * (wall_time - idle_time) / wall_time;
 
+		if (load > max_load)
+			max_load = load;
+
 		freq_avg = __cpufreq_driver_getavg(policy, j);
 		if (freq_avg <= 0)
 			freq_avg = policy->cur;
@@ -473,6 +479,8 @@ static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 		if (load_freq > max_load_freq)
 			max_load_freq = load_freq;
 	}
+
+	cpufreq_notify_utilization(policy, max_load);
 
 	/* Check for frequency increase */
 	if (policy->cur < dbs_tuners_ins.freq_for_responsiveness)
@@ -612,15 +620,14 @@ static int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 
 		dbs_enable++;
 
-		mutex_init(&this_dbs_info->timer_mutex);
-
 		for_each_cpu(j, policy->cpus) {
 			struct cpu_dbs_info_s *j_dbs_info;
 			j_dbs_info = &per_cpu(od_cpu_dbs_info, j);
 			j_dbs_info->cur_policy = policy;
 
 			j_dbs_info->prev_cpu_idle = get_cpu_idle_time(j,
-						&j_dbs_info->prev_cpu_wall, 0);
+						&j_dbs_info->prev_cpu_wall,
+						dbs_tuners_ins.io_is_busy);
 			if (dbs_tuners_ins.ignore_nice)
 				j_dbs_info->prev_cpu_nice =
 						kcpustat_cpu(j).cpustat[CPUTIME_NICE];
@@ -635,6 +642,7 @@ static int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 			rc = sysfs_create_group(cpufreq_global_kobject,
 						&dbs_attr_group);
 			if (rc) {
+				dbs_enable--;
 				mutex_unlock(&dbs_mutex);
 				return rc;
 			}
@@ -643,6 +651,8 @@ static int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 			dbs_tuners_ins.sampling_rate = DEF_SAMPLING_RATE;
 			dbs_tuners_ins.io_is_busy = 0;
 		}
+		mutex_init(&this_dbs_info->timer_mutex);
+
 		mutex_unlock(&dbs_mutex);
 
 		dbs_timer_init(this_dbs_info);
@@ -653,10 +663,9 @@ static int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 		dbs_timer_exit(this_dbs_info);
 
 		mutex_lock(&dbs_mutex);
+		mutex_destroy(&this_dbs_info->timer_mutex);
 
 		dbs_enable--;
-
-		mutex_destroy(&this_dbs_info->timer_mutex);
 
 		if (!dbs_enable) {
 			sysfs_remove_group(cpufreq_global_kobject,
@@ -716,3 +725,4 @@ fs_initcall(cpufreq_gov_dbs_init);
 module_init(cpufreq_gov_dbs_init);
 #endif
 module_exit(cpufreq_gov_dbs_exit);
+

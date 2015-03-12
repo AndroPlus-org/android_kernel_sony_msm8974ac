@@ -197,6 +197,12 @@ config CPU_FREQ_DEFAULT_GOV_PEGASUSQ
 	help
 	  Use the CPUFreq governor 'pegasusq' as default.
 
+config CPU_FREQ_DEFAULT_GOV_SMARTMAX
+        bool "smartmax"
+        select CPU_FREQ_GOV_SMARTMAX
+        help
+          Use the CPUFreq governor 'smartmax' as default
+
 config CPU_FREQ_DEFAULT_GOV_LAGFREE
         bool "lagfree"
         select CPU_FREQ_GOV_LAGFREE
@@ -344,6 +350,12 @@ config SMARTASSV2_SAMPLE_RATE_JIFFIES
 	depends on CPU_FREQ_GOV_SMARTASSV2
 	help
 	  Sampling rate, I highly recommend to leave it at 2.
+
+config CPU_FREQ_GOV_SMARTMAX
+        tristate "'smartmax' cpufreq policy governor"
+        select CPU_FREQ_TABLE
+        help
+          'smartmax' combined ondemand and smartass2
 
 config CPU_FREQ_GOV_LAGFREE
         tristate "'lagfree' cpufreq governor"

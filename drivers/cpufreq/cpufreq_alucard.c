@@ -37,24 +37,24 @@
 /* Tuning Interface */
 #define MIN_SAMPLING_RATE		10000
 #define SAMPLING_RATE			50000
-#define INC_CPU_LOAD_AT_MIN_FREQ	70
-#define INC_CPU_LOAD			70
+#define INC_CPU_LOAD_AT_MIN_FREQ	80
+#define INC_CPU_LOAD			80
 #define DEC_CPU_LOAD_AT_MIN_FREQ	70
 #define DEC_CPU_LOAD 			70
 
-#define CPUS_UP_RATE			1
+#define CPUS_UP_RATE			3
 #define CPUS_DOWN_RATE			2
 
 #ifdef CONFIG_MACH_LGE
-#define FREQ_RESPONSIVENESS		1134000
+#define FREQ_RESPONSIVENESS		1574400
 #else
 #define FREQ_RESPONSIVENESS		1134000
 #endif
 
 /* Pump Inc/Dec for all cores */
-#define PUMP_INC_STEP_AT_MIN_FREQ	1
+#define PUMP_INC_STEP_AT_MIN_FREQ	6
 #define PUMP_INC_STEP			1
-#define PUMP_DEC_STEP			2
+#define PUMP_DEC_STEP			1
 
 static void do_alucard_timer(struct work_struct *work);
 
@@ -142,7 +142,7 @@ static struct alucard_tuners {
 	.dec_cpu_load_at_min_freq = DEC_CPU_LOAD_AT_MIN_FREQ,
 	.dec_cpu_load = DEC_CPU_LOAD,
 	.freq_responsiveness = FREQ_RESPONSIVENESS,
-	.io_is_busy = 1,
+	.io_is_busy = 0,
 	.cpus_up_rate = CPUS_UP_RATE,
 	.cpus_down_rate = CPUS_DOWN_RATE,
 };
@@ -562,17 +562,15 @@ static void alucard_check_cpu(struct cpufreq_alucard_cpuinfo *this_alucard_cpuin
 			dec_cpu_load = alucard_tuners_ins.dec_cpu_load_at_min_freq;
 			pump_inc_step = this_alucard_cpuinfo->pump_inc_step_at_min_freq;
 			hi_index = this_alucard_cpuinfo->max_index;
-			check_up = true;
-			check_down = true;
 		}
 		/* Check for frequency increase or for frequency decrease */
 		if (cur_load >= inc_cpu_load && index < hi_index) {
 			++this_alucard_cpuinfo->up_rate;
 			if (check_up) {
-				if ((index + pump_inc_step) >= hi_index)
-					index = hi_index;
-				else
+				if ((index + pump_inc_step) <= hi_index)
 					index += pump_inc_step;
+				else
+					index = hi_index;
 
 				this_alucard_cpuinfo->up_rate = 1;
 				this_alucard_cpuinfo->down_rate = 1;
@@ -580,10 +578,10 @@ static void alucard_check_cpu(struct cpufreq_alucard_cpuinfo *this_alucard_cpuin
 		} else if (cur_load < dec_cpu_load && index > this_alucard_cpuinfo->min_index) {
 			++this_alucard_cpuinfo->down_rate;
 			if (check_down) {
-				if ((index - pump_dec_step) <= this_alucard_cpuinfo->min_index)
-					index = this_alucard_cpuinfo->min_index;
-				else
+				if ((index - this_alucard_cpuinfo->min_index) >= pump_dec_step)
 					index -= pump_dec_step;
+				else
+					index = this_alucard_cpuinfo->min_index;
 
 				this_alucard_cpuinfo->up_rate = 1;
 				this_alucard_cpuinfo->down_rate = 1;

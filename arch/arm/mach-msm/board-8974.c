@@ -217,7 +217,6 @@ void __init msm8974_add_drivers(void)
 #else
  	msm_thermal_device_init();
 #endif
-	msm_init_wifi();
 
 }
 

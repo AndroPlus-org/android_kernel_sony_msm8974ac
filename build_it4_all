@@ -6,10 +6,10 @@ rm ./arch/arm/boot/*.dtb
 fi
 
 ### get defconfig
-ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make leo_defconfig
+ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.3-2015.03/bin/arm-eabi- make leo_defconfig
 
 ### compile kernel
-ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make -j8
+ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.3-2015.03/bin/arm-eabi- make -j8
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]
@@ -32,10 +32,10 @@ fi
 rm ./arch/arm/boot/*.dtb
 
 ### get defconfig
-ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make aries_defconfig
+ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.3-2015.03/bin/arm-eabi- make aries_defconfig
 
 ### compile kernel
-ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make -j8
+ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.3-2015.03/bin/arm-eabi- make -j8
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]
@@ -59,10 +59,10 @@ fi
 rm ./arch/arm/boot/*.dtb
 
 ### get defconfig
-ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make scorpion_defconfig
+ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.3-2015.03/bin/arm-eabi- make scorpion_defconfig
 
 ### compile kernel
-ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make -j8
+ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.3-2015.03/bin/arm-eabi- make -j8
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]
@@ -85,10 +85,10 @@ fi
 rm ./arch/arm/boot/*.dtb
 
 ### get defconfig
-ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make scorpion_windy_defconfig
+ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.3-2015.03/bin/arm-eabi- make scorpion_windy_defconfig
 
 ### compile kernel
-ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make -j8
+ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.3-2015.03/bin/arm-eabi- make -j8
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]
@@ -112,10 +112,10 @@ fi
 rm ./arch/arm/boot/*.dtb
 
 ### get defconfig
-ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make sirius_defconfig
+ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.3-2015.03/bin/arm-eabi- make sirius_defconfig
 
 ### compile kernel
-ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make -j8
+ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.3-2015.03/bin/arm-eabi- make -j8
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]

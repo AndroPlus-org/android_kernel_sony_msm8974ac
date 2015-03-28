@@ -261,7 +261,6 @@ config CPU_FREQ_GOV_ADAPTIVE
 
 	  If in doubt, say N.
 
->>>>>>> aabbd5e... Added CPU govonors smartassH3 and adaptive
 config CPU_FREQ_GOV_SMARTASSV2
 	tristate "'smartassV2' cpufreq governor"
 	depends on CPU_FREQ
@@ -595,7 +594,6 @@ config CPU_FREQ_GOV_HYPER
 config CPU_FREQ_GOV_PEGASUSQ
 	tristate "'pegasusq' cpufreq policy governor"
 
->>>>>>> 8d9c42e... Add ALL of MY CPU GOVS from My JB Kernel! 8 new govs.
 config CPU_FREQ_GOV_INTELLIACTIVE
 	tristate "'intelliactive' cpufreq policy governor"
 	help

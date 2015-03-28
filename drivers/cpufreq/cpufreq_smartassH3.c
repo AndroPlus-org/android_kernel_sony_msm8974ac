@@ -824,7 +824,7 @@ static void smartass_suspend(int cpu, int suspend)
 	reset_timer(smp_processor_id(),this_smartass);
 }
 
-static void smartass_early_suspend(struct early_suspend *handler) {
+static void smartass_early_suspend(struct power_suspend *handler) {
 	int i;
 	if (suspended || sleep_ideal_freq==0) // disable behavior for sleep_ideal_freq==0
 		return;
@@ -833,7 +833,7 @@ static void smartass_early_suspend(struct early_suspend *handler) {
 		smartass_suspend(i,1);
 }
 
-static void smartass_late_resume(struct early_suspend *handler) {
+static void smartass_late_resume(struct power_suspend *handler) {
 	int i;
 	if (!suspended) // already not suspended so nothing to do
 		return;
@@ -919,6 +919,4 @@ module_exit(cpufreq_smartass_exit);
 MODULE_AUTHOR ("Erasmux, moded by H3ROS & C3C0");
 MODULE_DESCRIPTION ("'cpufreq_smartassH3' - A smart cpufreq governor");
 MODULE_LICENSE ("GPL");
-
-
 

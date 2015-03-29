@@ -103,9 +103,6 @@ vmlinux
 kernel/config_data.h
 boot*.img
 dt.img
-dtbTool
-dtbToolCM
-mkbootimg
 arch/arm/boot/Image
 arch/arm/boot/compressed/vmlinux
 arch/arm/boot/zImage

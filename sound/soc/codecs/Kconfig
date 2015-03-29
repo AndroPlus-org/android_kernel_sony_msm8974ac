@@ -298,6 +298,7 @@ config SND_SOC_WCD9320
 config SND_SOC_WCD9320_CONTROL
         bool "Taiko Controller"
 	depends on SND_SOC_WCD9320
+	default y
 	help
 	  Say Y to have taiko codec control.
 

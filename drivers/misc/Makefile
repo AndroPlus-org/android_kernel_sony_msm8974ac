@@ -84,4 +84,3 @@ obj-$(CONFIG_ONESEG_TUNER_SMTVJ18X) += oneseg_tuner_drv.o
 obj-$(CONFIG_ONESEG_TUNER_SMTVJ19X) += oneseg_tuner_drv.o
 obj-$(CONFIG_ISDBT_TUNER_SMTEJ11X) += isdbt_tuner_drv.o
 obj-$(CONFIG_ISDBT_TUNER_SMTEJ12X) += isdbt_tuner_drv.o
-obj-$(CONFIG_SOUND_CONTROL_HAX_3_GPL) += sound_control.o

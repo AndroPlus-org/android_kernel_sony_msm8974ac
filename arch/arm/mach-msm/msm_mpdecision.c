@@ -26,7 +26,9 @@
 #include "msm_mpdecision.h"
 #ifdef CONFIG_FB
 #include <linux/fb.h>
+#elif defined CONFIG_POWERSUSPEND
 #include <linux/powersuspend.h>
+#endif
 #include <linux/init.h>
 #include <linux/cpufreq.h>
 #include <linux/workqueue.h>
@@ -642,7 +644,7 @@ static int fb_notifier_callback(struct notifier_block *this,
 	return 0;
 }
 #else
-static void msm_mpdec_power_suspend(struct power_suspend *h) {
+static void msm_mpdec_early_suspend(struct power_suspend *h) {
        msm_mpdec_suspend();
 }
 
@@ -650,8 +652,8 @@ static void msm_mpdec_late_resume(struct power_suspend *h) {
        msm_mpdec_resume();
 }
 
-static struct power_suspend msm_mpdec_power_suspend_handler = {
-	.level = POWER_SUSPEND_LEVEL_DISABLE_FB,
+static struct early_suspend msm_mpdec_early_suspend_handler = {
+	.level = EARLY_SUSPEND_LEVEL_DISABLE_FB,
 	.suspend = msm_mpdec_power_suspend,
 	.resume = msm_mpdec_late_resume,
 };
@@ -1202,7 +1204,9 @@ static int __init msm_mpdec_init(void) {
 		err = -EINVAL;
 		goto err_fb_register;
 	}
-	register_power_suspend(&msm_mpdec_power_suspend_handler);
+#elif defined CONFIG_HAS_EARLYSUSPEND
+	register_power_suspend(&msm_mpdec_early_suspend_handler);
+#endif
 
     msm_mpdec_kobject = kobject_create_and_add("msm_mpdecision", kernel_kobj);
     if (msm_mpdec_kobject) {

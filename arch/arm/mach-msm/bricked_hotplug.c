@@ -23,8 +23,11 @@
 #include <linux/platform_device.h>
 #include <linux/module.h>
 #include <linux/device.h>
+#ifdef CONFIG_POWERSUSPEND
+#include <linux/powersuspend.h>
+#else
 #include <linux/fb.h>
-#include <linux/notifier.h>
+#endif
 
 #define DEBUG 0
 
@@ -38,7 +41,7 @@
 #define DEFAULT_SUSPEND_DEFER_TIME	10
 #define DEFAULT_DOWN_LOCK_DUR		500
 
-#define MSM_MPDEC_IDLE_FREQ		300000
+#define MSM_MPDEC_IDLE_FREQ		499200
 
 enum {
 	MSM_MPDEC_DISABLED = 0,
@@ -47,7 +50,9 @@ enum {
 	MSM_MPDEC_UP,
 };
 
+#ifndef CONFIG_POWERSUSPEND
 static struct notifier_block notif;
+#endif
 static struct delayed_work hotplug_work;
 static struct delayed_work suspend_work;
 static struct work_struct resume_work;
@@ -254,7 +259,7 @@ static void bricked_hotplug_suspend(struct work_struct *work)
 {
 	int cpu;
 
-	if (!hotplug.bricked_enabled)
+	if (!hotplug.bricked_enabled || hotplug.suspended)
 		return;
 
 	if (!hotplug.hotplug_suspend)
@@ -327,6 +332,28 @@ static void __ref bricked_hotplug_resume(struct work_struct *work)
 	}
 }
 
+#ifdef CONFIG_POWERSUSPEND
+static void __bricked_hotplug_suspend(struct power_suspend *handler)
+{
+	INIT_DELAYED_WORK(&suspend_work, bricked_hotplug_suspend);
+	queue_delayed_work_on(0, susp_wq, &suspend_work,
+			msecs_to_jiffies(hotplug.suspend_defer_time * 1000));
+}
+
+static void __ref __bricked_hotplug_resume(struct power_suspend *handler)
+{
+	flush_workqueue(susp_wq);
+	cancel_delayed_work_sync(&suspend_work);
+	queue_work_on(0, susp_wq, &resume_work);
+}
+
+static struct power_suspend bricked_hotplug_power_suspend_driver = {
+	.suspend = __bricked_hotplug_suspend,
+	.resume = __bricked_hotplug_resume,
+};
+#else
+static int prev_fb = FB_BLANK_UNBLANK;
+
 static int fb_notifier_callback(struct notifier_block *self,
 				unsigned long event, void *data)
 {
@@ -340,26 +367,29 @@ static int fb_notifier_callback(struct notifier_block *self,
 		blank = evdata->data;
 		switch (*blank) {
 			case FB_BLANK_UNBLANK:
-				//display on
-				flush_workqueue(susp_wq);
-				cancel_delayed_work_sync(&suspend_work);
-				queue_work_on(0, susp_wq, &resume_work);
+				if (prev_fb == FB_BLANK_POWERDOWN) {
+					/* display on */
+					flush_workqueue(susp_wq);
+					cancel_delayed_work_sync(&suspend_work);
+					queue_work_on(0, susp_wq, &resume_work);
+					prev_fb = FB_BLANK_UNBLANK;
+				}
 				break;
 			case FB_BLANK_POWERDOWN:
-			case FB_BLANK_HSYNC_SUSPEND:
-			case FB_BLANK_VSYNC_SUSPEND:
-			case FB_BLANK_NORMAL:
-				//display off
-				INIT_DELAYED_WORK(&suspend_work, bricked_hotplug_suspend);
-				queue_delayed_work_on(0, susp_wq, &suspend_work, 
-					msecs_to_jiffies(hotplug.suspend_defer_time * 1000)); 
+				if (prev_fb == FB_BLANK_UNBLANK) {
+					/* display off */
+					INIT_DELAYED_WORK(&suspend_work, bricked_hotplug_suspend);
+					queue_delayed_work_on(0, susp_wq, &suspend_work,
+						msecs_to_jiffies(hotplug.suspend_defer_time * 1000));
+					prev_fb = FB_BLANK_POWERDOWN;
+				}
 				break;
 		}
 	}
 
 	return NOTIFY_OK;
 }
-
+#endif
 
 static int bricked_hotplug_start(void)
 {
@@ -378,10 +408,19 @@ static int bricked_hotplug_start(void)
 		pr_err("%s: Failed to allocate suspend workqueue\n",
 		       MPDEC_TAG);
 		ret = -ENOMEM;
-		goto err_out;
+		goto err_dev;
 	}
 
+#ifdef CONFIG_POWERSUSPEND
+	register_power_suspend(&bricked_hotplug_power_suspend_driver);
+#else
 	notif.notifier_call = fb_notifier_callback;
+	if (fb_register_client(&notif)) {
+		pr_err("%s: Failed to register FB notifier callback\n",
+			MPDEC_TAG);
+		goto err_susp;
+	}
+#endif
 
 	mutex_init(&hotplug.bricked_cpu_mutex);
 	mutex_init(&hotplug.bricked_hotplug_mutex);
@@ -400,6 +439,12 @@ static int bricked_hotplug_start(void)
 					msecs_to_jiffies(hotplug.startdelay));
 
 	return ret;
+#ifndef CONFIG_POWERSUSPEND
+err_susp:
+	destroy_workqueue(susp_wq);
+#endif
+err_dev:
+	destroy_workqueue(hotplug_wq);
 err_out:
 	hotplug.bricked_enabled = 0;
 	return ret;
@@ -421,7 +466,12 @@ static void bricked_hotplug_stop(void)
 	cancel_delayed_work_sync(&hotplug_work);
 	mutex_destroy(&hotplug.bricked_hotplug_mutex);
 	mutex_destroy(&hotplug.bricked_cpu_mutex);
+#ifdef CONFIG_POWERSUSPEND
+	unregister_power_suspend(&bricked_hotplug_power_suspend_driver);
+#else
+	fb_unregister_client(&notif);
 	notif.notifier_call = NULL;
+#endif
 	destroy_workqueue(susp_wq);
 	destroy_workqueue(hotplug_wq);
 
@@ -870,3 +920,4 @@ module_exit(msm_mpdec_exit);
 MODULE_AUTHOR("Pranav Vashi <neobuddy89@gmail.com>");
 MODULE_DESCRIPTION("Bricked Hotplug Driver");
 MODULE_LICENSE("GPLv2");
+

@@ -209,15 +209,12 @@ static int cpu_hotplug_handler(struct notifier_block *nb,
 static int system_suspend_handler(struct notifier_block *nb,
 				unsigned long val, void *data)
 {
-<<<<<<< HEAD
-=======
 	if (!rq_info.hotplug_enabled)
 		return NOTIFY_OK;
 
 	if (rq_info.bricked_hotplug_enabled)
 		return NOTIFY_OK;
 
->>>>>>> afee06e... MSM BRICKED HOTPLUG: add more controls to hotplug. fix RQ STATS for it.
 	switch (val) {
 	case PM_POST_HIBERNATION:
 	case PM_POST_SUSPEND:
@@ -315,7 +312,6 @@ static struct kobj_attribute bricked_hotplug_enabled_attr =
 		show_bricked_hotplug_enable,
 		store_bricked_hotplug_enable);
 
-#ifdef CONFIG_BRICKED_HOTPLUG
 unsigned int get_rq_info(void)
 {
 	unsigned long flags = 0;

@@ -1585,7 +1585,7 @@ static void __ref disable_msm_thermal(void)
 
 static int __ref set_enabled(const char *val, const struct kernel_param *kp)
 {
-	int ret = 0;
+	int ret = 1;
 
 	if (*val == '0' || *val == 'n' || *val == 'N') {
 		enabled = 0;

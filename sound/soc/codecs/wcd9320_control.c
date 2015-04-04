@@ -29,7 +29,7 @@ bool hplanagain_con = false;
 bool hpranagain_con = false;
 bool hpldiggain_con = false;
 bool hprdiggain_con = false;
-bool spkdiggain_con = true;
+bool spkdiggain_con = false;
 bool spkdrv_ena = true;
 
 bool hpwidget = false;

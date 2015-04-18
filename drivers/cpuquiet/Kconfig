@@ -12,7 +12,7 @@ if CPU_QUIET
 
 config CPU_QUIET_STATS
 	bool "per CPU statistics"
-	default n
+	default y
 	help
 	  Enable up/down count and total time plugged statistics per CPU. These
 	  depend on correct driver input for reliability

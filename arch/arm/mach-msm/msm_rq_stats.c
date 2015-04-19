@@ -209,12 +209,6 @@ static int cpu_hotplug_handler(struct notifier_block *nb,
 static int system_suspend_handler(struct notifier_block *nb,
 				unsigned long val, void *data)
 {
-	if (!rq_info.hotplug_enabled)
-		return NOTIFY_OK;
-
-	if (rq_info.bricked_hotplug_enabled)
-		return NOTIFY_OK;
-
 	switch (val) {
 	case PM_POST_HIBERNATION:
 	case PM_POST_SUSPEND:
@@ -233,41 +227,7 @@ static int system_suspend_handler(struct notifier_block *nb,
 
 
 static ssize_t hotplug_disable_show(struct kobject *kobj,
-				    struct kobj_attribute *attr, char *buf)
-{
-	return snprintf(buf, MAX_LONG_SIZE, "%d\n", rq_info.hotplug_disabled);
-}
-
-static ssize_t store_hotplug_enable(struct kobject *kobj,
-				     struct kobj_attribute *attr,
-				     const char *buf, size_t count)
-{
-	int ret;
-	unsigned int val;
-	unsigned long flags = 0;
-
-	spin_lock_irqsave(&rq_lock, flags);
-	ret = sscanf(buf, "%u", &val);
-	if (ret != 1 || val < 0 || val > 1)
-		return -EINVAL;
-
-	rq_info.hotplug_enabled = val;
-
-	if (!rq_info.bricked_hotplug_enabled) {
-		if (rq_info.hotplug_enabled)
-			rq_info.hotplug_disabled = 0;
-		else
-			rq_info.hotplug_disabled = 1;
-	} else
-		rq_info.hotplug_disabled = 1;
-
-	spin_unlock_irqrestore(&rq_lock, flags);
-
-	return count;
-}
-
-static ssize_t show_hotplug_enable(struct kobject *kobj,
-				    struct kobj_attribute *attr, char *buf)
+		struct kobj_attribute *attr, char *buf)
 {
 	unsigned int val = 0;
 	val = rq_info.hotplug_disabled;
@@ -278,7 +238,7 @@ static struct kobj_attribute hotplug_disabled_attr = __ATTR_RO(hotplug_disable);
 
 unsigned int get_rq_info(void)
 {
-	unsigned long flags = 0;
+unsigned long flags = 0;
         unsigned int rq = 0;
 
         spin_lock_irqsave(&rq_lock, flags);
@@ -362,11 +322,7 @@ static struct kobj_attribute run_queue_poll_ms_attr =
 static ssize_t show_def_timer_ms(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
-	if (!rq_info.bricked_hotplug_enabled)
-		return snprintf(buf, MAX_LONG_SIZE, "%u\n",
-				rq_info.def_interval);
-	else
-		return snprintf(buf, MAX_LONG_SIZE, "%u\n", 0);
+	return snprintf(buf, MAX_LONG_SIZE, "%u\n", rq_info.def_interval);
 }
 
 static ssize_t store_def_timer_ms(struct kobject *kobj,
@@ -388,11 +344,7 @@ static struct kobj_attribute def_timer_ms_attr =
 static ssize_t show_cpu_normalized_load(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
-	if (!rq_info.bricked_hotplug_enabled)
-		return snprintf(buf, MAX_LONG_SIZE, "%u\n",
-			rq_info.hotplug_enabled ? report_load_at_max_freq() : 0);
-	else
-		return snprintf(buf, MAX_LONG_SIZE, "%u\n", 0);
+	return snprintf(buf, MAX_LONG_SIZE, "%u\n", report_load_at_max_freq());
 }
 
 static struct kobj_attribute cpu_normalized_load_attr =
@@ -405,8 +357,6 @@ static struct attribute *rq_attrs[] = {
 	&run_queue_avg_attr.attr,
 	&run_queue_poll_ms_attr.attr,
 	&hotplug_disabled_attr.attr,
-	&hotplug_enabled_attr.attr,
-	&bricked_hotplug_enabled_attr.attr,
 	NULL,
 };
 
@@ -456,9 +406,7 @@ static int __init msm_rq_stats_init(void)
 	rq_info.def_timer_jiffies = DEFAULT_DEF_TIMER_JIFFIES;
 	rq_info.rq_poll_last_jiffy = 0;
 	rq_info.def_timer_last_jiffy = 0;
-	rq_info.hotplug_disabled = 1;
-	rq_info.hotplug_enabled = 0;
-	rq_info.bricked_hotplug_enabled = 0;
+	rq_info.hotplug_disabled = 0;
 	ret = init_rq_attribs();
 
 	rq_info.init = 1;
@@ -494,3 +442,4 @@ static int __init msm_rq_stats_early_init(void)
 	return 0;
 }
 core_initcall(msm_rq_stats_early_init);
+

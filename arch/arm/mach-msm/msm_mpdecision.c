@@ -782,24 +782,13 @@ static ssize_t store_scroff_single_core(struct kobject *a, struct attribute *b,
 static ssize_t store_max_cpus(struct kobject *a, struct attribute *b,
 				   const char *buf, size_t count)
 {
-    unsigned int input;
-    int ret, cpu;
-    ret = sscanf(buf, "%u", &input);
-    if ((ret != 1) || input > CONFIG_NR_CPUS)
+	unsigned int input;
+	int ret;
+	ret = sscanf(buf, "%u", &input);
+	if ((ret != 1) || input > CONFIG_NR_CPUS)
                 return -EINVAL;
 
-    msm_mpdec_tuners_ins.max_cpus = input;
-    if (num_online_cpus() > input) {
-        for (cpu=CONFIG_NR_CPUS; cpu>0; cpu--) {
-            if (num_online_cpus() <= input)
-                break;
-            if (!cpu_online(cpu))
-                continue;
-            cpu_down(cpu);
-            pr_info(MPDEC_TAG"Unplugging CPU[%i]...\n", cpu);
-        }
-        pr_info(MPDEC_TAG"max_cpus set to %u. Affected CPUs were unplugged!\n", input);
-    }
+	msm_mpdec_tuners_ins.max_cpus = input;
 
 	return count;
 }
@@ -807,24 +796,13 @@ static ssize_t store_max_cpus(struct kobject *a, struct attribute *b,
 static ssize_t store_min_cpus(struct kobject *a, struct attribute *b,
 				   const char *buf, size_t count)
 {
-    unsigned int input;
-    int ret, cpu;
-    ret = sscanf(buf, "%u", &input);
-    if ((ret != 1) || input < 1)
-        return -EINVAL;
+	unsigned int input;
+	int ret;
+	ret = sscanf(buf, "%u", &input);
+	if ((ret != 1) || input < 1)
+                return -EINVAL;
 
-    msm_mpdec_tuners_ins.min_cpus = input;
-    if (num_online_cpus() < input) {
-        for (cpu=1; cpu<CONFIG_NR_CPUS; cpu++) {
-            if (num_online_cpus() >= input)
-                break;
-            if (cpu_online(cpu))
-                continue;
-            cpu_up(cpu);
-            pr_info(MPDEC_TAG"Hotplugging CPU[%i]...\n", cpu);
-        }
-        pr_info(MPDEC_TAG"min_cpus set to %u. Affected CPUs were hotplugged!\n", input);
-    }
+	msm_mpdec_tuners_ins.min_cpus = input;
 
 	return count;
 }

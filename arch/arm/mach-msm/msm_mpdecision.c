@@ -30,12 +30,9 @@
 #include <linux/cpumask.h>
 #include <asm-generic/cputime.h>
 #include <linux/hrtimer.h>
-#include <linux/delay.h>
 
 #define MPDEC_TAG "[MPDEC]: "
-#define MSM_MPDEC_DELAY 500
-#define CPU_UPDELAY 200
-#define CPU_DOWNDELAY 200
+#define MSM_MPDEC_DELAY 400
 
 enum {
 	MSM_MPDEC_DISABLED = 0,
@@ -51,7 +48,7 @@ struct msm_mpdec_suspend_t {
 static DEFINE_PER_CPU(struct msm_mpdec_suspend_t, msm_mpdec_suspend);
 
 static struct delayed_work msm_mpdec_work;
-static DEFINE_MUTEX(msm_cpu_lock);
+static DEFINE_SPINLOCK(msm_cpu_lock);
 
 bool scroff_single_core = true;
 
@@ -113,13 +110,12 @@ static void msm_mpdec_work_thread(struct work_struct *work)
 {
 	int ret = 0;
 	unsigned int cpu = nr_cpu_ids;
+	unsigned long flags = 0;
 
 	if (per_cpu(msm_mpdec_suspend, (CONFIG_NR_CPUS - 1)).device_suspended == true)
 		goto out;
 
-
-	if (!mutex_trylock(&msm_cpu_lock))
-		goto out;
+	spin_lock_irqsave(&msm_cpu_lock, flags);
 
 	ret = mp_decision();
 	switch (ret) {
@@ -130,7 +126,6 @@ static void msm_mpdec_work_thread(struct work_struct *work)
 		cpu = (CONFIG_NR_CPUS - 1);
 		if ((cpu < nr_cpu_ids) && (cpu_online(cpu))) {
 			cpu_down(cpu);
-			msleep(CPU_DOWNDELAY);
 			pr_info(MPDEC_TAG"CPU[%d] 1->0 | Mask=[%d%d]\n",
 					cpu, cpu_online(0), cpu_online(1));
 		}
@@ -139,7 +134,6 @@ static void msm_mpdec_work_thread(struct work_struct *work)
 		cpu = (CONFIG_NR_CPUS - 1);
 		if ((cpu < nr_cpu_ids) && (!cpu_online(cpu))) {
 			cpu_up(cpu);
-			msleep(CPU_UPDELAY);
 			pr_info(MPDEC_TAG"CPU[%d] 0->1 | Mask=[%d%d]\n",
 					cpu, cpu_online(0), cpu_online(1));
 		}
@@ -148,7 +142,8 @@ static void msm_mpdec_work_thread(struct work_struct *work)
 		pr_err(MPDEC_TAG"%s: invalid mpdec hotplug state %d\n",
 		       __func__, ret);
 	}
-	mutex_unlock(&msm_cpu_lock);
+
+	spin_unlock_irqrestore(&msm_cpu_lock, flags);
 
 out:
 	schedule_delayed_work(&msm_mpdec_work,

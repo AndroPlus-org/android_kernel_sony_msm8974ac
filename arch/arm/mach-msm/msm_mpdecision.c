@@ -33,7 +33,6 @@
 #include <asm-generic/cputime.h>
 #include <linux/hrtimer.h>
 #include <linux/delay.h>
-#include "acpuclock.h"
 
 #define DEBUG 1
 
@@ -84,15 +83,10 @@ static unsigned int NwNs_Threshold[8] = {19, 30, 19, 11, 19, 11, 0, 11};
 static unsigned int TwTs_Threshold[8] = {140, 0, 140, 190, 140, 190, 0, 190};
 
 extern unsigned int get_rq_info(void);
-extern unsigned long acpuclk_get_rate(int);
+extern unsigned long acpuclk_8x60_get_rate(int);
 
 unsigned int state = MSM_MPDEC_IDLE;
 bool was_paused = false;
-
-static unsigned long get_rate(int cpu)
-{
-        return acpuclk_get_rate(cpu);
-}
 
 static int get_slowest_cpu(void)
 {

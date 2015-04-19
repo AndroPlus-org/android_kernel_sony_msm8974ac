@@ -50,7 +50,6 @@
 DEFINE_PER_CPU(struct msm_mpdec_cpudata_t, msm_mpdec_cpudata);
 EXPORT_PER_CPU_SYMBOL_GPL(msm_mpdec_cpudata);
 
-static struct notifier_block msm_mpdec_fb_notif;
 static bool mpdec_suspended = false;
 static struct delayed_work msm_mpdec_work;
 static struct workqueue_struct *msm_mpdec_workq;
@@ -101,7 +100,7 @@ static unsigned int TwTs_Threshold[8] = {140, 0, 140, 190, 140, 190, 0, 190};
 extern unsigned int get_rq_info(void);
 extern unsigned long acpuclk_get_rate(int);
 
-unsigned int mpdec_state = MSM_MPDEC_IDLE;
+unsigned int state = MSM_MPDEC_IDLE;
 bool was_paused = false;
 #ifdef CONFIG_MSM_MPDEC_INPUTBOOST_CPUMIN
 bool is_screen_on = true;
@@ -201,7 +200,7 @@ static int mp_decision(void) {
     cputime64_t current_time;
     cputime64_t this_time = 0;
 
-    if (mpdec_state == MSM_MPDEC_DISABLED)
+    if (state == MSM_MPDEC_DISABLED)
         return MSM_MPDEC_DISABLED;
 
     current_time = ktime_to_ms(ktime_get());
@@ -276,8 +275,8 @@ static void msm_mpdec_work_thread(struct work_struct *work) {
         was_paused = false;
     }
 
-    mpdec_state = mp_decision();
-    switch (mpdec_state) {
+    state = mp_decision();
+    switch (state) {
     case MSM_MPDEC_DISABLED:
     case MSM_MPDEC_IDLE:
         break;
@@ -315,11 +314,11 @@ static void msm_mpdec_work_thread(struct work_struct *work) {
         break;
     default:
         pr_err(MPDEC_TAG"%s: invalid mpdec hotplug state %d\n",
-               __func__, mpdec_state);
+               __func__, state);
     }
     mutex_unlock(&mpdec_msm_cpu_lock);
 out:
-	if (mpdec_state != MSM_MPDEC_DISABLED)
+	if (state != MSM_MPDEC_DISABLED)
 		queue_delayed_work(msm_mpdec_workq, &msm_mpdec_work,
 				msecs_to_jiffies(msm_mpdec_tuners_ins.delay));
 	return;
@@ -764,7 +763,7 @@ static ssize_t show_enabled(struct kobject *a, struct attribute *b,
 				   char *buf)
 {
 	unsigned int enabled;
-	switch (mpdec_state) {
+	switch (state) {
 	case MSM_MPDEC_DISABLED:
 		enabled = 0;
 		break;
@@ -911,7 +910,7 @@ static ssize_t store_enabled(struct kobject *a, struct attribute *b,
     if (ret != 1)
         return -EINVAL;
 
-    switch (mpdec_state) {
+    switch (state) {
     case MSM_MPDEC_DISABLED:
         enabled = 0;
         break;
@@ -929,14 +928,14 @@ static ssize_t store_enabled(struct kobject *a, struct attribute *b,
 
     switch (buf[0]) {
     case '0':
-        mpdec_state = MSM_MPDEC_DISABLED;
+        state = MSM_MPDEC_DISABLED;
         pr_info(MPDEC_TAG"nap time... Hot plugging offline CPUs...\n");
         for (cpu = 1; cpu < CONFIG_NR_CPUS; cpu++)
             if (!cpu_online(cpu))
                 mpdec_cpu_up(cpu);
         break;
     case '1':
-        mpdec_state = MSM_MPDEC_IDLE;
+        state = MSM_MPDEC_IDLE;
         was_paused = true;
         queue_delayed_work(msm_mpdec_workq, &msm_mpdec_work,
                            msecs_to_jiffies(msm_mpdec_tuners_ins.delay));
@@ -1193,7 +1192,7 @@ static int __init msm_mpdec_init(void) {
     rc = input_register_handler(&mpdec_input_handler);
 #endif
 
-    if (mpdec_state != MSM_MPDEC_DISABLED)
+    if (state != MSM_MPDEC_DISABLED)
         queue_delayed_work(msm_mpdec_workq, &msm_mpdec_work,
                            msecs_to_jiffies(msm_mpdec_tuners_ins.startdelay));
 

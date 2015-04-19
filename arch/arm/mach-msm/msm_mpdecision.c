@@ -70,7 +70,6 @@ static unsigned int NwNs_Threshold[4] = {20, 0, 0, 5};
 static unsigned int TwTs_Threshold[4] = {250, 0, 0, 250};
 
 extern unsigned int get_rq_info(void);
-unsigned int state = MSM_MPDEC_IDLE;
 bool was_paused = false;
 
 static int mp_decision(void)
@@ -84,9 +83,6 @@ static int mp_decision(void)
 	static cputime64_t last_time;
 	cputime64_t current_time;
 	cputime64_t this_time = 0;
-
-	if (state == MSM_MPDEC_DISABLED)
-		return MSM_MPDEC_DISABLED;
 
 	current_time = ktime_to_ms(ktime_get());
 
@@ -132,6 +128,7 @@ static int mp_decision(void)
 
 static void msm_mpdec_work_thread(struct work_struct *work)
 {
+	int ret = 0;
 	unsigned int cpu = nr_cpu_ids;
 	cputime64_t on_time = 0;
 
@@ -152,8 +149,8 @@ static void msm_mpdec_work_thread(struct work_struct *work)
 		was_paused = false;
 	}
 
-	state = mp_decision();
-	switch (state) {
+	ret = mp_decision();
+	switch (ret) {
 	case MSM_MPDEC_DISABLED:
 	case MSM_MPDEC_IDLE:
 		break;
@@ -193,14 +190,13 @@ static void msm_mpdec_work_thread(struct work_struct *work)
 		break;
 	default:
 		pr_err(MPDEC_TAG"%s: invalid mpdec hotplug state %d\n",
-		       __func__, state);
+		       __func__, ret);
 	}
 	mutex_unlock(&msm_cpu_lock);
 
 out:
-	if (state != MSM_MPDEC_DISABLED)
-		schedule_delayed_work(&msm_mpdec_work,
-				msecs_to_jiffies(msm_mpdec_tuners_ins.delay));
+	schedule_delayed_work(&msm_mpdec_work,
+			msecs_to_jiffies(msm_mpdec_tuners_ins.delay));
 	return;
 }
 
@@ -260,25 +256,6 @@ show_one(startdelay, startdelay);
 show_one(delay, delay);
 show_one(pause, pause);
 show_one(scroff_single_core, scroff_single_core);
-
-static ssize_t show_enabled(struct kobject *a, struct attribute *b,
-				   char *buf)
-{
-	unsigned int enabled;
-	switch (state) {
-	case MSM_MPDEC_DISABLED:
-		enabled = 0;
-		break;
-	case MSM_MPDEC_IDLE:
-	case MSM_MPDEC_DOWN:
-	case MSM_MPDEC_UP:
-		enabled = 1;
-		break;
-	default:
-		enabled = 333;
-	}
-	return sprintf(buf, "%u\n", enabled);
-}
 
 static ssize_t show_nwns_threshold_up(struct kobject *kobj, struct attribute *attr,
 					char *buf)
@@ -367,53 +344,6 @@ static ssize_t store_scroff_single_core(struct kobject *a, struct attribute *b,
 	return count;
 }
 
-static ssize_t store_enabled(struct kobject *a, struct attribute *b,
-				   const char *buf, size_t count)
-{
-	unsigned int cpu, input, enabled;
-	int ret;
-	ret = sscanf(buf, "%u", &input);
-	if (ret != 1)
-		return -EINVAL;
-
-	switch (state) {
-	case MSM_MPDEC_DISABLED:
-		enabled = 0;
-		break;
-	case MSM_MPDEC_IDLE:
-	case MSM_MPDEC_DOWN:
-	case MSM_MPDEC_UP:
-		enabled = 1;
-		break;
-	default:
-		enabled = 333;
-	}
-
-	if (buf[0] == enabled)
-		return -EINVAL;
-
-	switch (buf[0]) {
-	case '0':
-		state = MSM_MPDEC_DISABLED;
-		cpu = (CONFIG_NR_CPUS - 1);
-		per_cpu(msm_mpdec_cpudata, cpu).on_time = ktime_to_ms(ktime_get());
-		per_cpu(msm_mpdec_cpudata, cpu).online = true;
-		cpu_up(cpu);
-		pr_info(MPDEC_TAG"nap time... Hot plugged CPU[%d] | Mask=[%d%d]\n",
-				 cpu, cpu_online(0), cpu_online(1));
-		break;
-	case '1':
-		state = MSM_MPDEC_IDLE;
-		was_paused = true;
-		schedule_delayed_work(&msm_mpdec_work, 0);
-		pr_info(MPDEC_TAG"firing up mpdecision...\n");
-		break;
-	default:
-		ret = -EINVAL;
-	}
-	return count;
-}
-
 static ssize_t store_nwns_threshold_up(struct kobject *a, struct attribute *b,
 				   const char *buf, size_t count)
 {
@@ -474,7 +404,6 @@ define_one_global_rw(startdelay);
 define_one_global_rw(delay);
 define_one_global_rw(pause);
 define_one_global_rw(scroff_single_core);
-define_one_global_rw(enabled);
 define_one_global_rw(nwns_threshold_up);
 define_one_global_rw(nwns_threshold_down);
 define_one_global_rw(twts_threshold_up);
@@ -485,7 +414,6 @@ static struct attribute *msm_mpdec_attributes[] = {
 	&delay.attr,
 	&pause.attr,
 	&scroff_single_core.attr,
-	&enabled.attr,
 	&nwns_threshold_up.attr,
 	&nwns_threshold_down.attr,
 	&twts_threshold_up.attr,
@@ -511,8 +439,7 @@ static int __init msm_mpdec(void)
 	}
 
 	INIT_DELAYED_WORK(&msm_mpdec_work, msm_mpdec_work_thread);
-	if (state != MSM_MPDEC_DISABLED)
-		schedule_delayed_work(&msm_mpdec_work, 0);
+	schedule_delayed_work(&msm_mpdec_work, 0);
 
 	register_early_suspend(&msm_mpdec_early_suspend_handler);
 

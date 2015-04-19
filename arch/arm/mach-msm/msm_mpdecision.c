@@ -1,10 +1,8 @@
 /*
  * arch/arm/mach-msm/msm_mpdecision.c
  *
- * This program features:
- * -cpu auto-hotplug/unplug based on system load for MSM multicore cpus
- * -single core while screen is off
- * -extensive sysfs tuneables
+ * cpu auto-hotplug/unplug based on system load for MSM dualcore cpus
+ * single core while screen is off
  *
  * Copyright (c) 2012, Dennis Rassmann <showp1984@gmail.com>
  *

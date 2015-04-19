@@ -577,10 +577,8 @@ static void msm_mpdec_resume(void) {
     is_screen_on = true;
 #endif
 
-    if (!mpdec_suspended) {
-		pr_info(MPDEC_TAG"Screen -> on\n");
+    if (!mpdec_suspended)
         return;
-	}
 
     mpdec_suspended = false;
 

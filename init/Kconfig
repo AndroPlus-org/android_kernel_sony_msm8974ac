@@ -1148,8 +1148,33 @@ config AIO
 	default y
 	help
 	  This option enables POSIX asynchronous I/O which may by used
-          by some high performance threaded applications. Disabling
-          this option saves about 7k.
+	  by some high performance threaded applications. Disabling
+	  this option saves about 7k.
+
+config AIO_SSD_ONLY
+	bool "Tune AIO performance for SSDs" if EXPERT
+	default y
+	depends on AIO
+	help
+	  Solid state storage have no head to move and no location
+	  to "physically reach", as the block is being retrieved
+	  in the exact moment we request it.
+	  Optimize Asynchronous IO for those conditions.
+
+	  Enabling this option on systems with rotational drives
+	  WILL be resulting in bad storage performance.
+
+	  If you've got ONLY SSDs, say Y. If unsure, say N.
+
+
+config PCI_QUIRKS
+	default y
+	bool "Enable PCI quirk workarounds" if EXPERT
+	depends on PCI
+	help
+	  This enables workarounds for various PCI chipset
+	  bugs/quirks. Disable this only if your target machine is
+	  unaffected by PCI quirks.
 
 config EMBEDDED
 	bool "Embedded system"

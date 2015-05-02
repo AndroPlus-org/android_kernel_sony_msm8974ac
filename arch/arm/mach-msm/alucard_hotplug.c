@@ -105,7 +105,7 @@ static struct hotplug_tuners {
 #ifdef CONFIG_MACH_JF
 	.hotplug_enable = 1,
 #else
-	.hotplug_enable = 1,
+	.hotplug_enable = 0,
 #endif
 	.min_cpus_online = 1,
 	.maxcoreslimit = NR_CPUS,

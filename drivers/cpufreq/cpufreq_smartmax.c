@@ -311,16 +311,6 @@ struct cpufreq_governor cpufreq_gov_smartmax = {
     .owner = THIS_MODULE,
     };
 
-
-static inline u64 get_cpu_iowait_time(unsigned int cpu, u64 *wall) {
-	u64 iowait_time = get_cpu_iowait_time_us(cpu, wall);
-
-	if (iowait_time == -1ULL)
-		return 0;
-
-	return iowait_time;
-}
-
 inline static void smartmax_update_min_max(
 		struct smartmax_info_s *this_smartmax, struct cpufreq_policy *policy) {
 	this_smartmax->ideal_speed = // ideal_freq; but make sure it obeys the policy min/max

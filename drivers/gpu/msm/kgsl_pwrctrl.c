@@ -214,12 +214,7 @@ void kgsl_pwrctrl_pwrlevel_change(struct kgsl_device *device,
 
 
 	trace_kgsl_pwrlevel(device, pwr->active_pwrlevel, pwrlevel->gpu_freq);
-<<<<<<< HEAD
-
-#ifdef CONFIG_CPU_FREQ_GOV_ELEMENTALX
-=======
-#ifdef CONFIG_CPU_FREQ_GOV_SLIM
->>>>>>> d5a5cb8... cpufreq: slim: add new governor and adpt it for new cm branch
+#if defined (CONFIG_CPU_FREQ_GOV_ELEMENTALX) || (CONFIG_CPU_FREQ_GOV_SLIM)
         graphics_boost = pwr->active_pwrlevel;
 #endif
 }

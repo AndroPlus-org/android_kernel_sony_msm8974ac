@@ -179,7 +179,18 @@ u64 get_cpu_idle_time(unsigned int cpu, u64 *wall, int io_busy)
 
 	return idle_time;
 }
+
+u64 get_cpu_iowait_time(unsigned int cpu, u64 *wall)
+{
+	u64 iowait_time = get_cpu_iowait_time_us(cpu, wall);
+
+	if (iowait_time == -1ULL)
+		return 0;
+
+	return iowait_time;
+}
 EXPORT_SYMBOL_GPL(get_cpu_idle_time);
+EXPORT_SYMBOL_GPL(get_cpu_iowait_time);
 
 static struct cpufreq_policy *__cpufreq_cpu_get(unsigned int cpu, int sysfs)
 {

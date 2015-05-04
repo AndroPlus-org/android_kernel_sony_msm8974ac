@@ -184,21 +184,11 @@ static inline unsigned int get_sampling_rate(void)
 		return dbs_tuners_ins.sampling_rate;
 }
 
-static inline cputime64_t get_cpu_iowait_time(unsigned int cpu, cputime64_t *wall)
-{
-	u64 iowait_time = get_cpu_iowait_time_us(cpu, wall);
-
-	if (iowait_time == -1ULL)
-		return 0;
-
-	return iowait_time;
-}
-
 static void dbs_reset_sample(struct cpu_dbs_info_s *p_dbs_info)
 {
 	int delay = usecs_to_jiffies(get_sampling_rate());
 	p_dbs_info->prev_cpu_idle = get_cpu_idle_time(p_dbs_info->cpu,
-				&p_dbs_info->prev_cpu_wall);
+				&p_dbs_info->prev_cpu_wall, 0);
 	p_dbs_info->prev_cpu_iowait = get_cpu_iowait_time(p_dbs_info->cpu,
 				&p_dbs_info->prev_cpu_wall);
 	/* cancel the next ondemand sample */

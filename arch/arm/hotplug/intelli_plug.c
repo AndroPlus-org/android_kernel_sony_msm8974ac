@@ -69,6 +69,9 @@ static struct mutex intelli_plug_mutex;
 static struct notifier_block notif;
 #endif
 
+extern unsigned long avg_nr_running(void);
+extern unsigned long avg_cpu_nr_running(unsigned int cpu);
+
 struct ip_cpu_info {
 	unsigned long cpu_nr_running;
 };

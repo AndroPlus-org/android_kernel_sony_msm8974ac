@@ -1585,7 +1585,7 @@ static void __ref disable_msm_thermal(void)
 
 static int __ref set_enabled(const char *val, const struct kernel_param *kp)
 {
-	int ret = 0;
+	int ret = 1;
 
 	if (*val == '0' || *val == 'n' || *val == 'N') {
 		enabled = 0;
@@ -1626,7 +1626,7 @@ static ssize_t __ref store_cc_enabled(struct kobject *kobj,
 		struct kobj_attribute *attr, const char *buf, size_t count)
 {
 	int ret = 0;
-	int val = 1;
+	int val = 0;
 
 	ret = kstrtoint(buf, 10, &val);
 	if (ret) {
@@ -1948,7 +1948,7 @@ int __devinit msm_thermal_init(struct msm_thermal_data *pdata)
 	disable_msm_thermal();
 	hotplug_init();
 	freq_mitigation_init();
-	enabled = 1;
+	enabled = 0;
 
 	return ret;
 }

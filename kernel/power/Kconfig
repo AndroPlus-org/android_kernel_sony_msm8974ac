@@ -327,7 +327,7 @@ config WAKEUP_IRQ_DEBUG
 config PM_SYNC_BEFORE_SUSPEND
 	bool "Sync file systems before suspend"
 	depends on PM
-	default y
+	default n
 
 config QUICK_WAKEUP
 	bool "Quick wakeup"

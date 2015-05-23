@@ -16,8 +16,8 @@
 
 enum zen_data_dir { ASYNC, SYNC };
 
-static const int sync_expire  = HZ / 4;    /* max time before a sync is submitted. */
-static const int async_expire = 2 * HZ;    /* ditto for async, these limits are SOFT! */
+static const int sync_expire  = HZ / 2;    /* max time before a sync is submitted. */
+static const int async_expire = 5 * HZ;    /* ditto for async, these limits are SOFT! */
 static const int fifo_batch = 1;
 
 struct zen_data {
@@ -25,7 +25,7 @@ struct zen_data {
 	/* Requests are only present on fifo_list */
 	struct list_head fifo_list[2];
 
-        unsigned int batching;          /* number of sequential requests made */
+	unsigned int batching;		/* number of sequential requests made */
 
 	/* tunables */
 	int fifo_expire[2];
@@ -91,7 +91,7 @@ zen_expired_request(struct zen_data *zdata, int ddir)
                 return NULL;
 
         rq = rq_entry_fifo(zdata->fifo_list[ddir].next);
-        if (time_after(jiffies, rq_fifo_time(rq)))
+        if (time_after_eq(jiffies, rq_fifo_time(rq)))
                 return rq;
 
         return NULL;
@@ -257,9 +257,7 @@ static struct elevator_type iosched_zen = {
 
 static int __init zen_init(void)
 {
-	elv_register(&iosched_zen);
-
-	return 0;
+	return elv_register(&iosched_zen);
 }
 
 static void __exit zen_exit(void)
@@ -275,3 +273,4 @@ MODULE_AUTHOR("Brandon Berhent");
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("Zen IO scheduler");
 MODULE_VERSION("1.0");
+

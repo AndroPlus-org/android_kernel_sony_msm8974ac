@@ -416,7 +416,7 @@ static int enable_fast_hotplug(const char *val, const struct kernel_param *kp){
 		init_timer(&unboost_timer);
 
 		mod_timer(&unboost_timer, jiffies + msecs_to_jiffies(boost_duration));
-		queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(1));
+		queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(refresh_rate));
 		mutex_unlock(&mutex);
 	}
 

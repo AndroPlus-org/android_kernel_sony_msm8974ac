@@ -180,36 +180,6 @@ extern unsigned long avg_cpu_nr_running(unsigned int cpu);
 static struct power_suspend hotplug_power_suspend_handler;
 static void plug_in(int online_cpu_count);
 
-static int enable_fast_hotplug(const char *val, const struct kernel_param *kp){
-	int cpu;
-	int ret = param_set_bool(val, kp);
-	if(!fast_hotplug_enabled){
-		pr_info(HOTPLUG_INFO_TAG"Fast hotplug disabled\n");
-		mutex_lock(&mutex);
-		flush_workqueue(hotplug_wq);
-		for_each_possible_cpu(cpu){
-			if(cpu == 0)
-				continue;
-			cpu_up(cpu);
-		}
-		is_sleeping = true;
-		mutex_unlock(&mutex);
-	} else {
-		pr_info(HOTPLUG_INFO_TAG"Fast hotplug enabled\n");
-		mutex_lock(&mutex);
-		is_sleeping = false;
-		is_boosted = true;
-
-		flush_workqueue(hotplug_wq);
-
-		mod_timer(&unboost_timer, jiffies + msecs_to_jiffies(boost_duration));
-		queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(1));
-		mutex_unlock(&mutex);
-	}
-
-	return ret;
-}
-
 static int get_slowest_cpu(void){
 	int cpu, slowest_cpu = 1;
 	unsigned long load, min_load = ~0;
@@ -413,6 +383,46 @@ static struct input_handler hotplug_input_handler = {
 	.id_table       = hotplug_ids,
 };
 
+static int enable_fast_hotplug(const char *val, const struct kernel_param *kp){
+	int cpu;
+	int ret = param_set_bool(val, kp);
+	
+	if(!fast_hotplug_enabled){
+		pr_info(HOTPLUG_INFO_TAG"Fast hotplug disabled\n");
+		mutex_lock(&mutex);
+		flush_workqueue(hotplug_wq);
+		
+		// stop the boosting as well
+		input_unregister_handler(&hotplug_input_handler);
+		del_timer_sync(&unboost_timer);
+
+		for_each_possible_cpu(cpu){
+			if(cpu == 0)
+				continue;
+			cpu_up(cpu);
+		}
+		is_sleeping = true;
+		mutex_unlock(&mutex);
+	} else {
+		pr_info(HOTPLUG_INFO_TAG"Fast hotplug enabled\n");
+		mutex_lock(&mutex);
+		is_sleeping = false;
+		is_boosted = true;
+
+		flush_workqueue(hotplug_wq);
+		
+		int rc;
+		rc = input_register_handler(&hotplug_input_handler);
+		init_timer(&unboost_timer);
+
+		mod_timer(&unboost_timer, jiffies + msecs_to_jiffies(boost_duration));
+		queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(1));
+		mutex_unlock(&mutex);
+	}
+
+	return ret;
+}
+
 /*
  * Suspend / Resume
  */
@@ -464,14 +474,9 @@ static struct power_suspend hotplug_power_suspend_handler = {
  */
 static int __init hotplug_init(void)
 {
-	int rc;
-
-	rc = input_register_handler(&hotplug_input_handler);
-
 
 	unboost_timer.function = unboost_cpu;
 	unboost_timer.expires = jiffies;
-	init_timer(&unboost_timer);
 
 	hotplug_wq = alloc_workqueue("hotplug", WQ_HIGHPRI | WQ_UNBOUND, 1);
 
@@ -479,7 +484,7 @@ static int __init hotplug_init(void)
 
 	register_power_suspend(&hotplug_power_suspend_handler);
 
-	queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(refresh_rate));
+	//queue_delayed_work_on(0, hotplug_wq, &hotplug_work, msecs_to_jiffies(refresh_rate));
 
 	pr_info(HOTPLUG_INFO_TAG"Fast hotplug succesfully initialized !");
 	return 0;

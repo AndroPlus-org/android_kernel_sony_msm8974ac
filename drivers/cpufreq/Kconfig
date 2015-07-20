@@ -140,6 +140,15 @@ config CPU_FREQ_DEFAULT_GOV_SMARTASSH3
 	help
 	  Use the CPUFreq governor 'smartassH3' as default.
 
+config CPU_FREQ_DEFAULT_GOV_ZZMOOVE
+	  bool "zzmoove"
+	  select CPU_FREQ_GOV_ZZMOOVE
+	  select CPU_FREQ_GOV_PERFORMANCE
+	  help
+	  Use the CPUFreq governor 'zzmoove' as default, using predefined
+	  frequency lookup tables and optimized scaling triggers instead of
+	  % frequency steps to get smooth up/downscaling dependant on CPU load.
+
 config CPU_FREQ_DEFAULT_GOV_INTERACTIVE
 	bool "interactive"
 	select CPU_FREQ_GOV_INTERACTIVE
@@ -580,6 +589,16 @@ config CPU_FREQ_SAMPLING_LATENCY_MULTIPLIER
 	help
 	  Sampling latency rate multiplied by the cpu switch latency.
 	  Affects governor polling. 
+
+config CPU_FREQ_GOV_ZZMOOVE
+	tristate "'zzmoove' cpufreq governor"
+	depends on CPU_FREQ
+	default y
+	help
+	  'zzmoove' - based on cpufreq_conservative, using predefined
+	  frequency lookup tables and optimized scaling triggers instead of
+	  % frequency steps to get smooth up/downscaling dependant on CPU load.
+	  If in doubt, say N.
 
 config CPU_FREQ_DEFAULT_GOV_ADAPTIVE
 	bool "adaptive"

@@ -73,8 +73,8 @@ UTS_TRUNCATE="cut -b -$UTS_LEN"
 
   echo \#define UTS_VERSION \"`echo $UTS_VERSION | $UTS_TRUNCATE`\"
 
-  echo \#define LINUX_COMPILE_BY \"mail\"
-  echo \#define LINUX_COMPILE_HOST \"andro.plus\"
+  echo \#define LINUX_COMPILE_BY \"AndroPlus\"
+  echo \#define LINUX_COMPILE_HOST \"WedyDQ10\"
 
   echo \#define LINUX_COMPILER \"`$CC -v 2>&1 | tail -n 1`\"
 ) > .tmpcompile

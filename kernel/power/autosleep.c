@@ -12,6 +12,11 @@
 #include <linux/pm_wakeup.h>
 #include <linux/wakelock.h>
 
+#ifdef CONFIG_POWERSUSPEND
+#include <linux/powersuspend.h>
+#include <linux/syscalls.h>
+#endif
+
 #include "power.h"
 
 /*
@@ -151,7 +156,6 @@ int pm_autosleep_set_state(suspend_state_t state)
 	if (state > PM_SUSPEND_ON) {
 		pm_wakep_autosleep_enabled(true);
 		queue_up_suspend_work();
-<<<<<<< HEAD
 #ifdef CONFIG_POWERSUSPEND
 		// Yank555.lu : add hook to handle powersuspend tasks (sleep)
 		set_power_suspend_state_autosleep_hook(POWER_SUSPEND_ACTIVE);
@@ -167,10 +171,6 @@ int pm_autosleep_set_state(suspend_state_t state)
 		// Yank555.lu : add hook to handle powersuspend tasks (wakeup)
 		set_power_suspend_state_autosleep_hook(POWER_SUSPEND_INACTIVE);
 #endif
-=======
-	} else {
-		pm_wakep_autosleep_enabled(false);
->>>>>>> a29535d... kernel/power/powersuspend: cumulative update to version 1.6 (faux123/Yank555.lu)
 	}
 
 	mutex_unlock(&autosleep_lock);

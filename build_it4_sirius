@@ -32,6 +32,6 @@ fi
 
 
 ### Copy img to my desktop
-dd if=../final_files/boot_D6503E.img of="/mnt/hgfs/VMShare/AndroidImageKitchen20/boot_D6503E.img"
+#dd if=../final_files/boot_D6503E.img of="/mnt/hgfs/VMShare/AndroidImageKitchen20/boot_D6503E.img"
 
 dd if=../final_files/boot_D6503P.img of="/mnt/hgfs/VMShare/AndroidImageKitchen20/boot_D6503P.img"

@@ -8619,7 +8619,7 @@ void zzmoove_suspend(void)
 
 #if defined(CONFIG_HAS_EARLYSUSPEND) && !defined(USE_LCD_NOTIFIER)
 static void __cpuinit powersave_late_resume(struct early_suspend *handler)
-#elif defined(CONFIG_POWERSUSPEND) && !defined(USE_LCD_NOTIFIER)
+#elif defined(CONFIG_POWERSUSPEND) && !defined(USE_LCD_NOTIFIER) || defined(CONFIG_POWERSUSPEND) && defined(USE_LCD_NOTIFIER)
 static void __cpuinit powersave_resume(struct power_suspend *handler)
 #elif defined(USE_LCD_NOTIFIER)
 void zzmoove_resume(void)
@@ -8704,7 +8704,7 @@ void zzmoove_resume(void)
 #endif /* ZZMOOVE_DEBUG */
 }
 
-#if defined(CONFIG_HAS_EARLYSUSPEND) && !defined(USE_LCD_NOTIFIER) && !defined(DISABLE_POWER_MANAGEMENT)
+#if defined(CONFIG_HAS_EARLYSUSPEND) && !defined(USE_LCD_NOTIFIER) && !defined (DISABLE_POWER_MANAGEMENT)
 static struct early_suspend __refdata _powersave_early_suspend = {
   .suspend = powersave_early_suspend,
   .resume = powersave_late_resume,
@@ -8855,7 +8855,7 @@ static int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 		dbs_timer_init(this_dbs_info);
 #if defined(CONFIG_HAS_EARLYSUSPEND) && !defined(USE_LCD_NOTIFIER) && !defined(DISABLE_POWER_MANAGEMENT)
 		register_early_suspend(&_powersave_early_suspend);
-#elif defined(CONFIG_POWERSUSPEND) && !defined(USE_LCD_NOTIFIER) && !defined(DISABLE_POWER_MANAGEMENT)
+#elif defined(CONFIG_POWERSUSPEND) && !defined(USE_LCD_NOTIFIER) && !defined(DISABLE_POWER_MANAGEMENT) || defined(CONFIG_POWERSUSPEND) && defined(USE_LCD_NOTIFIER) && !defined(DISABLE_POWER_MANAGEMENT)
 		if (cpu == 0)
 		    register_power_suspend(&powersave_powersuspend);
 #endif /* (defined(CONFIG_HAS_EARLYSUSPEND)... */

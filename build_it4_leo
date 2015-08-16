@@ -7,12 +7,12 @@ fi
 ### get defconfig
 #ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make leo_defconfig
 ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make leo_defconfig
-#ARCH=arm CROSS_COMPILE=~/sm_arm-eabi-4.9.x-master/bin/arm-eabi- make leo_defconfig
+#ARCH=arm CROSS_COMPILE=~/arm-eabi-5.1/bin/arm-eabi- make leo_defconfig
 
 ### compile kernel
-#ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make -j8
-ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make -j8
-#ARCH=arm CROSS_COMPILE=~/sm_arm-eabi-4.9.x-master/bin/arm-eabi- make -j8
+#ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make -j4
+ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make -j4
+#ARCH=arm CROSS_COMPILE=~/arm-eabi-5.1/bin/arm-eabi- make -j4
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]

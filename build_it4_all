@@ -9,7 +9,7 @@ fi
 ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make leo_defconfig
 
 ### compile kernel
-ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make -j8
+ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make -j4
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]
@@ -37,7 +37,7 @@ rm ./arch/arm/boot/*.dtb
 ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make aries_defconfig
 
 ### compile kernel
-ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make -j8
+ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make -j4
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]
@@ -66,7 +66,7 @@ rm ./arch/arm/boot/*.dtb
 ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make scorpion_defconfig
 
 ### compile kernel
-ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make -j8
+ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make -j4
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]
@@ -92,7 +92,7 @@ rm ./arch/arm/boot/*.dtb
 ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make scorpion_windy_defconfig
 
 ### compile kernel
-ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make -j8
+ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make -j4
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]
@@ -119,7 +119,7 @@ rm ./arch/arm/boot/*.dtb
 ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make sirius_defconfig
 
 ### compile kernel
-ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make -j8
+ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make -j4
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]

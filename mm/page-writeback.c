@@ -100,7 +100,7 @@ unsigned long vm_dirty_bytes;
  * The default intervals between `kupdate'-style writebacks
  */
 #define DEFAULT_DIRTY_WRITEBACK_INTERVAL	 5 * 100 /* centiseconds */
-#define HIGH_DIRTY_WRITEBACK_INTERVAL		15 * 100 /* centiseconds */
+#define HIGH_DIRTY_WRITEBACK_INTERVAL		30 * 100 /* centiseconds */
 
 /*
  * The interval between `kupdate'-style writebacks

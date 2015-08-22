@@ -570,22 +570,22 @@
 	qcom,vddmax-mv = <4350>;
 	qcom,vddsafe-mv = <4400>;
 	qcom,vinmin-mv = <4200>;
-	qcom,ibatmax-ma = <1600>;
-	qcom,ibatterm-ma = <160>;
-	qcom,ibatsafe-ma = <1600>;
+	qcom,ibatmax-ma = <1800>;
+	qcom,ibatterm-ma = <130>;
+	qcom,ibatsafe-ma = <2100>;
 	qcom,maxinput-dc-mv = <10000>;
 	qcom,maxinput-usb-ma = <1500>;
-	qcom,maxinput-usb-mv = <6500>;
-	qcom,thermal-mitigation = <1600 1600 1100 900 700 500 300 200 100 0>;
+	qcom,maxinput-usb-mv = <13000>;
+	qcom,thermal-mitigation = <1800 1600 1100 900 700 500 300 200 100 0>;
 	qcom,cool-bat-mv = <4350>;
-	qcom,ibatmax-warm-ma = <900>;
+	qcom,ibatmax-warm-ma = <750>;
 	qcom,warm-bat-mv = <4200>;
-	qcom,ibatmax-cool-ma = <900>;
+	qcom,ibatmax-cool-ma = <750>;
 	qcom,vbatdet-delta-mv = <70>;
 	qcom,tchg-mins = <512>;
 	qcom,vbatweak-mv = <3200>;
-	qcom,step-thresh-soc = <101>;
-	qcom,ibatmax-ma-under-step = <1600>;
+	qcom,step-thresh-soc = <60>;
+	qcom,ibatmax-ma-under-step = <1800>;
 };
 
 &pm8941_bms {

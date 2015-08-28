@@ -287,4 +287,11 @@ config AIO_OPTIMIZATION
 	default y
 	help
 	  An experimental AIO FS kernel optimization
+
+config DYNAMIC_FSYNC
+	bool "dynamic file sync control"
+	default y
+	help
+	  An experimental file sync control using Linux's notifier chain
+
 endmenu

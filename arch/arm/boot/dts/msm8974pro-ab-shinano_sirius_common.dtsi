@@ -585,7 +585,7 @@
 	qcom,tchg-mins = <512>;
 	qcom,vbatweak-mv = <3200>;
 	qcom,step-thresh-soc = <101>;
-	qcom,ibatmax-ma-under-step = <1800>;
+	qcom,ibatmax-ma-under-step = <2150>;
 };
 
 &pm8941_bms {

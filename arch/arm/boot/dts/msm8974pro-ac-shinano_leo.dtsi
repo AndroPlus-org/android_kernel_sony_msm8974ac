@@ -39,7 +39,7 @@
 };
 
 &pm8941_chg {
-	qcom,step-thresh-soc = <60>;
+	qcom,step-thresh-soc = <80>;
 	qcom,ibatmax-ma-over-step = <1550>;
 	qcom,ibatmax-ma-under-step = <2150>;
 };

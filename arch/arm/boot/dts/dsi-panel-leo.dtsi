@@ -424,6 +424,7 @@
 		qcom,cont-splash-enabled;
 		qcom,mdss-dsi-tx-eot-append;
 		qcom,partial-update-enabled;
+		qcom,panel-roi-alignment = <900 4 2 2 540 20>;
 		qcom,ulps-enabled;
 
 		somc,driver-ic = <0>;
@@ -1096,7 +1097,7 @@
 		qcom,cont-splash-enabled;
 		qcom,mdss-dsi-tx-eot-append;
 		qcom,partial-update-enabled;
-		qcom,panel-roi-alignment = <900 4 0 2 540 2>;
+		qcom,panel-roi-alignment = <900 4 2 2 540 20>;
 		qcom,ulps-enabled;
 
 		somc,driver-ic = <0>;

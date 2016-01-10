@@ -6,10 +6,10 @@ rm ./arch/arm/boot/*.dtb
 fi
 
 ### get defconfig
-ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make sirius_defconfig
+ARCH=arm CROSS_COMPILE=~/arm-eabi-4.9/bin/arm-eabi- make sirius_defconfig
 
 ### compile kernel
-ARCH=arm CROSS_COMPILE=~/UBERTC-arm-eabi-4.9-cc946e382b79/bin/arm-eabi- make -j8
+ARCH=arm CROSS_COMPILE=~/arm-eabi-4.9/bin/arm-eabi- make -j8
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]

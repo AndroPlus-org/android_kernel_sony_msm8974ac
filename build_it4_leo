@@ -1,18 +1,19 @@
 ### GCC 4.9.x
+### I'm using UBERTC https://bitbucket.org/UBERTC/arm-eabi-4.9
+export ARCH=arm
+export PATH=~/arm-eabi-4.9/bin/:$PATH
+### See prefix of file names in the toolchain's bin directory
+export CROSS_COMPILE=arm-eabi-
 
 if [ ! -e ./arch/arm/boot/msm8974pro-ac-shinano_leo.dtb ]; then
 rm ./arch/arm/boot/*.dtb
 fi
 
 ### get defconfig
-#ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make leo_defconfig
-ARCH=arm CROSS_COMPILE=~/arm-eabi-4.9/bin/arm-eabi- make leo_defconfig
-#ARCH=arm CROSS_COMPILE=~/arm-eabi-5.1/bin/arm-eabi- make leo_defconfig
+make leo_defconfig
 
 ### compile kernel
-#ARCH=arm CROSS_COMPILE=~/arm-cortex_a15-linux-gnueabihf-linaro_4.9.1-2014.04/bin/arm-gnueabi- make -j4
-ARCH=arm CROSS_COMPILE=~/arm-eabi-4.9/bin/arm-eabi- make -j4
-#ARCH=arm CROSS_COMPILE=~/arm-eabi-5.1/bin/arm-eabi- make -j4
+make -j4
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]

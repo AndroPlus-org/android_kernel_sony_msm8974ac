@@ -1,4 +1,9 @@
 ### GCC 4.9.x
+### I'm using UBERTC https://bitbucket.org/UBERTC/arm-eabi-4.9
+export ARCH=arm
+export PATH=~/arm-eabi-4.9/bin/:$PATH
+### See prefix of file names in the toolchain's bin directory
+export CROSS_COMPILE=arm-eabi-
 
 ### Build kernel for Z3
 if [ ! -e ./arch/arm/boot/msm8974pro-ac-shinano_leo.dtb ]; then
@@ -6,10 +11,10 @@ rm ./arch/arm/boot/*.dtb
 fi
 
 ### get defconfig
-ARCH=arm CROSS_COMPILE=~/arm-eabi-4.9/bin/arm-eabi- make leo_defconfig
+make leo_defconfig
 
 ### compile kernel
-ARCH=arm CROSS_COMPILE=~/arm-eabi-4.9/bin/arm-eabi- make -j4
+make -j4
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]
@@ -34,10 +39,10 @@ fi
 rm ./arch/arm/boot/*.dtb
 
 ### get defconfig
-ARCH=arm CROSS_COMPILE=~/arm-eabi-4.9/bin/arm-eabi- make aries_defconfig
+make aries_defconfig
 
 ### compile kernel
-ARCH=arm CROSS_COMPILE=~/arm-eabi-4.9/bin/arm-eabi- make -j4
+make -j4
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]
@@ -63,10 +68,10 @@ fi
 rm ./arch/arm/boot/*.dtb
 
 ### get defconfig
-ARCH=arm CROSS_COMPILE=~/arm-eabi-4.9/bin/arm-eabi- make scorpion_defconfig
+make scorpion_defconfig
 
 ### compile kernel
-ARCH=arm CROSS_COMPILE=~/arm-eabi-4.9/bin/arm-eabi- make -j4
+make -j4
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]
@@ -89,10 +94,10 @@ fi
 rm ./arch/arm/boot/*.dtb
 
 ### get defconfig
-ARCH=arm CROSS_COMPILE=~/arm-eabi-4.9/bin/arm-eabi- make scorpion_windy_defconfig
+make scorpion_windy_defconfig
 
 ### compile kernel
-ARCH=arm CROSS_COMPILE=~/arm-eabi-4.9/bin/arm-eabi- make -j4
+make -j4
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]
@@ -116,10 +121,10 @@ fi
 rm ./arch/arm/boot/*.dtb
 
 ### get defconfig
-ARCH=arm CROSS_COMPILE=~/arm-eabi-4.9/bin/arm-eabi- make sirius_defconfig
+make sirius_defconfig
 
 ### compile kernel
-ARCH=arm CROSS_COMPILE=~/arm-eabi-4.9/bin/arm-eabi- make -j4
+make -j4
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]

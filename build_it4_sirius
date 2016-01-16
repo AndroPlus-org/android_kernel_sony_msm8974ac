@@ -1,4 +1,9 @@
 ### GCC 4.9.x
+### I'm using UBERTC https://bitbucket.org/UBERTC/arm-eabi-4.9
+export ARCH=arm
+export PATH=~/arm-eabi-4.9/bin/:$PATH
+### See prefix of file names in the toolchain's bin directory
+export CROSS_COMPILE=arm-eabi-
 
 ### Build kernel for Z2
 if [ ! -e ./arch/arm/boot/msm8974pro-ab-shinano_sirius.dtb ]; then
@@ -6,10 +11,10 @@ rm ./arch/arm/boot/*.dtb
 fi
 
 ### get defconfig
-ARCH=arm CROSS_COMPILE=~/arm-eabi-4.9/bin/arm-eabi- make sirius_defconfig
+make sirius_defconfig
 
 ### compile kernel
-ARCH=arm CROSS_COMPILE=~/arm-eabi-4.9/bin/arm-eabi- make -j8
+make -j8
 
 echo "checking for compiled kernel..."
 if [ -f arch/arm/boot/zImage ]
